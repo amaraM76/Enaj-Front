@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model UserProfile {
+  id              String    @id @default(uuid())
+  firstName       String?
+  lastName        String?
+  email           String    @unique
+  location        String?
+  age             Int?
+  gender          String?
+  shoppingStores  String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  auth            UserAuth?
+  ailments        UserAilment[]
+  preferences     UserPreference[]
+  savedProducts   SavedProduct[]
+}
+
+model UserAuth {
+  id           String      @id @default(uuid())
+  userId       String      @unique
+  user         UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clerkId      String?     @unique
+  username     String?     @unique
+  passwordHash String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@index([username])
+}
+
+model UserAilment {
+  id          String      @id @default(uuid())
+  userId      String
+  ailmentSlug String
+  customEntry String?
+  createdAt   DateTime    @default(now())
+
+  user        UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UserPreference {
+  id             String      @id @default(uuid())
+  userId         String
+  preferenceSlug String?
+  source         String      @default("SELECTED")
+  customEntry    String?
+  createdAt      DateTime    @default(now())
+
+  user           UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SavedProduct {
+  id        String      @id @default(uuid())
+  userId    String
+  productId String
+  createdAt DateTime    @default(now())
+
+  user      UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+}
