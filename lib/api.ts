@@ -78,16 +78,16 @@ export interface LoginResponse {
 
 export interface UserProfile {
   id: string
-  username: string
   firstName: string
   lastName: string
   email: string
   location?: string
-  age?: number
+  age?: number | string
   gender?: string
-  shoppingStores?: string[]
-  ailments?: string[]
-  preferences?: string[]
+  shoppingStores?: string | string[]
+  selectedAilments?: any[]
+  selectedPreferences?: string[]
+  savedProducts?: any[]
 }
 
 export interface GetUserResponse {
