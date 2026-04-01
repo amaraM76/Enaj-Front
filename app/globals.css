@@ -1,0 +1,202 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: #f8fffe;
+  --foreground: #1a2e2b;
+  --card: #ffffff;
+  --card-foreground: #1a2e2b;
+  --popover: #ffffff;
+  --popover-foreground: #1a2e2b;
+  --primary: #0ABAB5;
+  --primary-foreground: #ffffff;
+  --secondary: #A8D5BA;
+  --secondary-foreground: #1a2e2b;
+  --muted: #f0f9f6;
+  --muted-foreground: #5a7a73;
+  --accent: #e6f7f6;
+  --accent-foreground: #0a8a86;
+  --destructive: #e74c3c;
+  --destructive-foreground: #ffffff;
+  --border: #d4ece8;
+  --input: #d4ece8;
+  --ring: #0ABAB5;
+  --chart-1: #0ABAB5;
+  --chart-2: #A8D5BA;
+  --chart-3: #078a86;
+  --chart-4: #7cc9a0;
+  --chart-5: #05d6d0;
+  --radius: 0.75rem;
+  --sidebar: #f0f9f6;
+  --sidebar-foreground: #1a2e2b;
+  --sidebar-primary: #0ABAB5;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e6f7f6;
+  --sidebar-accent-foreground: #0a8a86;
+  --sidebar-border: #d4ece8;
+  --sidebar-ring: #0ABAB5;
+  --enaj-tiffany: #0ABAB5;
+  --enaj-green: #A8D5BA;
+  --enaj-dark: #1a2e2b;
+  --enaj-light: #f8fffe;
+}
+
+.dark {
+  --background: #0d1f1e;
+  --foreground: #e8f5f3;
+  --card: #132a28;
+  --card-foreground: #e8f5f3;
+  --popover: #132a28;
+  --popover-foreground: #e8f5f3;
+  --primary: #0ABAB5;
+  --primary-foreground: #ffffff;
+  --secondary: #2a6b4f;
+  --secondary-foreground: #e8f5f3;
+  --muted: #1a3533;
+  --muted-foreground: #8aada6;
+  --accent: #1a3533;
+  --accent-foreground: #05d6d0;
+  --destructive: #c0392b;
+  --destructive-foreground: #e8f5f3;
+  --border: #1f403d;
+  --input: #1f403d;
+  --ring: #0ABAB5;
+  --chart-1: #0ABAB5;
+  --chart-2: #A8D5BA;
+  --chart-3: #078a86;
+  --chart-4: #7cc9a0;
+  --chart-5: #05d6d0;
+  --sidebar: #132a28;
+  --sidebar-foreground: #e8f5f3;
+  --sidebar-primary: #0ABAB5;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1a3533;
+  --sidebar-accent-foreground: #05d6d0;
+  --sidebar-border: #1f403d;
+  --sidebar-ring: #0ABAB5;
+}
+
+@theme inline {
+  --font-sans: 'Plus Jakarta Sans', 'Geist', 'Geist Fallback';
+  --font-mono: 'Geist Mono', 'Geist Mono Fallback';
+  --color-enaj-tiffany: var(--enaj-tiffany);
+  --color-enaj-green: var(--enaj-green);
+  --color-enaj-dark: var(--enaj-dark);
+  --color-enaj-light: var(--enaj-light);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Logo floating animation */
+@keyframes logo-float {
+  0% { transform: translateY(0); }
+  25% { transform: translateY(-4px); }
+  50% { transform: translateY(0); }
+  75% { transform: translateY(3px); }
+  100% { transform: translateY(0); }
+}
+
+.animate-logo-float {
+  animation: logo-float 3s ease-in-out infinite;
+}
+
+/* Cloud drift animations */
+@keyframes cloud-drift-1 {
+  0% { transform: translateX(0) translateY(0); }
+  25% { transform: translateX(12vw) translateY(-10px); }
+  50% { transform: translateX(25vw) translateY(5px); }
+  75% { transform: translateX(38vw) translateY(-7px); }
+  100% { transform: translateX(50vw) translateY(0); }
+}
+
+@keyframes cloud-drift-2 {
+  0% { transform: translateX(0) translateY(0); }
+  33% { transform: translateX(-10vw) translateY(8px); }
+  66% { transform: translateX(-22vw) translateY(-5px); }
+  100% { transform: translateX(-35vw) translateY(0); }
+}
+
+@keyframes cloud-drift-3 {
+  0% { transform: translateX(0) translateY(0) scale(1); }
+  50% { transform: translateX(18vw) translateY(-12px) scale(1.05); }
+  100% { transform: translateX(35vw) translateY(0) scale(1); }
+}
+
+@keyframes cloud-drift-4 {
+  0% { transform: translateX(0) translateY(0); }
+  50% { transform: translateX(-15vw) translateY(10px); }
+  100% { transform: translateX(-30vw) translateY(0); }
+}
+
+@keyframes cloud-drift-5 {
+  0% { transform: translateX(0) translateY(0); }
+  25% { transform: translateX(8vw) translateY(-8px); }
+  50% { transform: translateX(18vw) translateY(4px); }
+  75% { transform: translateX(28vw) translateY(-6px); }
+  100% { transform: translateX(40vw) translateY(0); }
+}
+
+@keyframes cloud-drift-6 {
+  0% { transform: translateX(0) translateY(0) scale(1); }
+  50% { transform: translateX(-12vw) translateY(-9px) scale(1.03); }
+  100% { transform: translateX(-25vw) translateY(0) scale(1); }
+}
+
+@keyframes cloud-drift-7 {
+  0% { transform: translateX(0) translateY(0); }
+  50% { transform: translateX(10vw) translateY(7px); }
+  100% { transform: translateX(20vw) translateY(0); }
+}
+
+.animate-cloud-1 { animation: cloud-drift-1 65s ease-in-out infinite; }
+.animate-cloud-2 { animation: cloud-drift-2 80s ease-in-out infinite; }
+.animate-cloud-3 { animation: cloud-drift-3 55s ease-in-out infinite; }
+.animate-cloud-4 { animation: cloud-drift-4 90s ease-in-out infinite; }
+.animate-cloud-5 { animation: cloud-drift-5 70s ease-in-out infinite; }
+.animate-cloud-6 { animation: cloud-drift-6 60s ease-in-out infinite; }
+.animate-cloud-7 { animation: cloud-drift-7 75s ease-in-out infinite; }
