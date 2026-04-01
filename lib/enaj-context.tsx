@@ -94,21 +94,19 @@ export function EnajProvider({ children }: { children: ReactNode }) {
 
   // Save profile data for Clerk user (uses local API proxy to avoid CORS)
   const saveProfileWithClerk = useCallback(async (userId: string, data: Record<string, unknown>) => {
-    // Use local API route to avoid CORS issues
-    const response = await fetch('/api/auth/clerk-sync', {
-      method: 'POST',
+    const response = await fetch(`${API_URL}/api/users/${userId}/profile`, {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        clerkId: userId,
+        ...data,
         email: clerkUser?.primaryEmailAddress?.emailAddress,
         firstName: clerkUser?.firstName,
         lastName: clerkUser?.lastName,
-        ...data,
       }),
     })
-
+  
     if (!response.ok) {
       const error = await response.json().catch(() => ({}))
       throw new Error((error as { message?: string }).message || 'Failed to save profile')
