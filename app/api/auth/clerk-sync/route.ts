@@ -25,58 +25,18 @@ export async function OPTIONS(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const headers = getCorsHeaders(request)
   try {
-    const { clerkId, firstName, lastName, email } = await request.json()
+    const body = await request.json()
 
-    if (!clerkId || !email) {
-      return NextResponse.json(
-        { error: 'clerkId and email are required' },
-        { status: 400, headers }
-      )
-    }
-
-    // Check if user already exists by clerkId
-    const existingAuth = await prisma.userAuth.findUnique({
-      where: { clerkId },
-      include: { user: true },
+    const response = await fetch(`https://enaj-back-production.up.railway.app/api/auth/clerk-sync`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
     })
 
-    if (existingAuth) {
-      return NextResponse.json({ user: existingAuth.user }, { headers })
-    }
-
-    // Check if user exists by email
-    const existingProfile = await prisma.userProfile.findUnique({
-      where: { email },
-    })
-
-    if (existingProfile) {
-      // Link clerkId to existing profile
-      await prisma.userAuth.upsert({
-        where: { userId: existingProfile.id },
-        update: { clerkId },
-        create: { userId: existingProfile.id, clerkId },
-      })
-      return NextResponse.json({ user: existingProfile }, { headers })
-    }
-
-    // Create new user
-    const newProfile = await prisma.userProfile.create({
-      data: {
-        firstName: firstName || '',
-        lastName: lastName || '',
-        email,
-        auth: {
-          create: { clerkId },
-        },
-      },
-    })
-
-    return NextResponse.json({ user: newProfile }, { status: 201, headers })
+    const data = await response.json()
+    return NextResponse.json(data, { status: response.status, headers })
   } catch (error) {
     console.error('clerk-sync error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500, headers }
-    )
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500, headers })
   }
 }
