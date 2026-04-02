@@ -179,30 +179,25 @@ export function EnajProvider({ children }: { children: ReactNode }) {
     if (profile) return
 
     const initializeUser = async () => {
-      // Try to fetch existing user
+      // Wait for clerkUser to be fully loaded
+      if (!clerkUser) return
+      
       const hasProfile = await fetchUserProfile(clerkUserId)
       
       if (hasProfile) {
-        // User exists in our database - go to dashboard
         setCurrentStep('dashboard')
       } else {
-        // User doesn't exist in our database yet - create them
         const created = await createUserInBackend(clerkUserId)
-        
         if (created) {
-          // Successfully created - redirect to onboarding to complete profile
           setCurrentStep('onboarding')
         } else {
-          // Creation failed but don't show error - just go to onboarding
-          // The user can complete setup there
           setCurrentStep('onboarding')
         }
       }
     }
-
     initializeUser()
-  }, [isClerkLoaded, isSignedIn, clerkUserId, profile, fetchUserProfile, createUserInBackend])
-
+  }, [isClerkLoaded, isSignedIn, clerkUserId, profile, fetchUserProfile, createUserInBackend, clerkUser])
+  
   // ── Logout (Clerk handles the actual sign out) ────────────────��──────────
   const logout = useCallback(() => {
     setProfileState(null)
