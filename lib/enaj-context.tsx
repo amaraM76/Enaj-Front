@@ -152,8 +152,8 @@ export function EnajProvider({ children }: { children: ReactNode }) {
         body: JSON.stringify({
           clerkId: userId,
           email: clerkUser.primaryEmailAddress?.emailAddress || '',
-          firstName: clerkUser.firstName || '',
-          lastName: clerkUser.lastName || '',
+          firstName: clerkUser.firstName || clerkUser.fullName?.split(' ')[0] || '',
+          lastName: clerkUser.lastName || clerkUser.fullName?.split(' ').slice(1).join(' ') || '',
         }),
       })
 
