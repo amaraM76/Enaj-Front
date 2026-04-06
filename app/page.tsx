@@ -9,10 +9,10 @@ import { Onboarding } from '@/components/onboarding'
 import { Dashboard } from '@/components/dashboard'
 
 function AppContent() {
-  const { currentStep, isClerkLoaded } = useEnaj()
+  const { currentStep, isClerkLoaded, profile, clerkUserId } = useEnaj()
 
-  // Show loading while Clerk initializes
-  if (!isClerkLoaded) {
+  // Show loading while Clerk initializes or while fetching profile
+  if (!isClerkLoaded || (clerkUserId && !profile)) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="animate-pulse text-muted-foreground">Loading...</div>
