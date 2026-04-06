@@ -180,21 +180,16 @@ export function EnajProvider({ children }: { children: ReactNode }) {
     if (profile) return
 
     const initializeUser = async () => {
-      // Wait for clerkUser to be fully loaded
       if (!clerkUser) return
       
       const hasProfile = await fetchUserProfile(clerkUserId)
       
       if (hasProfile) {
-        // hasProfile is only true if profile is complete
         setCurrentStep('dashboard')
       } else {
-        const created = await createUserInBackend(clerkUserId)
-        if (created) {
-          setCurrentStep('onboarding')
-        } else {
-          setCurrentStep('onboarding')
-        }
+        await createUserInBackend(clerkUserId)
+        await fetchUserProfile(clerkUserId) // fetch again to get name
+        setCurrentStep('onboarding')
       }
     }
     initializeUser()
