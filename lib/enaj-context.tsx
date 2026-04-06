@@ -85,7 +85,8 @@ export function EnajProvider({ children }: { children: ReactNode }) {
         customHealthCondition: undefined,
         customPreference: undefined,
       })
-      return true
+      const isComplete = !!(user.location && user.age && user.gender && user.shoppingStores)
+      return isComplete
     } catch {
       // User doesn't exist in our database yet
       return false
@@ -185,6 +186,7 @@ export function EnajProvider({ children }: { children: ReactNode }) {
       const hasProfile = await fetchUserProfile(clerkUserId)
       
       if (hasProfile) {
+        // hasProfile is only true if profile is complete
         setCurrentStep('dashboard')
       } else {
         const created = await createUserInBackend(clerkUserId)
@@ -197,7 +199,7 @@ export function EnajProvider({ children }: { children: ReactNode }) {
     }
     initializeUser()
   }, [isClerkLoaded, isSignedIn, clerkUserId, profile, fetchUserProfile, createUserInBackend, clerkUser])
-  
+
   // ── Logout (Clerk handles the actual sign out) ────────────────��──────────
   const logout = useCallback(() => {
     setProfileState(null)
