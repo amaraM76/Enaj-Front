@@ -188,7 +188,6 @@ export function EnajProvider({ children }: { children: ReactNode }) {
         setCurrentStep('dashboard')
       } else {
         await createUserInBackend(clerkUserId)
-        await fetchUserProfile(clerkUserId) // fetch again to get name
         setCurrentStep('onboarding')
       }
     }

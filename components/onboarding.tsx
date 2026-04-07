@@ -140,6 +140,8 @@ export function Onboarding() {
     setSaving(true)
     setSaveError('')
     try {
+      console.log('Saving profile for userId:', userId)
+      console.log('Profile data:', { location, age, gender, shoppingStores })
       // 1. Save profile data using Clerk userId
       await saveProfileWithClerk(userId, {
         location: location || undefined,
