@@ -140,8 +140,12 @@ export function Onboarding() {
     setSaving(true)
     setSaveError('')
     try {
-      console.log('Saving profile for userId:', userId)
-      console.log('Profile data:', { location, age, gender, shoppingStores })
+      console.log('=== SAVING PROFILE ===')
+      console.log('userId:', userId)
+      console.log('location:', location)
+      console.log('age:', age)
+      console.log('gender:', gender)
+      console.log('shoppingStores:', shoppingStores)
       // 1. Save profile data using Clerk userId
       await saveProfileWithClerk(userId, {
         location: location || undefined,
@@ -149,6 +153,8 @@ export function Onboarding() {
         gender: gender || undefined,
         shoppingStores: shoppingStores || undefined,
       })
+      console.log('=== PROFILE SAVED ===')
+
 
       // 2. Save ailments
       await api.saveUserAilments(
