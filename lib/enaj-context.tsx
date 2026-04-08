@@ -168,37 +168,34 @@ export function EnajProvider({ children }: { children: ReactNode }) {
     }
   }, [clerkUser])
 
-  // ── Auto-fetch profile when Clerk user is signed in ──────────────────────
-  useEffect(() => {
-    // Wait for Clerk to be fully loaded before checking auth state
-    if (!isClerkLoaded) return
-    
-    // If not signed in and Clerk is loaded, stay on current step (landing)
-    if (!isSignedIn || !clerkUserId) return
-    
-    // If already have a profile, don't re-fetch
-    if (profile) return
+  const [profileLoaded, setProfileLoaded] = useState(false)
 
+  useEffect(() => {
+    if (!isClerkLoaded) return
+    if (!isSignedIn || !clerkUserId) return
+    if (profileLoaded) return
+  
     const initializeUser = async () => {
       if (!clerkUser) return
       
       const hasProfile = await fetchUserProfile(clerkUserId)
+      setProfileLoaded(true)
       
       if (hasProfile) {
         setCurrentStep('dashboard')
       } else {
         await createUserInBackend(clerkUserId)
+        await fetchUserProfile(clerkUserId)
         setCurrentStep('onboarding')
       }
     }
     initializeUser()
-  }, [isClerkLoaded, isSignedIn, clerkUserId, profile, fetchUserProfile, createUserInBackend, clerkUser])
+  }, [isClerkLoaded, isSignedIn, clerkUserId, profileLoaded, fetchUserProfile, createUserInBackend, clerkUser])
 
-  // ── Logout (Clerk handles the actual sign out) ────────────────��──────────
   const logout = useCallback(() => {
     setProfileState(null)
+    setProfileLoaded(false)
     setCurrentStep('landing')
-    // Note: Actual Clerk sign out should be called from the component using useClerk().signOut()
   }, [])
 
   const setProfile = useCallback((p: UserProfile) => {

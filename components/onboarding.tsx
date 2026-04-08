@@ -209,6 +209,29 @@ export function Onboarding() {
     await saveProfile()
     if (!saveError) goNext()
   }
+  
+  const handleProfileNext = async () => {
+    if (!isProfileValid()) return
+    if (!userId) {
+      setSaveError('Please sign in first')
+      return
+    }
+    setSaving(true)
+    setSaveError('')
+    try {
+      await saveProfileWithClerk(userId, {
+        location: location || undefined,
+        age: age ? Number(age) : undefined,
+        gender: gender || undefined,
+        shoppingStores: shoppingStores || undefined,
+      })
+      goNext()
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : 'Something went wrong.')
+    } finally {
+      setSaving(false)
+    }
+  }
 
   const handleFinish = async () => {
     if (!profileSaved) await saveProfile()
@@ -934,12 +957,21 @@ export function Onboarding() {
               </Button>
             ) : (
             <Button
-              onClick={step === 'profile' ? handleCompleteReview : goNext}
-              disabled={step === 'profile' && !isProfileValid()}
+              onClick={step === 'profile' ? handleProfileNext : goNext}
+              disabled={(step === 'profile' && !isProfileValid()) || saving}
               className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 px-6"
             >
-              Continue
-              <ArrowRight className="h-4 w-4" />
+              {saving ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  Continue
+                  <ArrowRight className="h-4 w-4" />
+                </>
+              )}
             </Button>
             )}
           </div>
