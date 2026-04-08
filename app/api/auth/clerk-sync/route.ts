@@ -25,18 +25,88 @@ export async function OPTIONS(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const headers = getCorsHeaders(request)
   try {
-    const body = await request.json()
+    const { clerkId, firstName, lastName, email, location, age, gender, shoppingStores } = await request.json()
 
-    const response = await fetch(`https://enaj-back-production.up.railway.app/api/auth/clerk-sync`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
+    if (!clerkId || !email) {
+      return NextResponse.json(
+        { error: 'clerkId and email are required' },
+        { status: 400, headers }
+      )
+    }
+
+    // Build the profile data to update/create
+    const profileData: {
+      firstName?: string
+      lastName?: string
+      location?: string
+      age?: number
+      gender?: string
+      shoppingStores?: string
+    } = {}
+    
+    if (firstName !== undefined) profileData.firstName = firstName
+    if (lastName !== undefined) profileData.lastName = lastName
+    if (location !== undefined) profileData.location = location
+    if (age !== undefined) profileData.age = typeof age === 'number' ? age : parseInt(age, 10) || undefined
+    if (gender !== undefined) profileData.gender = gender
+    if (shoppingStores !== undefined) profileData.shoppingStores = shoppingStores
+
+    // Check if user already exists by clerkId
+    const existingAuth = await prisma.userAuth.findUnique({
+      where: { clerkId },
+      include: { user: true },
     })
 
-    const data = await response.json()
-    return NextResponse.json(data, { status: response.status, headers })
+    if (existingAuth) {
+      // Update existing user's profile with new data
+      const updatedUser = await prisma.userProfile.update({
+        where: { id: existingAuth.user.id },
+        data: profileData,
+      })
+      return NextResponse.json({ user: updatedUser }, { headers })
+    }
+
+    // Check if user exists by email
+    const existingProfile = await prisma.userProfile.findUnique({
+      where: { email },
+    })
+
+    if (existingProfile) {
+      // Link clerkId to existing profile and update profile data
+      await prisma.userAuth.upsert({
+        where: { userId: existingProfile.id },
+        update: { clerkId },
+        create: { userId: existingProfile.id, clerkId },
+      })
+      const updatedUser = await prisma.userProfile.update({
+        where: { id: existingProfile.id },
+        data: profileData,
+      })
+      return NextResponse.json({ user: updatedUser }, { headers })
+    }
+
+    // Create new user with all profile data
+    const newProfile = await prisma.userProfile.create({
+      data: {
+        firstName: firstName || '',
+        lastName: lastName || '',
+        email,
+        location: location || null,
+        age: age ? (typeof age === 'number' ? age : parseInt(age, 10)) : null,
+        gender: gender || null,
+        shoppingStores: shoppingStores || null,
+        auth: {
+          create: { clerkId },
+        },
+      },
+    })
+
+    return NextResponse.json({ user: newProfile }, { status: 201, headers })
   } catch (error) {
     console.error('clerk-sync error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500, headers })
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500, headers }
+    )
   }
 }

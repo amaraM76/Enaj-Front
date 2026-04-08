@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useAuth, SignUp } from '@clerk/nextjs'
+import { useAuth, useUser, SignUp } from '@clerk/nextjs'
 import { useEnaj } from '@/lib/enaj-context'
 import { EnajLogo } from '@/components/enaj-logo'
 import { CloudBackground } from '@/components/cloud-background'
@@ -52,6 +52,7 @@ const STEPS: OnboardingStep[] = ['welcome', 'profile', 'ailments', 'preferences'
 export function Onboarding() {
   const { setProfile, setCurrentStep, ailmentCategories, preferenceCategories, saveProfileWithClerk } = useEnaj()
   const { isSignedIn, userId } = useAuth()
+  const { user: clerkUser } = useUser() 
   const [step, setStep] = useState<OnboardingStep>('welcome')
   const [location, setLocation] = useState('')
   const [age, setAge] = useState('')
@@ -184,9 +185,9 @@ export function Onboarding() {
         }))
 
       setProfile({
-        firstName: '', // Will be fetched from Clerk
-        lastName: '',
-        email: '',
+        firstName: clerkUser?.firstName || '',
+        lastName: clerkUser?.lastName || '',
+        email: clerkUser?.primaryEmailAddress?.emailAddress || '',
         location,
         age,
         gender,
