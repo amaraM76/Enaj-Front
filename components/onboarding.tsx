@@ -50,7 +50,7 @@ const PERIMENOPAUSE_ID = 'perimenopause'
 const STEPS: OnboardingStep[] = ['welcome', 'profile', 'ailments', 'preferences', 'review', 'extension']
 
 export function Onboarding() {
-  const { setProfile, setCurrentStep, ailmentCategories, preferenceCategories, saveProfileWithClerk } = useEnaj()
+  const { setProfile, setCurrentStep, ailmentCategories, preferenceCategories } = useEnaj()
   const { isSignedIn, userId } = useAuth()
   const { user: clerkUser } = useUser() 
   const [step, setStep] = useState<OnboardingStep>('welcome')
@@ -132,50 +132,41 @@ export function Onboarding() {
     )
   }
 
-  const saveProfile = async () => {
+  const saveProfile = async (): Promise<boolean> => {
     if (!userId) {
       setSaveError('Please sign in first')
-      return
+      return false
     }
-    
+  
     setSaving(true)
     setSaveError('')
+  
     try {
-      console.log('=== SAVING PROFILE ===')
-      console.log('userId:', userId)
-      console.log('location:', location)
-      console.log('age:', age)
-      console.log('gender:', gender)
-      console.log('shoppingStores:', shoppingStores)
-      // 1. Save profile data using Clerk userId
-      await saveProfileWithClerk(userId, {
+      await api.updateProfile(userId, {
         location: location || undefined,
         age: age ? Number(age) : undefined,
         gender: gender || undefined,
         shoppingStores: shoppingStores || undefined,
       })
-      console.log('=== PROFILE SAVED ===')
-
-
-      // 2. Save ailments
+  
       await api.saveUserAilments(
         userId,
         Array.from(selectedAilmentIds),
         customHealthCondition.trim() || undefined
       )
-
-      // 3. Build and save preferences
+  
       const prefsArray: { preferenceSlug?: string; source: string; customEntry?: string }[] =
         Array.from(selectedPreferenceIds).map((id) => ({
           preferenceSlug: id,
           source: 'SELECTED',
         }))
+  
       if (customPreference.trim()) {
         prefsArray.push({ customEntry: customPreference.trim(), source: 'CUSTOM' })
       }
+  
       await api.saveUserPreferences(userId, prefsArray)
-
-      // 4. Set local profile
+  
       const allAilments = ailmentCategories.flatMap((c) => c.ailments)
       const selectedAilments = allAilments
         .filter((a) => selectedAilmentIds.has(a.id))
@@ -183,7 +174,7 @@ export function Onboarding() {
           ailment,
           activeIngredients: [...ailment.flaggedIngredients],
         }))
-
+  
       setProfile({
         firstName: clerkUser?.firstName || '',
         lastName: clerkUser?.lastName || '',
@@ -198,18 +189,19 @@ export function Onboarding() {
         customHealthCondition: customHealthCondition.trim() || undefined,
         customPreference: customPreference.trim() || undefined,
       })
+  
       setProfileSaved(true)
+      return true
     } catch (err) {
       setSaveError(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
+      return false
     } finally {
       setSaving(false)
     }
   }
 
-  const handleCompleteReview = async () => {
-    await saveProfile()
-    if (!saveError) goNext()
-  }
+
+
   
   const handleProfileNext = async () => {
     if (!isProfileValid()) return
@@ -220,7 +212,7 @@ export function Onboarding() {
     setSaving(true)
     setSaveError('')
     try {
-      await saveProfileWithClerk(userId, {
+      await api.updateProfile(userId, {
         location: location || undefined,
         age: age ? Number(age) : undefined,
         gender: gender || undefined,
@@ -234,9 +226,14 @@ export function Onboarding() {
     }
   }
 
+  const handleCompleteReview = async () => {
+    const ok = await saveProfile()
+    if (ok) goNext()
+  }
+
   const handleFinish = async () => {
-    if (!profileSaved) await saveProfile()
-    if (!saveError) setCurrentStep('dashboard')
+    const ok = profileSaved ? true : await saveProfile()
+    if (ok) setCurrentStep('dashboard')
   }
 
   const goNext = () => {
