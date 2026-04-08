@@ -95,15 +95,14 @@ export function EnajProvider({ children }: { children: ReactNode }) {
   }, [clerkUser])
 
   const saveProfileWithClerk = useCallback(async (userId: string, data: Record<string, unknown>) => {
-    const response = await fetch('/api/auth/clerk-sync', {
-      method: 'POST',
+    const response = await fetch(`${API_URL}/api/users/${userId}/profile`, {
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        clerkId: userId,
+        ...data,
         email: clerkUser?.primaryEmailAddress?.emailAddress,
         firstName: clerkUser?.firstName,
         lastName: clerkUser?.lastName,
-        ...data,
       }),
     })
   
@@ -112,6 +111,7 @@ export function EnajProvider({ children }: { children: ReactNode }) {
       throw new Error((error as { message?: string }).message || 'Failed to save profile')
     }
   }, [clerkUser])
+
 
   // ── Fetch catalog data on mount ──────────────────────────────────────────
   useEffect(() => {
