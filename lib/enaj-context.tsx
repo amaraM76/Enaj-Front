@@ -48,6 +48,8 @@ interface EnajContextType {
   unsaveProduct: (productId: string) => void
   isProductSaved: (productId: string) => boolean
   refreshSavedProducts: () => Promise<void>
+  profileLoaded: boolean
+
 }
 
 const EnajContext = createContext<EnajContextType | null>(null)
@@ -170,11 +172,10 @@ export function EnajProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!isClerkLoaded) return
     if (!isSignedIn || !clerkUserId) return
+    if (!clerkUser) return  // ← add this
     if (profileLoaded) return
-  
+
     const initializeUser = async () => {
-      if (!clerkUser) return
-      
       const userProfile = await fetchUserProfile(clerkUserId)
       setProfileLoaded(true)
       
@@ -195,7 +196,7 @@ export function EnajProvider({ children }: { children: ReactNode }) {
       }
     }
     initializeUser()
-  }, [isClerkLoaded, isSignedIn, clerkUserId, profileLoaded, fetchUserProfile, createUserInBackend, clerkUser])
+  }, [isClerkLoaded, isSignedIn, clerkUserId, clerkUser, profileLoaded, fetchUserProfile, createUserInBackend])
 
   const logout = useCallback(() => {
     setProfileState(null)
@@ -378,6 +379,7 @@ export function EnajProvider({ children }: { children: ReactNode }) {
         unsaveProduct,
         isProductSaved,
         refreshSavedProducts,
+        profileLoaded,
       }}
     >
       {children}
