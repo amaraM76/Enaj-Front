@@ -933,14 +933,14 @@ export function Onboarding() {
                 )}
               </Button>
             ) : (
-              <Button
-                onClick={goNext}
-                disabled={step === 'profile' && !isProfileValid()}
-                className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 px-6"
-              >
-                Continue
-                <ArrowRight className="h-4 w-4" />
-              </Button>
+            <Button
+              onClick={step === 'profile' ? handleCompleteReview : goNext}
+              disabled={step === 'profile' && !isProfileValid()}
+              className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 px-6"
+            >
+              Continue
+              <ArrowRight className="h-4 w-4" />
+            </Button>
             )}
           </div>
         </footer>
