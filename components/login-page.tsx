@@ -15,11 +15,19 @@ export function LoginPage() {
   // When user signs in via Clerk, fetch their profile and go to dashboard
   useEffect(() => {
     if (isSignedIn && userId) {
-      fetchUserProfile(userId).then(async (hasProfile) => {
-        if (hasProfile) {
-          setCurrentStep('dashboard')
+      fetchUserProfile(userId).then(async (userProfile) => {
+        if (userProfile) {
+          const hasCompletedOnboarding = (
+            (userProfile.selectedAilments && userProfile.selectedAilments.length > 0) ||
+            (userProfile.selectedPreferences && userProfile.selectedPreferences.length > 0)
+          )
+          
+          if (hasCompletedOnboarding) {
+            setCurrentStep('dashboard')
+          } else {
+            setCurrentStep('onboarding')
+          }
         } else {
-          // User signed in but no profile yet - create user and go to onboarding
           await createUserInBackend(userId)
           setCurrentStep('onboarding')
         }

@@ -36,7 +36,7 @@ interface EnajContextType {
   preferenceCategories: PreferenceCategory[]
   loading: boolean
   logout: () => void
-  fetchUserProfile: (clerkUserId: string) => Promise<boolean>
+  fetchUserProfile: (clerkUserId: string) => Promise<UserProfile | null>
   createUserInBackend: (clerkUserId: string) => Promise<boolean>
   saveProfileWithClerk: (clerkUserId: string, data: Record<string, unknown>) => Promise<void>
   addAilment: (ailment: Ailment) => void
@@ -66,10 +66,10 @@ export function EnajProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   // Fetch user profile from our backend using Clerk userId
-  const fetchUserProfile = useCallback(async (userId: string): Promise<boolean> => {
+  const fetchUserProfile = useCallback(async (userId: string): Promise<UserProfile | null> => {
     try {
       const { user } = await api.getUser(userId)
-      setProfileState({
+      const profileData = {
         firstName: user.firstName ?? clerkUser?.firstName ?? '',
         lastName: user.lastName ?? clerkUser?.lastName ?? '',
         email: user.email ?? clerkUser?.primaryEmailAddress?.emailAddress ?? '',
@@ -84,12 +84,11 @@ export function EnajProvider({ children }: { children: ReactNode }) {
         savedProducts: user.savedProducts ?? [],
         customHealthCondition: undefined,
         customPreference: undefined,
-      })
-      const isComplete = !!(user.location && user.age && user.gender && user.shoppingStores)
-      return isComplete
+      }
+      setProfileState(profileData)
+      return profileData
     } catch {
-      // User doesn't exist in our database yet
-      return false
+      return null
     }
   }, [clerkUser])
 
@@ -176,11 +175,19 @@ export function EnajProvider({ children }: { children: ReactNode }) {
     const initializeUser = async () => {
       if (!clerkUser) return
       
-      const hasProfile = await fetchUserProfile(clerkUserId)
+      const userProfile = await fetchUserProfile(clerkUserId)
       setProfileLoaded(true)
       
-      if (hasProfile) {
-        setCurrentStep('dashboard')
+      if (userProfile) {
+        const hasCompletedOnboarding = (
+          (userProfile.selectedAilments && userProfile.selectedAilments.length > 0) ||
+          (userProfile.selectedPreferences && userProfile.selectedPreferences.length > 0)
+        )
+        if (hasCompletedOnboarding) {
+          setCurrentStep('dashboard')
+        } else {
+          setCurrentStep('onboarding')
+        }
       } else {
         await createUserInBackend(clerkUserId)
         await fetchUserProfile(clerkUserId)
