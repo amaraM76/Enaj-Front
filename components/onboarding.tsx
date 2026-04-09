@@ -148,17 +148,12 @@ export function Onboarding() {
     setSaveError('')
   
     try {
-      const profileRes = await fetch(`/api/users/${userId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          location: location || undefined,
-          age: age ? Number(age) : undefined,
-          gender: gender || undefined,
-          shoppingStores: shoppingStores || undefined,
-        }),
+      await api.updateProfile(userId, {
+        location: location || undefined,
+        age: age ? Number(age) : undefined,
+        gender: gender || undefined,
+        shoppingStores: shoppingStores || undefined,
       })
-      if (!profileRes.ok) throw new Error('Failed to save profile')
 
       await api.saveUserAilments(
         userId,
@@ -224,17 +219,12 @@ export function Onboarding() {
     setSaving(true)
     setSaveError('')
     try {
-      const profileRes = await fetch(`/api/users/${userId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          location: location || undefined,
-          age: age ? Number(age) : undefined,
-          gender: gender || undefined,
-          shoppingStores: shoppingStores || undefined,
-        }),
+      await api.updateProfile(userId, {
+        location: location || undefined,
+        age: age ? Number(age) : undefined,
+        gender: gender || undefined,
+        shoppingStores: shoppingStores || undefined,
       })
-      if (!profileRes.ok) throw new Error('Failed to save profile')
 
       goNext()
     } catch (err) {
