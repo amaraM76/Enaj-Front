@@ -67,7 +67,11 @@ export function ProfileSettings() {
 
     // Persist to backend
     if (clerkUserId) {
-      api.updateProfile(clerkUserId, updatedFields).catch(() => {})
+      fetch(`/api/users/${clerkUserId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedFields),
+      }).catch(() => {})
     }
   }
 
