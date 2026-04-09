@@ -179,7 +179,7 @@ export const api = {
     userId: string,
     fields: Partial<Omit<UserProfile, 'id'>>
   ): Promise<UpdateProfileResponse> {
-    return request<UpdateProfileResponse>(`/api/users/${userId}/profile`, {
+    return request<UpdateProfileResponse>(`/api/users/${userId}`, {
       method: 'PUT',
       body: fields,
     })
