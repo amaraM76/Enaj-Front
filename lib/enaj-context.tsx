@@ -196,8 +196,14 @@ export function EnajProvider({ children }: { children: ReactNode }) {
       
       if (userProfile) {
         const hasCompletedOnboarding = (
-          (userProfile.selectedAilments && userProfile.selectedAilments.length > 0) ||
-          (userProfile.selectedPreferences && userProfile.selectedPreferences.length > 0)
+          !!userProfile.location?.trim() &&
+          !!userProfile.age?.toString().trim() &&
+          !!userProfile.gender?.trim() &&
+          !!userProfile.shoppingStores?.trim() &&
+          (
+            (userProfile.selectedAilments && userProfile.selectedAilments.length > 0) ||
+            (userProfile.selectedPreferences && userProfile.selectedPreferences.length > 0)
+          )
         )
         console.log('hasCompletedOnboarding:', hasCompletedOnboarding)
         if (hasCompletedOnboarding) {

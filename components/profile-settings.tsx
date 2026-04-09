@@ -65,9 +65,13 @@ export function ProfileSettings() {
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
 
-    // Persist to backend
+    // Persist to backend via local Prisma route
     if (clerkUserId) {
-      api.updateProfile(clerkUserId, updatedFields).catch(() => {})
+      fetch(`/api/users/${clerkUserId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedFields),
+      }).catch(() => {})
     }
   }
 
