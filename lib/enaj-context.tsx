@@ -112,6 +112,8 @@ export function EnajProvider({ children }: { children: ReactNode }) {
     }
   }, [clerkUser])
 
+  
+
 
   // ── Fetch catalog data on mount ──────────────────────────────────────────
   useEffect(() => {
@@ -168,6 +170,11 @@ export function EnajProvider({ children }: { children: ReactNode }) {
   }, [clerkUser])
 
   const [profileLoaded, setProfileLoaded] = useState(false)
+  useEffect(() => {
+    setProfileLoaded(false)
+  }, [clerkUserId])
+
+
 
   useEffect(() => {
     console.log('AUTH EFFECT:', { isClerkLoaded, isSignedIn: !!isSignedIn, clerkUserId: !!clerkUserId, clerkUser: !!clerkUser, profileLoaded })

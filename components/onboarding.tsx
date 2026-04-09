@@ -76,6 +76,12 @@ export function Onboarding() {
   const currentStepIndex = STEPS.indexOf(step)
   const progress = ((currentStepIndex + 1) / STEPS.length) * 100
 
+  useEffect(() => {
+    if (isSignedIn && step === 'welcome') {
+      setStep('profile')
+    }
+  }, [isSignedIn])
+
   // When arriving at preferences step, auto-select linked preferences from selected ailments
   useEffect(() => {
     if (step === 'preferences' && !hasAutoSelected) {
