@@ -170,14 +170,14 @@ export function EnajProvider({ children }: { children: ReactNode }) {
   const [profileLoaded, setProfileLoaded] = useState(false)
 
   useEffect(() => {
+    console.log('AUTH EFFECT:', { isClerkLoaded, isSignedIn: !!isSignedIn, clerkUserId: !!clerkUserId, clerkUser: !!clerkUser, profileLoaded })
     if (!isClerkLoaded) return
     if (!isSignedIn || !clerkUserId) return
-    if (!clerkUser) return  // ← add this
+    if (!clerkUser) return
     if (profileLoaded) return
-
+    
+    console.log('CALLING initializeUser')
     const initializeUser = async () => {
-      console.log('=== initializeUser called ===')
-      console.log('clerkUserId:', clerkUserId)
       
       const userProfile = await fetchUserProfile(clerkUserId)
       console.log('=== fetchUserProfile returned ===')
