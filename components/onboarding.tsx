@@ -50,7 +50,7 @@ const PERIMENOPAUSE_ID = 'perimenopause'
 const STEPS: OnboardingStep[] = ['welcome', 'profile', 'ailments', 'preferences', 'review', 'extension']
 
 export function Onboarding() {
-  const { setProfile, setCurrentStep, ailmentCategories, preferenceCategories } = useEnaj()
+  const { setProfile, setCurrentStep, ailmentCategories, preferenceCategories, fetchUserProfile } = useEnaj()
   const { isSignedIn, userId } = useAuth()
   const { user: clerkUser } = useUser() 
   const [step, setStep] = useState<OnboardingStep>('welcome')
@@ -177,6 +177,7 @@ export function Onboarding() {
       }
   
       await api.saveUserPreferences(userId, prefsArray)
+      await fetchUserProfile(userId)
   
       const allAilments = ailmentCategories.flatMap((c) => c.ailments)
       const selectedAilments = allAilments

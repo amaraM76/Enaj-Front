@@ -95,9 +95,11 @@ export function EnajProvider({ children }: { children: ReactNode }) {
   }, [clerkUser])
 
   const saveProfileWithClerk = useCallback(async (userId: string, data: Record<string, unknown>) => {
-    const response = await fetch(`${API_URL}/api/users/${userId}/profile`, {
+    const response = await fetch(`/api/users/${userId}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
         ...data,
         email: clerkUser?.primaryEmailAddress?.emailAddress,
@@ -108,7 +110,9 @@ export function EnajProvider({ children }: { children: ReactNode }) {
   
     if (!response.ok) {
       const error = await response.json().catch(() => ({}))
-      throw new Error((error as { message?: string }).message || 'Failed to save profile')
+      throw new Error(
+        (error as { message?: string }).message || 'Failed to save profile'
+      )
     }
   }, [clerkUser])
 
@@ -195,19 +199,26 @@ export function EnajProvider({ children }: { children: ReactNode }) {
       setProfileLoaded(true)
       
       if (userProfile) {
-        const hasCompletedOnboarding = (
-          !!userProfile.location?.trim() &&
-          !!userProfile.age?.toString().trim() &&
-          !!userProfile.gender?.trim() &&
-          !!userProfile.shoppingStores?.trim() &&
-          (
-            (userProfile.selectedAilments && userProfile.selectedAilments.length > 0) ||
-            (userProfile.selectedPreferences && userProfile.selectedPreferences.length > 0)
-          )
+
+        const profileComplete =
+        !!userProfile.location?.trim() &&
+        !!userProfile.age?.toString().trim() &&
+        !!userProfile.gender?.trim() &&
+        !!userProfile.shoppingStores?.trim() &&
+        (
+          (userProfile.selectedAilments?.length ?? 0) > 0 ||
+          (userProfile.selectedPreferences?.length ?? 0) > 0
         )
       
-        console.log('hasCompletedOnboarding:', hasCompletedOnboarding)
-        if (hasCompletedOnboarding) {
+        console.log("PROFILE CHECK")
+        console.log("location:", userProfile.location)
+        console.log("age:", userProfile.age)
+        console.log("gender:", userProfile.gender)
+        console.log("shoppingStores:", userProfile.shoppingStores)
+        console.log("ailments:", userProfile.selectedAilments?.length)
+        console.log("preferences:", userProfile.selectedPreferences?.length)
+      
+        if (profileComplete) {
           setCurrentStep('dashboard')
         } else {
           setCurrentStep('onboarding')

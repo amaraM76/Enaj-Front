@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { Gender, Prisma } from '@prisma/client'
 
 function getCorsHeaders(request?: NextRequest) {
   const origin = request?.headers.get('origin') || '*'
@@ -35,21 +36,20 @@ export async function POST(request: NextRequest) {
     }
 
     // Build the profile data to update/create
-    const profileData: {
-      firstName?: string
-      lastName?: string
-      location?: string
-      age?: number
-      gender?: string
-      shoppingStores?: string
-    } = {}
+    const profileData: Prisma.UserProfileUpdateInput = {}
     
     if (firstName !== undefined) profileData.firstName = firstName
     if (lastName !== undefined) profileData.lastName = lastName
     if (location !== undefined) profileData.location = location
     if (age !== undefined) profileData.age = typeof age === 'number' ? age : parseInt(age, 10) || undefined
-    if (gender !== undefined) profileData.gender = gender
     if (shoppingStores !== undefined) profileData.shoppingStores = shoppingStores
+    
+    if (gender !== undefined) {
+      if (gender === 'female') profileData.gender = Gender.FEMALE
+      else if (gender === 'male') profileData.gender = Gender.MALE
+      else if (gender === 'prefer-not-to-say') profileData.gender = Gender.PREFER_NOT_TO_SAY
+      else profileData.gender = null
+    }
 
     // Check if user already exists by clerkId
     const existingAuth = await prisma.userAuth.findUnique({
@@ -93,7 +93,14 @@ export async function POST(request: NextRequest) {
         email,
         location: location || null,
         age: age ? (typeof age === 'number' ? age : parseInt(age, 10)) : null,
-        gender: gender || null,
+        gender:
+          gender === 'female'
+            ? Gender.FEMALE
+            : gender === 'male'
+            ? Gender.MALE
+            : gender === 'prefer-not-to-say'
+            ? Gender.PREFER_NOT_TO_SAY
+            : null,
         shoppingStores: shoppingStores || null,
         auth: {
           create: { clerkId },
