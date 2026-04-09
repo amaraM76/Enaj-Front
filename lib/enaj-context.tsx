@@ -176,7 +176,15 @@ export function EnajProvider({ children }: { children: ReactNode }) {
     if (profileLoaded) return
 
     const initializeUser = async () => {
+      console.log('=== initializeUser called ===')
+      console.log('clerkUserId:', clerkUserId)
+      
       const userProfile = await fetchUserProfile(clerkUserId)
+      console.log('=== fetchUserProfile returned ===')
+      console.log('userProfile:', JSON.stringify(userProfile))
+      console.log('selectedAilments:', userProfile?.selectedAilments)
+      console.log('selectedPreferences:', userProfile?.selectedPreferences)
+      
       setProfileLoaded(true)
       
       if (userProfile) {
@@ -184,12 +192,14 @@ export function EnajProvider({ children }: { children: ReactNode }) {
           (userProfile.selectedAilments && userProfile.selectedAilments.length > 0) ||
           (userProfile.selectedPreferences && userProfile.selectedPreferences.length > 0)
         )
+        console.log('hasCompletedOnboarding:', hasCompletedOnboarding)
         if (hasCompletedOnboarding) {
           setCurrentStep('dashboard')
         } else {
           setCurrentStep('onboarding')
         }
       } else {
+        console.log('no user profile found, creating...')
         await createUserInBackend(clerkUserId)
         await fetchUserProfile(clerkUserId)
         setCurrentStep('onboarding')
