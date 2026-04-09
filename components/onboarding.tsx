@@ -80,7 +80,7 @@ export function Onboarding() {
     if (isSignedIn && step === 'welcome') {
       setStep('profile')
     }
-  }, [isSignedIn])
+  }, [isSignedIn, step])
 
   // When arriving at preferences step, auto-select linked preferences from selected ailments
   useEffect(() => {
