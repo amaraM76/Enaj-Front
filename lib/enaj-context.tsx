@@ -202,7 +202,7 @@ export function EnajProvider({ children }: { children: ReactNode }) {
 
         const profileComplete =
         !!userProfile.location?.trim() &&
-        !!userProfile.age?.toString().trim() &&
+        userProfile.age !== '' && userProfile.age !== '0'
         !!userProfile.gender?.trim() &&
         !!userProfile.shoppingStores?.trim() &&
         (
