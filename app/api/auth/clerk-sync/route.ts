@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { Gender, Prisma } from '@prisma/client'
+
 
 function getCorsHeaders(request?: NextRequest) {
   const origin = request?.headers.get('origin') || '*'
@@ -26,29 +26,13 @@ export async function OPTIONS(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const headers = getCorsHeaders(request)
   try {
-    const { clerkId, firstName, lastName, email, location, age, gender, shoppingStores } = await request.json()
+    const { clerkId, firstName, lastName, email } = await request.json()
 
     if (!clerkId || !email) {
       return NextResponse.json(
         { error: 'clerkId and email are required' },
         { status: 400, headers }
       )
-    }
-
-    // Build the profile data to update/create
-    const profileData: Prisma.UserProfileUpdateInput = {}
-    
-    if (firstName !== undefined) profileData.firstName = firstName
-    if (lastName !== undefined) profileData.lastName = lastName
-    if (location !== undefined) profileData.location = location
-    if (age !== undefined) profileData.age = typeof age === 'number' ? age : parseInt(age, 10) || undefined
-    if (shoppingStores !== undefined) profileData.shoppingStores = shoppingStores
-    
-    if (gender !== undefined) {
-      if (gender === 'female') profileData.gender = Gender.FEMALE
-      else if (gender === 'male') profileData.gender = Gender.MALE
-      else if (gender === 'prefer-not-to-say') profileData.gender = Gender.PREFER_NOT_TO_SAY
-      else profileData.gender = null
     }
 
     // Check if user already exists by clerkId
@@ -58,12 +42,7 @@ export async function POST(request: NextRequest) {
     })
 
     if (existingAuth) {
-      // Update existing user's profile with new data
-      const updatedUser = await prisma.userProfile.update({
-        where: { id: existingAuth.user.id },
-        data: profileData,
-      })
-      return NextResponse.json({ user: updatedUser }, { headers })
+      return NextResponse.json({ user: existingAuth.user }, { headers })
     }
 
     // Check if user exists by email
@@ -72,36 +51,21 @@ export async function POST(request: NextRequest) {
     })
 
     if (existingProfile) {
-      // Link clerkId to existing profile and update profile data
+      // Link clerkId to existing profile
       await prisma.userAuth.upsert({
         where: { userId: existingProfile.id },
         update: { clerkId },
         create: { userId: existingProfile.id, clerkId },
       })
-      const updatedUser = await prisma.userProfile.update({
-        where: { id: existingProfile.id },
-        data: profileData,
-      })
-      return NextResponse.json({ user: updatedUser }, { headers })
+      return NextResponse.json({ user: existingProfile }, { headers })
     }
 
-    // Create new user with all profile data
+    // Create new user with Clerk identity fields only
     const newProfile = await prisma.userProfile.create({
       data: {
         firstName: firstName || '',
         lastName: lastName || '',
         email,
-        location: location || null,
-        age: age ? (typeof age === 'number' ? age : parseInt(age, 10)) : null,
-        gender:
-          gender === 'female'
-            ? Gender.FEMALE
-            : gender === 'male'
-            ? Gender.MALE
-            : gender === 'prefer-not-to-say'
-            ? Gender.PREFER_NOT_TO_SAY
-            : null,
-        shoppingStores: shoppingStores || null,
         auth: {
           create: { clerkId },
         },

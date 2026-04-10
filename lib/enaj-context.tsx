@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react'
+import { createContext, useContext, useState, useRef, useCallback, useEffect, type ReactNode } from 'react'
 import { useAuth, useUser } from '@clerk/nextjs'
 import type { Ailment, AilmentCategory, FlaggedIngredient, PreferenceCategory, Product } from './enaj-data'
 import { api } from './api'
@@ -63,6 +63,8 @@ export function EnajProvider({ children }: { children: ReactNode }) {
   const { user: clerkUser } = useUser()
   const [profile, setProfileState] = useState<UserProfile | null>(null)
   const [currentStep, setCurrentStep] = useState<'landing' | 'login' | 'onboarding' | 'dashboard'>('landing')
+  const currentStepRef = useRef(currentStep)
+  useEffect(() => { currentStepRef.current = currentStep }, [currentStep])
   const [ailmentCategories, setAilmentCategories] = useState<AilmentCategory[]>([])
   const [preferenceCategories, setPreferenceCategories] = useState<PreferenceCategory[]>([])
   const [loading, setLoading] = useState(true)
@@ -181,50 +183,33 @@ export function EnajProvider({ children }: { children: ReactNode }) {
 
 
   useEffect(() => {
-    console.log('AUTH EFFECT:', { isClerkLoaded, isSignedIn: !!isSignedIn, clerkUserId: !!clerkUserId, clerkUser: !!clerkUser, profileLoaded })
     if (!isClerkLoaded) return
     if (!isSignedIn || !clerkUserId) return
     if (!clerkUser) return
     if (profileLoaded) return
-    
-    console.log('CALLING initializeUser')
     const initializeUser = async () => {
-      
+      const comingFromSignup = currentStepRef.current === 'onboarding'
       const userProfile = await fetchUserProfile(clerkUserId)
-      console.log('=== fetchUserProfile returned ===')
-      console.log('userProfile:', JSON.stringify(userProfile))
-      console.log('selectedAilments:', userProfile?.selectedAilments)
-      console.log('selectedPreferences:', userProfile?.selectedPreferences)
-      
-      setProfileLoaded(true)
-      
-      if (userProfile) {
 
+      setProfileLoaded(true)
+
+      if (userProfile) {
         const profileComplete =
-        !!userProfile.location?.trim() &&
-        userProfile.age !== '' && userProfile.age !== '0'
-        !!userProfile.gender?.trim() &&
-        !!userProfile.shoppingStores?.trim() &&
-        (
-          (userProfile.selectedAilments?.length ?? 0) > 0 ||
-          (userProfile.selectedPreferences?.length ?? 0) > 0
-        )
-      
-        console.log("PROFILE CHECK")
-        console.log("location:", userProfile.location)
-        console.log("age:", userProfile.age)
-        console.log("gender:", userProfile.gender)
-        console.log("shoppingStores:", userProfile.shoppingStores)
-        console.log("ailments:", userProfile.selectedAilments?.length)
-        console.log("preferences:", userProfile.selectedPreferences?.length)
-      
-        if (profileComplete) {
+          !!userProfile.location?.trim() &&
+          userProfile.age !== '' && userProfile.age !== '0' &&
+          !!userProfile.gender?.trim() &&
+          !!userProfile.shoppingStores?.trim() &&
+          (
+            (userProfile.selectedAilments?.length ?? 0) > 0 ||
+            (userProfile.selectedPreferences?.length ?? 0) > 0
+          )
+
+        if (profileComplete && !comingFromSignup) {
           setCurrentStep('dashboard')
         } else {
           setCurrentStep('onboarding')
         }
       } else {
-        console.log('no user profile found, creating...')
         await createUserInBackend(clerkUserId)
         await fetchUserProfile(clerkUserId)
         setCurrentStep('onboarding')
