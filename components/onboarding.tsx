@@ -25,7 +25,7 @@ import {
   Check,
   Heart,
   Leaf,
-
+  Shield,
   User,
   Sparkles,
   Download,
@@ -72,6 +72,8 @@ export function Onboarding() {
   const [endocrineInfoId, setEndocrineInfoId] = useState<string | null>(null)
   const [menopauseConflict, setMenopauseConflict] = useState(false)
   const [categoryInfoId, setCategoryInfoId] = useState<string | null>(null)
+  const [enajBaselineEnabled, setEnajBaselineEnabled] = useState(false)
+  const [showBaselineInfo, setShowBaselineInfo] = useState(false)
 
   const currentStepIndex = STEPS.indexOf(step)
   const progress = ((currentStepIndex + 1) / STEPS.length) * 100
@@ -156,12 +158,16 @@ export function Onboarding() {
         customHealthCondition.trim() || undefined
       )
 
-      // 3. Build and save preferences
+      // 3. Build and save preferences (including baseline if enabled)
       const prefsArray: { preferenceSlug?: string; source: string; customEntry?: string }[] =
         Array.from(selectedPreferenceIds).map((id) => ({
           preferenceSlug: id,
           source: 'SELECTED',
         }))
+      // Add Enaj Non-Toxic Baseline as a special preference
+      if (enajBaselineEnabled) {
+        prefsArray.push({ preferenceSlug: 'enaj-nontoxic-baseline', source: 'BASELINE' })
+      }
       if (customPreference.trim()) {
         prefsArray.push({ customEntry: customPreference.trim(), source: 'CUSTOM' })
       }
@@ -176,6 +182,12 @@ export function Onboarding() {
           activeIngredients: [...ailment.flaggedIngredients],
         }))
 
+      // Include baseline in selectedPreferences if enabled
+      const finalPreferences = Array.from(selectedPreferenceIds)
+      if (enajBaselineEnabled) {
+        finalPreferences.push('enaj-nontoxic-baseline')
+      }
+
       setProfile({
         firstName: clerkUser?.firstName || '',
         lastName: clerkUser?.lastName || '',
@@ -185,7 +197,7 @@ export function Onboarding() {
         gender,
         shoppingStores,
         selectedAilments,
-        selectedPreferences: Array.from(selectedPreferenceIds),
+        selectedPreferences: finalPreferences,
         savedProducts: [],
         customHealthCondition: customHealthCondition.trim() || undefined,
         customPreference: customPreference.trim() || undefined,
@@ -526,6 +538,92 @@ export function Onboarding() {
                   <p className="text-sm text-muted-foreground">
                     Choose ingredients and factors you want to avoid.
                   </p>
+                </div>
+              </div>
+
+              {/* Enaj Non-Toxic Baseline Section */}
+              <div className="mb-6 rounded-xl border-2 border-primary/30 bg-gradient-to-br from-primary/5 to-secondary/10 p-5">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10">
+                    <Shield className="h-6 w-6 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <h3 className="font-semibold text-foreground">Enaj Non-Toxic Baseline</h3>
+                      <button
+                        onClick={() => setShowBaselineInfo(!showBaselineInfo)}
+                        className="flex h-5 w-5 items-center justify-center rounded-full border border-border text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                        aria-label="Learn more about Enaj Non-Toxic Baseline"
+                      >
+                        <HelpCircle className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Not sure what to avoid? Enable this option and we{"'"}ll monitor your products for commonly flagged toxic ingredients based on trusted health research.
+                    </p>
+                    
+                    {showBaselineInfo && (
+                      <div className="mb-4 rounded-lg border border-border bg-card p-4">
+                        <div className="flex items-start justify-between gap-2 mb-2">
+                          <p className="text-sm font-medium text-foreground">What we monitor:</p>
+                          <button
+                            onClick={() => setShowBaselineInfo(false)}
+                            className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                            aria-label="Close"
+                          >
+                            <X className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                        <ul className="text-sm text-muted-foreground space-y-1.5">
+                          <li className="flex items-start gap-2">
+                            <Check className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                            <span>Parabens - linked to hormone disruption</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <Check className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                            <span>Phthalates - associated with reproductive issues</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <Check className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                            <span>Formaldehyde & releasers - known carcinogens</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <Check className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                            <span>Sulfates (SLS/SLES) - skin irritants</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <Check className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                            <span>Synthetic fragrances - allergens & irritants</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <Check className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                            <span>And 20+ other commonly flagged ingredients</span>
+                          </li>
+                        </ul>
+                      </div>
+                    )}
+                    
+                    <button
+                      onClick={() => setEnajBaselineEnabled(!enajBaselineEnabled)}
+                      className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-all ${
+                        enajBaselineEnabled
+                          ? 'bg-primary text-primary-foreground shadow-md'
+                          : 'border-2 border-dashed border-primary/40 text-primary hover:border-primary hover:bg-primary/5'
+                      }`}
+                    >
+                      {enajBaselineEnabled ? (
+                        <>
+                          <Check className="h-4 w-4" />
+                          Baseline Protection Enabled
+                        </>
+                      ) : (
+                        <>
+                          <Shield className="h-4 w-4" />
+                          Enable Non-Toxic Baseline
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
 

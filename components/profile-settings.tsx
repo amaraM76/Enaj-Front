@@ -25,6 +25,9 @@ import {
   Download,
   ChevronRight,
   Chrome,
+  Shield,
+  HelpCircle,
+  X,
 } from 'lucide-react'
 
 export function ProfileSettings() {
@@ -39,6 +42,10 @@ export function ProfileSettings() {
   const [shoppingStores, setShoppingStores] = useState(profile?.shoppingStores || '')
   const [saved, setSaved] = useState(false)
   const [addAilmentOpen, setAddAilmentOpen] = useState(false)
+  const [showBaselineInfo, setShowBaselineInfo] = useState(false)
+  
+  // Check if baseline is enabled
+  const isBaselineEnabled = profile?.selectedPreferences.includes('enaj-nontoxic-baseline') ?? false
 
   if (!profile) return null
 
@@ -267,14 +274,102 @@ export function ProfileSettings() {
         )}
       </div>
 
+      {/* Enaj Non-Toxic Baseline */}
+      <div className="rounded-xl border-2 border-primary/30 bg-gradient-to-br from-primary/5 to-secondary/10 p-6">
+        <div className="flex items-start gap-4">
+          <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10">
+            <Shield className="h-6 w-6 text-primary" />
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-2">
+              <h2 className="text-lg font-semibold text-card-foreground">Enaj Non-Toxic Baseline</h2>
+              <button
+                onClick={() => setShowBaselineInfo(!showBaselineInfo)}
+                className="flex h-5 w-5 items-center justify-center rounded-full border border-border text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                aria-label="Learn more about Enaj Non-Toxic Baseline"
+              >
+                <HelpCircle className="h-3.5 w-3.5" />
+              </button>
+            </div>
+            <p className="text-sm text-muted-foreground mb-4">
+              {isBaselineEnabled 
+                ? "You're protected! We're monitoring your products for commonly flagged toxic ingredients."
+                : "Not sure what to avoid? Enable this and we'll monitor your products for commonly flagged toxic ingredients."}
+            </p>
+            
+            {showBaselineInfo && (
+              <div className="mb-4 rounded-lg border border-border bg-card p-4">
+                <div className="flex items-start justify-between gap-2 mb-2">
+                  <p className="text-sm font-medium text-foreground">What we monitor:</p>
+                  <button
+                    onClick={() => setShowBaselineInfo(false)}
+                    className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                    aria-label="Close"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+                <ul className="text-sm text-muted-foreground space-y-1.5">
+                  <li className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                    <span>Parabens - linked to hormone disruption</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                    <span>Phthalates - associated with reproductive issues</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                    <span>Formaldehyde & releasers - known carcinogens</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                    <span>Sulfates (SLS/SLES) - skin irritants</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                    <span>Synthetic fragrances - allergens & irritants</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                    <span>And 20+ other commonly flagged ingredients</span>
+                  </li>
+                </ul>
+              </div>
+            )}
+            
+            <button
+              onClick={() => togglePreference('enaj-nontoxic-baseline')}
+              className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-all ${
+                isBaselineEnabled
+                  ? 'bg-primary text-primary-foreground shadow-md'
+                  : 'border-2 border-dashed border-primary/40 text-primary hover:border-primary hover:bg-primary/5'
+              }`}
+            >
+              {isBaselineEnabled ? (
+                <>
+                  <Check className="h-4 w-4" />
+                  Baseline Protection Enabled
+                </>
+              ) : (
+                <>
+                  <Shield className="h-4 w-4" />
+                  Enable Non-Toxic Baseline
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Preferences Summary */}
       <div className="rounded-xl border border-border bg-card p-6">
         <h2 className="mb-4 text-lg font-semibold text-card-foreground flex items-center gap-2">
           <Leaf className="h-5 w-5 text-accent-foreground" />
-          Active Preferences ({profile.selectedPreferences.length})
+          Active Preferences ({profile.selectedPreferences.filter(p => p !== 'enaj-nontoxic-baseline').length})
         </h2>
 
-        {profile.selectedPreferences.length === 0 ? (
+        {profile.selectedPreferences.filter(p => p !== 'enaj-nontoxic-baseline').length === 0 ? (
           <p className="text-sm text-muted-foreground">
             No preferences set. Add preferences to filter products by your
             lifestyle choices.
@@ -282,7 +377,7 @@ export function ProfileSettings() {
         ) : (
           <div className="flex flex-wrap gap-2">
             {preferenceCategories.flatMap((c) => c.preferences)
-              .filter((p) => profile.selectedPreferences.includes(p.id))
+              .filter((p) => profile.selectedPreferences.includes(p.id) && p.id !== 'enaj-nontoxic-baseline')
               .map((p) => (
                 <button
                   key={p.id}
