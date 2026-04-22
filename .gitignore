@@ -1,7 +1,11 @@
+# v0 runtime files
+__v0_runtime_loader.js
+__v0_devtools.tsx
+__v0_jsx-dev-runtime.ts
 
-# clerk configuration (can include secrets)
-/.clerk/
-.env.local
+# Common ignores
 node_modules/
-.env
 .next/
+.env*.local
+.DS_Store
+.vercel

@@ -1,39 +1,41 @@
 'use client'
 
-// import { useEffect } from 'react'
-import { useAuth } from '@clerk/nextjs'
+import { useEffect } from 'react'
+import { SignIn, useAuth } from '@clerk/nextjs'
 import { useEnaj } from '@/lib/enaj-context'
 import { EnajLogo } from '@/components/enaj-logo'
 import { CloudBackground } from '@/components/cloud-background'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
-import { SignIn } from '@clerk/nextjs'
 
 export function LoginPage() {
-  const { setCurrentStep } = useEnaj()
+  const { setCurrentStep, fetchUserProfile, createUserInBackend } = useEnaj()
+  const { isSignedIn, userId } = useAuth()
 
-  // // When user signs in via Clerk, fetch their profile and go to dashboard
-  // useEffect(() => {
-  //   if (isSignedIn && userId) {
-  //     fetchUserProfile(userId).then(async (userProfile) => {
-  //       if (userProfile) {
-  //         const hasCompletedOnboarding = (
-  //           (userProfile.selectedAilments && userProfile.selectedAilments.length > 0) ||
-  //           (userProfile.selectedPreferences && userProfile.selectedPreferences.length > 0)
-  //         )
+  // When user signs in via Clerk, fetch their profile and go to dashboard or onboarding
+  useEffect(() => {
+    if (isSignedIn && userId) {
+      fetchUserProfile(userId).then(async (userProfile) => {
+        if (userProfile) {
+          // Check if user completed onboarding (has ailments or preferences)
+          const hasCompletedOnboarding = (
+            (userProfile.selectedAilments && userProfile.selectedAilments.length > 0) ||
+            (userProfile.selectedPreferences && userProfile.selectedPreferences.length > 0)
+          )
           
-  //         if (hasCompletedOnboarding) {
-  //           setCurrentStep('dashboard')
-  //         } else {
-  //           setCurrentStep('onboarding')
-  //         }
-  //       } else {
-  //         await createUserInBackend(userId)
-  //         setCurrentStep('onboarding')
-  //       }
-  //     })
-  //   }
-  // }, [isSignedIn, userId, fetchUserProfile, createUserInBackend, setCurrentStep])
+          if (hasCompletedOnboarding) {
+            setCurrentStep('dashboard')
+          } else {
+            setCurrentStep('onboarding')
+          }
+        } else {
+          // User signed in but no profile yet - create user and go to onboarding
+          await createUserInBackend(userId)
+          setCurrentStep('onboarding')
+        }
+      })
+    }
+  }, [isSignedIn, userId, fetchUserProfile, createUserInBackend, setCurrentStep])
 
   return (
     <div className="relative min-h-screen bg-background overflow-hidden">

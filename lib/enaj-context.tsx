@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, useRef, useCallback, useEffect, type ReactNode } from 'react'
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react'
 import { useAuth, useUser } from '@clerk/nextjs'
 import type { Ailment, AilmentCategory, FlaggedIngredient, PreferenceCategory, Product } from './enaj-data'
 import { api } from './api'
@@ -48,8 +48,6 @@ interface EnajContextType {
   unsaveProduct: (productId: string) => void
   isProductSaved: (productId: string) => boolean
   refreshSavedProducts: () => Promise<void>
-  profileLoaded: boolean
-
 }
 
 const EnajContext = createContext<EnajContextType | null>(null)
@@ -63,17 +61,16 @@ export function EnajProvider({ children }: { children: ReactNode }) {
   const { user: clerkUser } = useUser()
   const [profile, setProfileState] = useState<UserProfile | null>(null)
   const [currentStep, setCurrentStep] = useState<'landing' | 'login' | 'onboarding' | 'dashboard'>('landing')
-  const currentStepRef = useRef(currentStep)
-  useEffect(() => { currentStepRef.current = currentStep }, [currentStep])
   const [ailmentCategories, setAilmentCategories] = useState<AilmentCategory[]>([])
   const [preferenceCategories, setPreferenceCategories] = useState<PreferenceCategory[]>([])
   const [loading, setLoading] = useState(true)
 
   // Fetch user profile from our backend using Clerk userId
+  // Returns the user profile if found, null if not found
   const fetchUserProfile = useCallback(async (userId: string): Promise<UserProfile | null> => {
     try {
       const { user } = await api.getUser(userId)
-      const profileData = {
+      const userProfile: UserProfile = {
         firstName: user.firstName ?? clerkUser?.firstName ?? '',
         lastName: user.lastName ?? clerkUser?.lastName ?? '',
         email: user.email ?? clerkUser?.primaryEmailAddress?.emailAddress ?? '',
@@ -89,37 +86,36 @@ export function EnajProvider({ children }: { children: ReactNode }) {
         customHealthCondition: undefined,
         customPreference: undefined,
       }
-      setProfileState(profileData)
-      return profileData
+      setProfileState(userProfile)
+      return userProfile
     } catch {
+      // User doesn't exist in our database yet
       return null
     }
   }, [clerkUser])
 
+  // Save profile data for Clerk user (uses local API proxy to avoid CORS)
   const saveProfileWithClerk = useCallback(async (userId: string, data: Record<string, unknown>) => {
-    const response = await fetch(`/api/users/${userId}`, {
-      method: 'PUT',
+    // Use local API route to avoid CORS issues
+    const response = await fetch('/api/auth/clerk-sync', {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        ...data,
+        clerkId: userId,
         email: clerkUser?.primaryEmailAddress?.emailAddress,
         firstName: clerkUser?.firstName,
         lastName: clerkUser?.lastName,
+        ...data,
       }),
     })
-  
+
     if (!response.ok) {
       const error = await response.json().catch(() => ({}))
-      throw new Error(
-        (error as { message?: string }).message || 'Failed to save profile'
-      )
+      throw new Error((error as { message?: string }).message || 'Failed to save profile')
     }
   }, [clerkUser])
-
-  
-
 
   // ── Fetch catalog data on mount ──────────────────────────────────────────
   useEffect(() => {
@@ -160,8 +156,8 @@ export function EnajProvider({ children }: { children: ReactNode }) {
         body: JSON.stringify({
           clerkId: userId,
           email: clerkUser.primaryEmailAddress?.emailAddress || '',
-          firstName: clerkUser.firstName || clerkUser.fullName?.split(' ')[0] || '',
-          lastName: clerkUser.lastName || clerkUser.fullName?.split(' ').slice(1).join(' ') || '',
+          firstName: clerkUser.firstName || '',
+          lastName: clerkUser.lastName || '',
         }),
       })
 
@@ -175,53 +171,69 @@ export function EnajProvider({ children }: { children: ReactNode }) {
     }
   }, [clerkUser])
 
-  const [profileLoaded, setProfileLoaded] = useState(false)
+  // ── Auto-fetch profile when Clerk user is signed in ──────────────────────
   useEffect(() => {
-    setProfileLoaded(false)
-  }, [clerkUserId])
-
-
-
-  useEffect(() => {
+    // Wait for Clerk to be fully loaded before checking auth state
     if (!isClerkLoaded) return
+    
+    // If not signed in and Clerk is loaded, stay on current step (landing)
     if (!isSignedIn || !clerkUserId) return
-    if (!clerkUser) return
-    if (profileLoaded) return
+    
+    // If already have a profile with completed onboarding, go to dashboard
+    if (profile) {
+      const hasCompletedOnboarding = (
+        (profile.selectedAilments && profile.selectedAilments.length > 0) ||
+        (profile.selectedPreferences && profile.selectedPreferences.length > 0)
+      )
+      if (hasCompletedOnboarding) {
+        setCurrentStep('dashboard')
+      } else {
+        setCurrentStep('onboarding')
+      }
+      return
+    }
+
     const initializeUser = async () => {
-      const comingFromSignup = currentStepRef.current === 'onboarding'
+      // Try to fetch existing user
       const userProfile = await fetchUserProfile(clerkUserId)
-
-      setProfileLoaded(true)
-
+      
       if (userProfile) {
-        const profileComplete =
-          !!userProfile.location?.trim() &&
-          userProfile.age !== '' && userProfile.age !== '0' &&
-          !!userProfile.gender?.trim() &&
-          !!userProfile.shoppingStores?.trim() &&
-          (
-            (userProfile.selectedAilments?.length ?? 0) > 0 ||
-            (userProfile.selectedPreferences?.length ?? 0) > 0
-          )
-
-        if (profileComplete && !comingFromSignup) {
+        // User exists in our database - check if they completed onboarding
+        // If they have selected ailments or preferences, they completed onboarding
+        const hasCompletedOnboarding = (
+          (userProfile.selectedAilments && userProfile.selectedAilments.length > 0) ||
+          (userProfile.selectedPreferences && userProfile.selectedPreferences.length > 0)
+        )
+        
+        if (hasCompletedOnboarding) {
           setCurrentStep('dashboard')
         } else {
+          // User exists but hasn't completed onboarding
           setCurrentStep('onboarding')
         }
       } else {
-        await createUserInBackend(clerkUserId)
-        await fetchUserProfile(clerkUserId)
-        setCurrentStep('onboarding')
+        // User doesn't exist in our database yet - create them
+        const created = await createUserInBackend(clerkUserId)
+        
+        if (created) {
+          // Successfully created - redirect to onboarding to complete profile
+          setCurrentStep('onboarding')
+        } else {
+          // Creation failed but don't show error - just go to onboarding
+          // The user can complete setup there
+          setCurrentStep('onboarding')
+        }
       }
     }
-    initializeUser()
-  }, [isClerkLoaded, isSignedIn, clerkUserId, clerkUser, profileLoaded, fetchUserProfile, createUserInBackend])
 
+    initializeUser()
+  }, [isClerkLoaded, isSignedIn, clerkUserId, profile, fetchUserProfile, createUserInBackend])
+
+  // ── Logout (Clerk handles the actual sign out) ────────────────��──────────
   const logout = useCallback(() => {
     setProfileState(null)
-    setProfileLoaded(false)
     setCurrentStep('landing')
+    // Note: Actual Clerk sign out should be called from the component using useClerk().signOut()
   }, [])
 
   const setProfile = useCallback((p: UserProfile) => {
@@ -399,7 +411,6 @@ export function EnajProvider({ children }: { children: ReactNode }) {
         unsaveProduct,
         isProductSaved,
         refreshSavedProducts,
-        profileLoaded,
       }}
     >
       {children}

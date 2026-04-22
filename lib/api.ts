@@ -78,16 +78,16 @@ export interface LoginResponse {
 
 export interface UserProfile {
   id: string
+  username: string
   firstName: string
   lastName: string
   email: string
   location?: string
-  age?: number | string
+  age?: number
   gender?: string
-  shoppingStores?: string | string[]
-  selectedAilments?: any[]
-  selectedPreferences?: string[]
-  savedProducts?: any[]
+  shoppingStores?: string[]
+  ailments?: string[]
+  preferences?: string[]
 }
 
 export interface GetUserResponse {
@@ -179,7 +179,7 @@ export const api = {
     userId: string,
     fields: Partial<Omit<UserProfile, 'id'>>
   ): Promise<UpdateProfileResponse> {
-    return request<UpdateProfileResponse>(`/api/users/${userId}`, {
+    return request<UpdateProfileResponse>(`/api/users/${userId}/profile`, {
       method: 'PUT',
       body: fields,
     })

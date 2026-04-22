@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { Gender, Prisma } from '@prisma/client'
 
 function getCorsHeaders(request?: NextRequest) {
   const origin = request?.headers.get('origin') || '*'
@@ -107,36 +106,17 @@ export async function PUT(
       dbUserId = authRecord.userId
     }
 
-    const updateData: Prisma.UserProfileUpdateInput = {}
-
-    if (body.firstName !== undefined) updateData.firstName = body.firstName
-    if (body.lastName !== undefined) updateData.lastName = body.lastName
-    if (body.email !== undefined) updateData.email = body.email
-    if (body.location !== undefined) updateData.location = body.location
-    if (body.shoppingStores !== undefined) updateData.shoppingStores = body.shoppingStores
-    
-    if (body.age !== undefined) {
-      const parsedAge =
-        typeof body.age === 'number' ? body.age : parseInt(body.age, 10)
-    
-      if (!Number.isNaN(parsedAge)) {
-        updateData.age = parsedAge
-      }
-    }
-    
-    if (body.gender !== undefined) {
-      if (body.gender === 'female') updateData.gender = Gender.FEMALE
-      else if (body.gender === 'male') updateData.gender = Gender.MALE
-      else if (body.gender === 'prefer-not-to-say') {
-        updateData.gender = Gender.PREFER_NOT_TO_SAY
-      } else {
-        updateData.gender = null
-      }
-    }
-    
     const updatedUser = await prisma.userProfile.update({
       where: { id: dbUserId },
-      data: updateData,
+      data: {
+        firstName: body.firstName,
+        lastName: body.lastName,
+        email: body.email,
+        location: body.location,
+        age: body.age,
+        gender: body.gender,
+        shoppingStores: body.shoppingStores,
+      },
       include: {
         ailments: true,
         preferences: true,

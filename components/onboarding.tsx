@@ -50,9 +50,9 @@ const PERIMENOPAUSE_ID = 'perimenopause'
 const STEPS: OnboardingStep[] = ['welcome', 'profile', 'ailments', 'preferences', 'review', 'extension']
 
 export function Onboarding() {
-  const { setProfile, setCurrentStep, ailmentCategories, preferenceCategories, fetchUserProfile, saveProfileWithClerk } = useEnaj()
+  const { setProfile, setCurrentStep, ailmentCategories, preferenceCategories, saveProfileWithClerk } = useEnaj()
   const { isSignedIn, userId } = useAuth()
-  const { user: clerkUser } = useUser() 
+  const { user: clerkUser } = useUser()
   const [step, setStep] = useState<OnboardingStep>('welcome')
   const [location, setLocation] = useState('')
   const [age, setAge] = useState('')
@@ -75,12 +75,6 @@ export function Onboarding() {
 
   const currentStepIndex = STEPS.indexOf(step)
   const progress = ((currentStepIndex + 1) / STEPS.length) * 100
-
-  useEffect(() => {
-    if (isSignedIn && step === 'welcome') {
-      setStep('profile')
-    }
-  }, [isSignedIn, step])
 
   // When arriving at preferences step, auto-select linked preferences from selected ailments
   useEffect(() => {
@@ -138,16 +132,16 @@ export function Onboarding() {
     )
   }
 
-  const saveProfile = async (): Promise<boolean> => {
+  const saveProfile = async () => {
     if (!userId) {
       setSaveError('Please sign in first')
-      return false
+      return
     }
-
+    
     setSaving(true)
     setSaveError('')
-
     try {
+      // 1. Save profile data using Clerk userId
       await saveProfileWithClerk(userId, {
         location: location || undefined,
         age: age ? Number(age) : undefined,
@@ -155,25 +149,25 @@ export function Onboarding() {
         shoppingStores: shoppingStores || undefined,
       })
 
+      // 2. Save ailments
       await api.saveUserAilments(
         userId,
         Array.from(selectedAilmentIds),
         customHealthCondition.trim() || undefined
       )
-  
+
+      // 3. Build and save preferences
       const prefsArray: { preferenceSlug?: string; source: string; customEntry?: string }[] =
         Array.from(selectedPreferenceIds).map((id) => ({
           preferenceSlug: id,
           source: 'SELECTED',
         }))
-  
       if (customPreference.trim()) {
         prefsArray.push({ customEntry: customPreference.trim(), source: 'CUSTOM' })
       }
-  
       await api.saveUserPreferences(userId, prefsArray)
-      await fetchUserProfile(userId)
-  
+
+      // 4. Set local profile
       const allAilments = ailmentCategories.flatMap((c) => c.ailments)
       const selectedAilments = allAilments
         .filter((a) => selectedAilmentIds.has(a.id))
@@ -181,7 +175,7 @@ export function Onboarding() {
           ailment,
           activeIngredients: [...ailment.flaggedIngredients],
         }))
-  
+
       setProfile({
         firstName: clerkUser?.firstName || '',
         lastName: clerkUser?.lastName || '',
@@ -196,51 +190,22 @@ export function Onboarding() {
         customHealthCondition: customHealthCondition.trim() || undefined,
         customPreference: customPreference.trim() || undefined,
       })
-  
       setProfileSaved(true)
-      return true
     } catch (err) {
       setSaveError(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
-      return false
-    } finally {
-      setSaving(false)
-    }
-  }
-
-
-
-  
-  const handleProfileNext = async () => {
-    if (!isProfileValid()) return
-    if (!userId) {
-      setSaveError('Please sign in first')
-      return
-    }
-    setSaving(true)
-    setSaveError('')
-    try {
-      await saveProfileWithClerk(userId, {
-        location: location || undefined,
-        age: age ? Number(age) : undefined,
-        gender: gender || undefined,
-        shoppingStores: shoppingStores || undefined,
-      })
-      goNext()
-    } catch (err) {
-      setSaveError(err instanceof Error ? err.message : 'Something went wrong.')
     } finally {
       setSaving(false)
     }
   }
 
   const handleCompleteReview = async () => {
-    const ok = await saveProfile()
-    if (ok) goNext()
+    await saveProfile()
+    if (!saveError) goNext()
   }
 
   const handleFinish = async () => {
-    const ok = profileSaved ? true : await saveProfile()
-    if (ok) setCurrentStep('dashboard')
+    if (!profileSaved) await saveProfile()
+    if (!saveError) setCurrentStep('dashboard')
   }
 
   const goNext = () => {
@@ -961,23 +926,14 @@ export function Onboarding() {
                 )}
               </Button>
             ) : (
-            <Button
-              onClick={step === 'profile' ? handleProfileNext : goNext}
-              disabled={(step === 'profile' && !isProfileValid()) || saving}
-              className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 px-6"
-            >
-              {saving ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  Continue
-                  <ArrowRight className="h-4 w-4" />
-                </>
-              )}
-            </Button>
+              <Button
+                onClick={goNext}
+                disabled={step === 'profile' && !isProfileValid()}
+                className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 px-6"
+              >
+                Continue
+                <ArrowRight className="h-4 w-4" />
+              </Button>
             )}
           </div>
         </footer>
