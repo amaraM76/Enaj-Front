@@ -97,6 +97,9 @@ export function EnajProvider({ children }: { children: ReactNode }) {
   }, [clerkUser])
 
   const saveProfileWithClerk = useCallback(async (userId: string, data: Record<string, unknown>) => {
+    console.log("data", data)
+    console.log(data)
+    console.log("______________________________________")
     const response = await fetch(`/api/users/${userId}`, {
       method: 'PUT',
       headers: {

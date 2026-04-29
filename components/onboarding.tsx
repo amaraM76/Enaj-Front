@@ -50,7 +50,7 @@ const PERIMENOPAUSE_ID = 'perimenopause'
 const STEPS: OnboardingStep[] = ['welcome', 'profile', 'ailments', 'preferences', 'review', 'extension']
 
 export function Onboarding() {
-  const { setProfile, setCurrentStep, ailmentCategories, preferenceCategories, fetchUserProfile, saveProfileWithClerk } = useEnaj()
+  const { setProfile, setCurrentStep, ailmentCategories, preferenceCategories, fetchUserProfile } = useEnaj()
   const { isSignedIn, userId } = useAuth()
   const { user: clerkUser } = useUser() 
   const [step, setStep] = useState<OnboardingStep>('welcome')
@@ -143,17 +143,29 @@ export function Onboarding() {
       setSaveError('Please sign in first')
       return false
     }
-
+  
     setSaving(true)
     setSaveError('')
-
+  
     try {
-      await saveProfileWithClerk(userId, {
-        location: "Florida",
-        age: age ? Number(age) : undefined,
-        gender: gender || undefined,
-        shoppingStores: shoppingStores || undefined,
+      const response = await fetch('/api/auth/clerk-sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          clerkId: userId,
+          firstName: clerkUser?.firstName || '',
+          lastName: clerkUser?.lastName || '',
+          email: clerkUser?.primaryEmailAddress?.emailAddress || '',
+          location: location || undefined,
+          age: age ? Number(age) : undefined,
+          gender: gender || undefined,
+          shoppingStores: shoppingStores || undefined,
+        }),
       })
+      
+      if (!response.ok) {
+        throw new Error('Failed to save profile')
+      }
 
       await api.saveUserAilments(
         userId,
@@ -186,7 +198,7 @@ export function Onboarding() {
         firstName: clerkUser?.firstName || '',
         lastName: clerkUser?.lastName || '',
         email: clerkUser?.primaryEmailAddress?.emailAddress || '',
-        location: "Ohio",
+        location,
         age,
         gender,
         shoppingStores,
@@ -219,12 +231,25 @@ export function Onboarding() {
     setSaving(true)
     setSaveError('')
     try {
-      await saveProfileWithClerk(userId, {
-        location: "PA",
-        age: age ? Number(age) : undefined,
-        gender: gender || undefined,
-        shoppingStores: shoppingStores || undefined,
+      const response = await fetch('/api/auth/clerk-sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          clerkId: userId,
+          firstName: clerkUser?.firstName || '',
+          lastName: clerkUser?.lastName || '',
+          email: clerkUser?.primaryEmailAddress?.emailAddress || '',
+          location: location || undefined,
+          age: age ? Number(age) : undefined,
+          gender: gender || undefined,
+          shoppingStores: shoppingStores || undefined,
+        }),
       })
+      
+      if (!response.ok) {
+        throw new Error('Failed to save profile')
+      }
+
       goNext()
     } catch (err) {
       setSaveError(err instanceof Error ? err.message : 'Something went wrong.')
