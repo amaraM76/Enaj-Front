@@ -148,24 +148,6 @@ export function Onboarding() {
     setSaveError('')
   
     try {
-      const response = await fetch('/api/auth/clerk-sync', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          clerkId: userId,
-          firstName: clerkUser?.firstName || '',
-          lastName: clerkUser?.lastName || '',
-          email: clerkUser?.primaryEmailAddress?.emailAddress || '',
-          location: location || undefined,
-          age: age ? Number(age) : undefined,
-          gender: gender || undefined,
-          shoppingStores: shoppingStores || undefined,
-        }),
-      })
-      
-      if (!response.ok) {
-        throw new Error('Failed to save profile')
-      }
 
       await api.saveUserAilments(
         userId,
