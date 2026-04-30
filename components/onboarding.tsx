@@ -269,9 +269,16 @@ export function Onboarding() {
           <EnajLogo size="sm" />
           <span className="text-lg font-bold text-foreground">enaj</span>
         </div>
+        {step === 'welcome' ? (
+          <Button variant="ghost" onClick={() => setCurrentStep('landing')} className="gap-2">
+            <ArrowLeft className="h-4 w-4" />
+            Back
+          </Button>
+        ) : (
         <span className="text-sm text-muted-foreground">
           Step {currentStepIndex + 1} of {STEPS.length}
         </span>
+        )}
       </header>
 
       {/* Progress */}
@@ -337,14 +344,7 @@ export function Onboarding() {
                       </button>
                     </p>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => setCurrentStep('landing')}
-                    className="mt-4 flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    <ArrowLeft className="h-4 w-4" />
-                    Back
-                  </button>
+
                 </>
               ) : (
                 <>

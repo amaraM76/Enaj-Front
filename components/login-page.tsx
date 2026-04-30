@@ -71,6 +71,8 @@ export function LoginPage() {
                   dividerText: 'text-muted-foreground',
                   socialButtonsBlockButton: 'border-border bg-background hover:bg-accent',
                   socialButtonsBlockButtonText: 'text-foreground',
+                  footer: 'hidden',
+                  footerAction: { display: 'none' }, 
                 },
               }}
               routing="hash"
