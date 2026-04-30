@@ -147,13 +147,13 @@ export function Onboarding() {
     setSaving(true)
     setSaveError('')
 
-    // try {
-    //   await saveProfileWithClerk(userId, {
-    //     location: "location",
-    //     age: age ? Number(age) : undefined,
-    //     gender: gender || undefined,
-    //     shoppingStores: shoppingStores || undefined,
-    //   })
+    try {
+      await saveProfileWithClerk(userId, {
+        location: location,
+        age: age ? Number(age) : undefined,
+        gender: gender || undefined,
+        shoppingStores: shoppingStores || undefined,
+      })
 
       await api.saveUserAilments(
         userId,
@@ -186,7 +186,7 @@ export function Onboarding() {
         firstName: clerkUser?.firstName || '',
         lastName: clerkUser?.lastName || '',
         email: clerkUser?.primaryEmailAddress?.emailAddress || '',
-        location: "Ohio",
+        location,
         age,
         gender,
         shoppingStores,
@@ -220,7 +220,7 @@ export function Onboarding() {
     setSaveError('')
     try {
       await saveProfileWithClerk(userId, {
-        location: location || undefined,
+        location: "dog",
         age: age ? Number(age) : undefined,
         gender: gender || undefined,
         shoppingStores: shoppingStores || undefined,
