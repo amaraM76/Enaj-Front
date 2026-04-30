@@ -149,7 +149,7 @@ export function Onboarding() {
 
     try {
       await saveProfileWithClerk(userId, {
-        location: location,
+        location: "location",
         age: age ? Number(age) : undefined,
         gender: gender || undefined,
         shoppingStores: shoppingStores || undefined,
