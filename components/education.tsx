@@ -14,13 +14,21 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { useEnaj } from '@/lib/enaj-context'
+import { useSearchParams } from 'next/navigation'
 
 type FilterCategory = 'conditions' | 'preferences'
 
 export function Education() {
   const { ailmentCategories, preferenceCategories, profile } = useEnaj()
   const [searchQuery, setSearchQuery] = useState('')
+  const searchParams = useSearchParams()
   const [selectedCategory, setSelectedCategory] = useState<FilterCategory>('conditions')
+  useEffect(() => {
+    const tab = searchParams.get('tab') as FilterCategory
+    if (tab === 'conditions' || tab === 'preferences') {
+      setSelectedCategory(tab)
+    }
+  }, [searchParams])
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
