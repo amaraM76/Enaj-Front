@@ -1,5 +1,6 @@
 'use client'
 
+import { Suspense } from 'react'
 import { CloudBackground } from '@/components/cloud-background'
 import { Education } from '@/components/education'
 import { EnajLogo } from '@/components/enaj-logo'
@@ -37,7 +38,9 @@ export default function EducationPage() {
         </header>
 
         <main className="relative z-10 px-4 py-6 lg:px-8 lg:py-8">
-          <Education />
+          <Suspense fallback={null}>
+            <Education />
+          </Suspense>
         </main>
       </div>
     </EnajProvider>
