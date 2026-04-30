@@ -296,6 +296,7 @@ export function Onboarding() {
                   <p className="mt-4 max-w-md text-muted-foreground text-pretty leading-relaxed mb-8">
                     Your personal guardian angel for smarter shopping. Create an account to get started.
                   </p>
+                <div className="[&_.cl-footerAction]:hidden">
                   <SignUp
                     appearance={{
                       elements: {
@@ -318,6 +319,7 @@ export function Onboarding() {
                     signInUrl="#/sign-in"
                     fallbackRedirectUrl="/"
                   />
+                </div>
                   <div className="mt-6 text-sm text-muted-foreground">
                     <p>
                       Already have an account?{' '}
@@ -358,6 +360,14 @@ export function Onboarding() {
                     Let{"'"}s Get Started
                     <ArrowRight className="h-5 w-5" />
                   </Button>
+                  <button
+                    type="button"
+                    onClick={() => setCurrentStep('landing')}
+                    className="mt-4 flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    Back
+                  </button>
                 </>
               )}
             </div>
