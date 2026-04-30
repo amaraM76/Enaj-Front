@@ -311,6 +311,7 @@ export function Onboarding() {
                         dividerText: 'text-muted-foreground',
                         socialButtonsBlockButton: 'border-border bg-background hover:bg-accent',
                         socialButtonsBlockButtonText: 'text-foreground',
+                        footer: 'hidden',
                       },
                     }}
                     routing="hash"
@@ -329,6 +330,14 @@ export function Onboarding() {
                       </button>
                     </p>
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => setCurrentStep('landing')}
+                    className="mt-4 flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    Back
+                  </button>
                 </>
               ) : (
                 <>
