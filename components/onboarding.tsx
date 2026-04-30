@@ -252,6 +252,10 @@ export function Onboarding() {
   }
 
   const goBack = () => {
+    if (step === 'profile') {
+      setCurrentStep('landing')
+      return
+    }
     const idx = STEPS.indexOf(step)
     if (idx > 0) setStep(STEPS[idx - 1])
     else setCurrentStep('landing')
