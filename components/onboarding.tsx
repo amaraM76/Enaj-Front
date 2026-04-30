@@ -147,13 +147,13 @@ export function Onboarding() {
     setSaving(true)
     setSaveError('')
 
-    try {
-      await saveProfileWithClerk(userId, {
-        location: "location",
-        age: age ? Number(age) : undefined,
-        gender: gender || undefined,
-        shoppingStores: shoppingStores || undefined,
-      })
+    // try {
+    //   await saveProfileWithClerk(userId, {
+    //     location: "location",
+    //     age: age ? Number(age) : undefined,
+    //     gender: gender || undefined,
+    //     shoppingStores: shoppingStores || undefined,
+    //   })
 
       await api.saveUserAilments(
         userId,
