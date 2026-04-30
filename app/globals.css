@@ -200,3 +200,7 @@
 .animate-cloud-5 { animation: cloud-drift-5 70s ease-in-out infinite; }
 .animate-cloud-6 { animation: cloud-drift-6 60s ease-in-out infinite; }
 .animate-cloud-7 { animation: cloud-drift-7 75s ease-in-out infinite; }
+
+.cl-footerAction {
+  display: none !important;
+}

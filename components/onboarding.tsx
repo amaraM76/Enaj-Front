@@ -265,20 +265,20 @@ export function Onboarding() {
       <CloudBackground />
       {/* Header */}
       <header className="relative z-10 flex items-center justify-between border-b border-border px-6 py-4" style={{ background: 'rgba(255,255,255,0.5)', backdropFilter: 'blur(12px)' }}>
-        <div className="flex items-center gap-2">
-          <EnajLogo size="sm" />
-          <span className="text-lg font-bold text-foreground">enaj</span>
-        </div>
         {step === 'welcome' ? (
           <Button variant="ghost" onClick={() => setCurrentStep('landing')} className="gap-2">
             <ArrowLeft className="h-4 w-4" />
             Back
           </Button>
         ) : (
+          <div className="flex items-center gap-2">
+            <EnajLogo size="sm" />
+            <span className="text-lg font-bold text-foreground">enaj</span>
+          </div>
+        )}
         <span className="text-sm text-muted-foreground">
           Step {currentStepIndex + 1} of {STEPS.length}
         </span>
-        )}
       </header>
 
       {/* Progress */}
@@ -365,14 +365,6 @@ export function Onboarding() {
                     Let{"'"}s Get Started
                     <ArrowRight className="h-5 w-5" />
                   </Button>
-                  <button
-                    type="button"
-                    onClick={() => setCurrentStep('landing')}
-                    className="mt-4 flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    <ArrowLeft className="h-4 w-4" />
-                    Back
-                  </button>
                 </>
               )}
             </div>
