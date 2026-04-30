@@ -197,17 +197,13 @@ export function EnajProvider({ children }: { children: ReactNode }) {
       setProfileLoaded(true)
 
       if (userProfile) {
-        const profileComplete =
-          !!userProfile.location?.trim() &&
-          userProfile.age !== '' && userProfile.age !== '0' &&
-          !!userProfile.gender?.trim() &&
-          !!userProfile.shoppingStores?.trim() &&
-          (
-            (userProfile.selectedAilments?.length ?? 0) > 0 ||
-            (userProfile.selectedPreferences?.length ?? 0) > 0
-          )
+        const hasBasicProfile =
+        !!userProfile.location?.trim() &&
+        userProfile.age !== '' && userProfile.age !== '0' &&
+        !!userProfile.gender?.trim() &&
+        !!userProfile.shoppingStores?.trim()
 
-        if (profileComplete && !comingFromSignup) {
+        if (hasBasicProfile && !comingFromSignup) {
           setCurrentStep('dashboard')
         } else {
           setCurrentStep('onboarding')
