@@ -156,7 +156,7 @@ export function Onboarding() {
         firstName: clerkUser?.firstName || '',
         lastName: clerkUser?.lastName || '',
         email: clerkUser?.primaryEmailAddress?.emailAddress || '',
-        location: location,
+        location: "florida",
         age: age ? Number(age) : undefined,
         gender: gender || undefined,
         shoppingStores: shoppingStores || undefined,
