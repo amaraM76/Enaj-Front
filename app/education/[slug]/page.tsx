@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
 import { CloudBackground } from '@/components/cloud-background'
 import { EnajLogo } from '@/components/enaj-logo'
 import { Button } from '@/components/ui/button'
@@ -12,6 +11,8 @@ import { api } from '@/lib/api'
 import type { Ailment, FlaggedIngredient } from '@/lib/enaj-data'
 import { getPreferenceEducation } from '@/lib/preference-education'
 import { getAilmentEducation } from '@/lib/ailment-education'
+import { useParams, useSearchParams } from 'next/navigation'
+
 
 interface Preference {
   id: string
@@ -37,6 +38,9 @@ export default function EducationDetailPage() {
   const [preference, setPreference] = useState<Preference | null>(null)
   const [loading, setLoading] = useState(true)
   const [type, setType] = useState<'ailment' | 'preference' | null>(null)
+  const searchParams = useSearchParams()
+  const from = searchParams.get('from') // 'conditions' | 'preferences' | null
+  const backHref = from === 'preferences' ? '/education?tab=preferences' : '/education?tab=conditions'
 
   useEffect(() => {
     async function fetchData() {
@@ -118,7 +122,7 @@ export default function EducationDetailPage() {
             <EnajLogo size="sm" />
             <span className="text-lg font-bold text-foreground">enaj</span>
           </div>
-          <Link href="/education">
+          <Link href={backHref}>
             <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
               <ArrowLeft className="h-4 w-4" />
               Back to Learn
@@ -127,7 +131,7 @@ export default function EducationDetailPage() {
         </header>
         <main className="relative z-10 px-4 py-12 lg:px-8 text-center">
           <p className="text-muted-foreground">Topic not found.</p>
-          <Link href="/education">
+          <Link href={backHref}>
             <Button variant="outline" className="mt-4">
               Back to Education Center
             </Button>
@@ -155,7 +159,7 @@ export default function EducationDetailPage() {
           <EnajLogo size="sm" />
           <span className="text-lg font-bold text-foreground">enaj</span>
         </div>
-        <Link href="/education">
+        <Link href={backHref}>
           <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
             <ArrowLeft className="h-4 w-4" />
             Back to Learn
