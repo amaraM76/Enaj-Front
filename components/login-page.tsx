@@ -74,7 +74,7 @@ export function LoginPage() {
                 },
               }}
               routing="hash"
-              signUpUrl="#/sign-up"
+              signUpUrl="https://www.enajhealth.com/#/sign-up"
               fallbackRedirectUrl="/"
             />
           </div>

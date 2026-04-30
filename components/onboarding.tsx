@@ -299,26 +299,31 @@ export function Onboarding() {
                 <div className="[&_.cl-footerAction]:hidden">
                   <SignUp
                     appearance={{
-                      elements: {
-                        rootBox: 'mx-auto',
-                        card: 'bg-card/80 backdrop-blur-sm border-border shadow-lg',
-                        headerTitle: 'text-foreground',
-                        headerSubtitle: 'text-muted-foreground',
-                        formFieldLabel: 'text-foreground',
-                        formFieldInput: 'bg-background border-border text-foreground',
-                        formButtonPrimary: 'bg-primary hover:bg-primary/90',
-                        footerActionLink: 'text-primary hover:text-primary/80',
-                        dividerLine: 'bg-border',
-                        dividerText: 'text-muted-foreground',
-                        socialButtonsBlockButton: 'border-border bg-background hover:bg-accent',
-                        socialButtonsBlockButtonText: 'text-foreground',
-                        footer: 'hidden',
+                      layout: {
+                        socialButtonsPlacement: 'top',
+                        showOptionalFields: false,
                       },
-                    }}
-                    routing="hash"
-                    signInUrl="#/sign-in"
-                    fallbackRedirectUrl="/"
-                  />
+                        elements: {
+                          rootBox: 'mx-auto',
+                          card: 'bg-card/80 backdrop-blur-sm border-border shadow-lg',
+                          headerTitle: 'text-foreground',
+                          headerSubtitle: 'text-muted-foreground',
+                          formFieldLabel: 'text-foreground',
+                          formFieldInput: 'bg-background border-border text-foreground',
+                          formButtonPrimary: 'bg-primary hover:bg-primary/90',
+                          footerActionLink: 'text-primary hover:text-primary/80',
+                          dividerLine: 'bg-border',
+                          dividerText: 'text-muted-foreground',
+                          socialButtonsBlockButton: 'border-border bg-background hover:bg-accent',
+                          socialButtonsBlockButtonText: 'text-foreground',
+                          footer: 'hidden',
+                          footerAction: { display: 'none' }, 
+                        },
+                      }}
+                      routing="hash"
+                      signInUrl="https://www.enajhealth.com/#/sign-in"
+                      fallbackRedirectUrl="/"
+                    />
                 </div>
                   <div className="mt-6 text-sm text-muted-foreground">
                     <p>
