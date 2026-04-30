@@ -49,6 +49,8 @@ import {
   Home,
   BookOpen,
   Package,
+  ShieldCheck,
+  ShieldOff,
 } from 'lucide-react'
 
 const CATEGORY_ICONS: Record<string, React.ReactNode> = {
@@ -62,7 +64,6 @@ const CATEGORY_ICONS: Record<string, React.ReactNode> = {
   'household': <Home className="h-4 w-4" />,
 }
 
-// Extended flagged ingredient shape from the API
 interface ApiFlaggedIngredient {
   ingredient: string
   reason: string
@@ -79,8 +80,8 @@ export function ProductScanner() {
   const [searchQuery, setSearchQuery] = useState('')
   const [products, setProducts] = useState<(Product & { slug?: string; isRecommended?: boolean; flaggedIngredients?: ApiFlaggedIngredient[] })[]>([])
   const [productsLoading, setProductsLoading] = useState(true)
+  const [enajFilterOn, setEnajFilterOn] = useState(true) // ← NEW
 
-  // API search state
   const [apiSearchResults, setApiSearchResults] = useState<(Product & { slug?: string })[]>([])
   const [apiSearchLoading, setApiSearchLoading] = useState(false)
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -117,7 +118,6 @@ export function ProductScanner() {
     sources: { title: string; url: string }[]
   } | null>(null)
 
-  // Fetch products from the API whenever the category changes
   useEffect(() => {
     let cancelled = false
     async function load() {
@@ -137,23 +137,17 @@ export function ProductScanner() {
     return () => { cancelled = true }
   }, [activeCategory, clerkUserId])
 
-  // Debounced API search (Open Food Facts + Open Beauty Facts)
   useEffect(() => {
-    // Clear any pending timer
     if (searchTimerRef.current) {
       clearTimeout(searchTimerRef.current)
       searchTimerRef.current = null
     }
 
-    // Normalize smart quotes/curly apostrophes to straight apostrophes
     const normalizedQuery = searchQuery
-      .replace(/[\u2018\u2019\u201A\u201B]/g, "'")  // Single curly quotes to straight
-      .replace(/[\u201C\u201D\u201E\u201F]/g, '"')  // Double curly quotes to straight
+      .replace(/[\u2018\u2019\u201A\u201B]/g, "'")
+      .replace(/[\u201C\u201D\u201E\u201F]/g, '"')
       .trim()
 
-    console.log("[v0] Search query changed:", normalizedQuery)
-
-    // Clear results if query is too short
     if (normalizedQuery.length < 2) {
       setApiSearchResults([])
       setApiSearchLoading(false)
@@ -163,74 +157,33 @@ export function ProductScanner() {
     setApiSearchLoading(true)
 
     searchTimerRef.current = setTimeout(async () => {
-      console.log("[v0] Searching for:", normalizedQuery)
       try {
         const res = await api.searchProducts(normalizedQuery, 'all')
-        console.log("[v0] Search response:", res)
         const results = (res as { products?: Product[] }).products ?? []
         
-        // Helper to infer product category from API data
         const inferCategory = (product: Record<string, unknown>): string => {
-          // If backend provides a valid category, use it
           const existingCategory = (product.category as string)?.toLowerCase()
           if (existingCategory && ['skin-body', 'haircare', 'makeup', 'food', 'cleaning', 'fragrance', 'household'].includes(existingCategory)) {
             return existingCategory
           }
-          
-          // Check source field (Open Beauty Facts vs Open Food Facts)
           const source = (product.source as string)?.toLowerCase() || ''
           const name = ((product.name as string) || (product.product_name as string) || '').toLowerCase()
           const categories = ((product.categories as string) || (product.categories_tags as string) || '').toLowerCase()
-          
-          // If from Open Beauty Facts, categorize as beauty product
           if (source.includes('beauty') || source.includes('obf') || source === 'openbeautyfacts') {
-            if (categories.includes('hair') || name.includes('shampoo') || name.includes('conditioner') || name.includes('hair')) {
-              return 'haircare'
-            }
-            if (categories.includes('makeup') || categories.includes('cosmetic') || name.includes('lipstick') || name.includes('mascara') || name.includes('foundation') || name.includes('eyeshadow')) {
-              return 'makeup'
-            }
-            if (categories.includes('fragrance') || categories.includes('perfume') || name.includes('perfume') || name.includes('cologne')) {
-              return 'fragrance'
-            }
+            if (categories.includes('hair') || name.includes('shampoo') || name.includes('conditioner') || name.includes('hair')) return 'haircare'
+            if (categories.includes('makeup') || categories.includes('cosmetic') || name.includes('lipstick') || name.includes('mascara') || name.includes('foundation') || name.includes('eyeshadow')) return 'makeup'
+            if (categories.includes('fragrance') || categories.includes('perfume') || name.includes('perfume') || name.includes('cologne')) return 'fragrance'
             return 'skin-body'
           }
-          
-          // Check for beauty/personal care indicators in name or categories
-          if (categories.includes('beauty') || categories.includes('cosmetic') || categories.includes('personal care') ||
-              categories.includes('skin') || categories.includes('body care') || categories.includes('lotion') ||
-              name.includes('lotion') || name.includes('moisturizer') || name.includes('soap') ||
-              name.includes('body wash') || name.includes('sunscreen') || name.includes('deodorant') ||
-              name.includes('toothpaste') || name.includes('face wash') || name.includes('serum')) {
-            return 'skin-body'
-          }
-          
-          if (categories.includes('hair') || name.includes('shampoo') || name.includes('conditioner') || name.includes('hair gel') || name.includes('hair spray')) {
-            return 'haircare'
-          }
-          
-          if (categories.includes('makeup') || name.includes('lipstick') || name.includes('mascara') || name.includes('foundation') || name.includes('concealer')) {
-            return 'makeup'
-          }
-          
-          if (categories.includes('fragrance') || categories.includes('perfume') || name.includes('perfume') || name.includes('cologne') || name.includes('eau de')) {
-            return 'fragrance'
-          }
-          
-          if (categories.includes('cleaning') || categories.includes('detergent') || categories.includes('cleaner') ||
-              name.includes('detergent') || name.includes('cleaner') || name.includes('dish soap') || name.includes('laundry')) {
-            return 'cleaning'
-          }
-          
-          if (categories.includes('household') || name.includes('paper towel') || name.includes('tissue') || name.includes('trash bag')) {
-            return 'household'
-          }
-          
-          // Default to food
+          if (categories.includes('beauty') || categories.includes('cosmetic') || categories.includes('personal care') || categories.includes('skin') || categories.includes('body care') || categories.includes('lotion') || name.includes('lotion') || name.includes('moisturizer') || name.includes('soap') || name.includes('body wash') || name.includes('sunscreen') || name.includes('deodorant') || name.includes('toothpaste') || name.includes('face wash') || name.includes('serum')) return 'skin-body'
+          if (categories.includes('hair') || name.includes('shampoo') || name.includes('conditioner') || name.includes('hair gel') || name.includes('hair spray')) return 'haircare'
+          if (categories.includes('makeup') || name.includes('lipstick') || name.includes('mascara') || name.includes('foundation') || name.includes('concealer')) return 'makeup'
+          if (categories.includes('fragrance') || categories.includes('perfume') || name.includes('perfume') || name.includes('cologne') || name.includes('eau de')) return 'fragrance'
+          if (categories.includes('cleaning') || categories.includes('detergent') || categories.includes('cleaner') || name.includes('detergent') || name.includes('cleaner') || name.includes('dish soap') || name.includes('laundry')) return 'cleaning'
+          if (categories.includes('household') || name.includes('paper towel') || name.includes('tissue') || name.includes('trash bag')) return 'household'
           return 'food'
         }
         
-        // Map API results to match our Product shape
         const mappedResults = results.map((p: Record<string, unknown>) => ({
           id: (p.slug as string) || (p.id as string) || String(Math.random()),
           slug: (p.slug as string) || (p.id as string),
@@ -246,14 +199,13 @@ export function ProductScanner() {
               : [],
           category: inferCategory(p),
           packaging: Array.isArray(p.packaging) ? p.packaging as string[] : [],
-          allergens: Array.isArray(p.allergens) 
-            ? p.allergens as string[] 
+          allergens: Array.isArray(p.allergens)
+            ? p.allergens as string[]
             : typeof p.allergens_tags === 'string'
               ? (p.allergens_tags as string).split(',').map((s: string) => s.trim()).filter(Boolean)
               : [],
           barcode: (p.barcode as string) || (p.code as string) || undefined,
         }))
-        console.log("[v0] Mapped results:", mappedResults.length, "products")
         setApiSearchResults(mappedResults)
       } catch (err) {
         console.error("[v0] Search error:", err)
@@ -264,127 +216,74 @@ export function ProductScanner() {
     }, 500)
 
     return () => {
-      if (searchTimerRef.current) {
-        clearTimeout(searchTimerRef.current)
-      }
+      if (searchTimerRef.current) clearTimeout(searchTimerRef.current)
     }
   }, [searchQuery])
 
-  // Client-side ingredient scan against the user's profile
   const clientSideScan = useCallback(
     (product: Product & { slug?: string; packaging?: string[] }): { flaggedIngredients: ApiFlaggedIngredient[]; isRecommended: boolean } => {
       if (!profile) return { flaggedIngredients: [], isRecommended: true }
-
       const flagged: ApiFlaggedIngredient[] = []
       const productIngredients = product.ingredients.map((i) => i.toLowerCase())
       const productPackaging = (product.packaging || []).map((p) => p.toLowerCase())
-
-      // Helper to check if any keyword matches in an array (case-insensitive partial match)
       const findMatch = (keywords: string[], items: string[]): string | null => {
         for (const keyword of keywords) {
           const kw = keyword.toLowerCase()
           for (const item of items) {
-            if (item.includes(kw) || kw.includes(item)) {
-              return item
-            }
+            if (item.includes(kw) || kw.includes(item)) return item
           }
         }
         return null
       }
-
-      // Check against ailment flagged ingredients
       for (const sa of profile.selectedAilments) {
         for (const fi of sa.activeIngredients) {
           const matchedIngredient = productIngredients.find(
             (pi) => pi.includes(fi.name.toLowerCase()) || fi.name.toLowerCase().includes(pi)
           )
           if (matchedIngredient) {
-            flagged.push({
-              ingredient: fi.name,
-              reason: fi.reason,
-              source: 'ailment',
-              sourceName: sa.ailment.name,
-              flaggedFrom: 'ingredients',
-              sources: fi.sources,
-            })
+            flagged.push({ ingredient: fi.name, reason: fi.reason, source: 'ailment', sourceName: sa.ailment.name, flaggedFrom: 'ingredients', sources: fi.sources })
           }
         }
       }
-
-      // Check preferences using the keyword dictionary
-      // Build a map of preference id -> { name, reason } from categories
       const prefInfoMap = new Map<string, { name: string; reason?: string }>()
       for (const cat of preferenceCategories) {
         for (const pref of cat.preferences) {
           prefInfoMap.set(pref.id, { name: pref.name, reason: pref.reason })
         }
       }
-
-      // Track which preferences have already been flagged (only flag once per preference)
       const flaggedPrefIds = new Set<string>()
-
       for (const prefId of profile.selectedPreferences) {
         if (flaggedPrefIds.has(prefId)) continue
-
         const prefInfo = prefInfoMap.get(prefId) || { name: prefId }
         const prefName = prefInfo.name
         const keywords = getPreferenceKeywords(prefName)
-
-        // Check ingredients first
         const ingredientMatch = findMatch(keywords, productIngredients)
         if (ingredientMatch) {
-          flagged.push({
-            ingredient: ingredientMatch,
-            reason: prefInfo.reason || `Contains ${prefName}`,
-            source: 'preference',
-            sourceName: prefName,
-            flaggedFrom: 'ingredients',
-          })
+          flagged.push({ ingredient: ingredientMatch, reason: prefInfo.reason || `Contains ${prefName}`, source: 'preference', sourceName: prefName, flaggedFrom: 'ingredients' })
           flaggedPrefIds.add(prefId)
           continue
         }
-
-        // Check packaging
         const packagingMatch = findMatch(keywords, productPackaging)
         if (packagingMatch) {
-          flagged.push({
-            ingredient: packagingMatch,
-            reason: prefInfo.reason || `Packaging contains ${prefName}`,
-            source: 'preference',
-            sourceName: prefName,
-            flaggedFrom: 'packaging',
-          })
+          flagged.push({ ingredient: packagingMatch, reason: prefInfo.reason || `Packaging contains ${prefName}`, source: 'preference', sourceName: prefName, flaggedFrom: 'packaging' })
           flaggedPrefIds.add(prefId)
         }
       }
-
       return { flaggedIngredients: flagged, isRecommended: flagged.length === 0 }
     },
     [profile, preferenceCategories]
   )
 
-  // Scan a product via the API
-  // For external products (from Open Food Facts), import them first then use backend scan
   const performScan = useCallback(
     async (product: Product & { slug?: string; packaging?: string[]; barcode?: string }) => {
       if (!profile) return
-
       setScanning(true)
       setScanResult(null)
-
       try {
         let slug = product.slug || product.id
         let category = product.category
-
-        // Check if this is an external product (no slug or slug looks like an external ID)
-        // External products from API search have ingredients but may not exist in our DB
-        const isExternalProduct = !product.slug || apiSearchResults.some(
-          (p) => (p.slug || p.id) === (product.slug || product.id)
-        )
-
+        const isExternalProduct = !product.slug || apiSearchResults.some((p) => (p.slug || p.id) === (product.slug || product.id))
         if (isExternalProduct) {
-          // Import the product to our database first
-          console.log("[v0] Importing product:", product.name)
           try {
             const importRes = await api.importProduct({
               barcode: product.barcode,
@@ -396,44 +295,20 @@ export function ProductScanner() {
               allergens: (product as Product & { allergens?: string[] }).allergens || [],
               category: product.category,
             })
-            console.log("[v0] Import response:", importRes)
             slug = importRes.product.slug
             category = importRes.product.category
-          } catch (importErr) {
-            // Import failed, fall back to client-side scan
-            console.error("[v0] Import failed:", importErr)
+          } catch {
             const { flaggedIngredients, isRecommended } = clientSideScan(product)
-            setScanResult({
-              product,
-              isRecommended,
-              flaggedIngredients,
-              alternatives: [],
-            })
+            setScanResult({ product, isRecommended, flaggedIngredients, alternatives: [] })
             setScanning(false)
             return
           }
         }
-
-        // Now scan using the backend
-        console.log("[v0] Scanning product:", category, slug, clerkUserId)
         const res = await api.scanProduct(category, slug, clerkUserId || '')
-        console.log("[v0] Scan response:", res)
-        setScanResult({
-          product: res.product ?? product,
-          isRecommended: res.isRecommended,
-          flaggedIngredients: res.flaggedIngredients ?? [],
-          alternatives: res.alternatives ?? [],
-        })
-      } catch (scanErr) {
-        // Backend scan failed, fall back to client-side scan
-        console.error("[v0] Scan failed:", scanErr)
+        setScanResult({ product: res.product ?? product, isRecommended: res.isRecommended, flaggedIngredients: res.flaggedIngredients ?? [], alternatives: res.alternatives ?? [] })
+      } catch {
         const { flaggedIngredients, isRecommended } = clientSideScan(product)
-        setScanResult({
-          product,
-          isRecommended,
-          flaggedIngredients,
-          alternatives: [],
-        })
+        setScanResult({ product, isRecommended, flaggedIngredients, alternatives: [] })
       } finally {
         setScanning(false)
       }
@@ -442,29 +317,30 @@ export function ProductScanner() {
   )
 
   const filteredProducts = useMemo(() => {
-    const localMatches = products.filter((p) => {
+    let base = products.filter((p) => {
       if (!searchQuery.trim()) return true
       const q = searchQuery.toLowerCase()
       return p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q)
     })
 
-    // If we have API search results, append any that aren't already in localMatches
     if (searchQuery.trim().length >= 2 && apiSearchResults.length > 0) {
-      const localIds = new Set(localMatches.map((p) => p.slug || p.id))
-      const uniqueApiResults = apiSearchResults.filter(
-        (p) => !localIds.has(p.slug || p.id)
-      )
-      return [...localMatches, ...uniqueApiResults]
+      const localIds = new Set(base.map((p) => p.slug || p.id))
+      const uniqueApiResults = apiSearchResults.filter((p) => !localIds.has(p.slug || p.id))
+      base = [...base, ...uniqueApiResults]
     }
 
-    return localMatches
-  }, [searchQuery, products, apiSearchResults])
+    // ← NEW: if Enaj filter is on, only show products with no flagged ingredients
+    if (enajFilterOn && profile) {
+      return base.filter((p) => {
+        const { flaggedIngredients } = clientSideScan(p)
+        return flaggedIngredients.length === 0
+      })
+    }
 
-  const getCategoryLabel = (slug: string) => {
-    return PRODUCT_CATEGORIES.find((c) => c.slug === slug)?.label ?? slug
-  }
+    return base
+  }, [searchQuery, products, apiSearchResults, enajFilterOn, profile, clientSideScan])
 
-  // Helper to get the product identifier for save/unsave (slug preferred, fallback to id)
+  const getCategoryLabel = (slug: string) => PRODUCT_CATEGORIES.find((c) => c.slug === slug)?.label ?? slug
   const getProductSlug = (product: Product & { slug?: string }) => product.slug || product.id
 
   if (!profile) return null
@@ -472,13 +348,44 @@ export function ProductScanner() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground md:text-3xl">
-          Search
-        </h1>
+        <h1 className="text-2xl font-bold text-foreground md:text-3xl">Search</h1>
         <p className="mt-1 text-muted-foreground">
           Search for products; Enaj will determine if they match your health conditions and preferences.
         </p>
       </div>
+
+      {/* ── ENAJ FILTER TOGGLE ── */}
+      {!scanResult && (
+        <div className={`flex items-center justify-between rounded-xl border-2 px-4 py-3 transition-colors ${enajFilterOn ? 'border-primary/40 bg-primary/5' : 'border-border bg-card'}`}>
+          <div className="flex items-center gap-3">
+            {enajFilterOn
+              ? <ShieldCheck className="h-5 w-5 text-primary flex-shrink-0" />
+              : <ShieldOff className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+            }
+            <div>
+              <p className={`text-sm font-semibold ${enajFilterOn ? 'text-primary' : 'text-foreground'}`}>
+                {enajFilterOn ? 'Enaj Filter: On' : 'Enaj Filter: Off'}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {enajFilterOn
+                  ? 'Only showing products that match your health profile'
+                  : 'Showing all products — some may conflict with your profile'}
+              </p>
+            </div>
+          </div>
+          {/* Toggle switch */}
+          <button
+            role="switch"
+            aria-checked={enajFilterOn}
+            onClick={() => setEnajFilterOn((v) => !v)}
+            className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${enajFilterOn ? 'bg-primary' : 'bg-muted-foreground/30'}`}
+          >
+            <span
+              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ${enajFilterOn ? 'translate-x-5' : 'translate-x-0'}`}
+            />
+          </button>
+        </div>
+      )}
 
       {/* Category Banner */}
       {!scanResult && (
@@ -510,10 +417,7 @@ export function ProductScanner() {
           className="bg-card border-border text-foreground placeholder:text-muted-foreground pl-10"
         />
         {searchQuery && (
-          <button
-            onClick={() => setSearchQuery('')}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-          >
+          <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
             <X className="h-4 w-4" />
           </button>
         )}
@@ -532,49 +436,47 @@ export function ProductScanner() {
               <Search className="h-10 w-10 text-muted-foreground mb-3" />
               <p className="text-lg font-medium text-foreground">No products found</p>
               <p className="text-sm text-muted-foreground mt-1">
-                Try a different search term or category.
+                {enajFilterOn
+                  ? 'No products match your health profile in this category. Try turning off the Enaj Filter to see all products.'
+                  : 'Try a different search term or category.'}
               </p>
             </div>
           ) : (
             <>
-            {apiSearchLoading && (
-              <div className="flex items-center justify-center gap-2 py-4">
-                <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                <p className="text-sm text-muted-foreground">{'Searching Open Food Facts & Open Beauty Facts...'}</p>
+              {apiSearchLoading && (
+                <div className="flex items-center justify-center gap-2 py-4">
+                  <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                  <p className="text-sm text-muted-foreground">Searching Open Food Facts & Open Beauty Facts...</p>
+                </div>
+              )}
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {filteredProducts.map((product) => (
+                  <button
+                    key={product.id}
+                    onClick={() => performScan(product)}
+                    disabled={scanning}
+                    className="group flex flex-col rounded-xl border border-border bg-card p-4 text-left transition-all hover:shadow-lg hover:border-primary/30 disabled:opacity-60"
+                  >
+                    <div className="mb-3 flex h-32 items-center justify-center rounded-lg bg-muted">
+                      <ShoppingCart className="h-8 w-8 text-muted-foreground transition-colors group-hover:text-primary" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-xs font-medium text-primary">{product.brand}</p>
+                      <h3 className="mt-1 text-sm font-semibold text-card-foreground leading-snug">{product.name}</h3>
+                      <p className="mt-1 text-sm font-bold text-card-foreground">{product.price}</p>
+                    </div>
+                    <div className="mt-3 flex items-center gap-2">
+                      <Badge variant="secondary" className="bg-muted text-muted-foreground text-xs">
+                        {getCategoryLabel(product.category)}
+                      </Badge>
+                      <span className="ml-auto text-xs text-muted-foreground group-hover:text-primary transition-colors flex items-center gap-1">
+                        <Search className="h-3.5 w-3.5" />
+                        Check
+                      </span>
+                    </div>
+                  </button>
+                ))}
               </div>
-            )}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {filteredProducts.map((product) => (
-                <button
-                  key={product.id}
-                  onClick={() => performScan(product)}
-                  disabled={scanning}
-                  className="group flex flex-col rounded-xl border border-border bg-card p-4 text-left transition-all hover:shadow-lg hover:border-primary/30 disabled:opacity-60"
-                >
-                  <div className="mb-3 flex h-32 items-center justify-center rounded-lg bg-muted">
-                    <ShoppingCart className="h-8 w-8 text-muted-foreground transition-colors group-hover:text-primary" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-xs font-medium text-primary">{product.brand}</p>
-                    <h3 className="mt-1 text-sm font-semibold text-card-foreground leading-snug">
-                      {product.name}
-                    </h3>
-                    <p className="mt-1 text-sm font-bold text-card-foreground">
-                      {product.price}
-                    </p>
-                  </div>
-                  <div className="mt-3 flex items-center gap-2">
-                    <Badge variant="secondary" className="bg-muted text-muted-foreground text-xs">
-                      {getCategoryLabel(product.category)}
-                    </Badge>
-                    <span className="ml-auto text-xs text-muted-foreground group-hover:text-primary transition-colors flex items-center gap-1">
-                      <Search className="h-3.5 w-3.5" />
-                      Check
-                    </span>
-                  </div>
-                </button>
-              ))}
-            </div>
             </>
           )}
         </>
@@ -584,107 +486,65 @@ export function ProductScanner() {
       {scanning && (
         <div className="flex flex-col items-center rounded-xl border border-border bg-card py-16">
           <Loader2 className="mb-4 h-10 w-10 animate-spin text-primary" />
-          <p className="text-lg font-semibold text-card-foreground">
-            Checking product...
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Analyzing ingredients against your health profile
-          </p>
+          <p className="text-lg font-semibold text-card-foreground">Checking product...</p>
+          <p className="mt-1 text-sm text-muted-foreground">Analyzing ingredients against your health profile</p>
         </div>
       )}
 
       {/* Scan Results */}
       {scanResult && !scanning && (
         <div className="flex flex-col gap-6">
-          {/* Back button */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setScanResult(null)}
-            className="self-start text-muted-foreground hover:text-foreground gap-2"
-          >
+          <Button variant="ghost" size="sm" onClick={() => setScanResult(null)} className="self-start text-muted-foreground hover:text-foreground gap-2">
             <X className="h-4 w-4" />
             Back to Products
           </Button>
 
-          {/* Scanned Product */}
-          <div
-            className={`rounded-xl border-2 p-5 ${
-              scanResult.isRecommended
-                ? 'border-secondary bg-secondary/10'
-                : 'border-destructive/30 bg-destructive/5'
-            }`}
-          >
+          <div className={`rounded-xl border-2 p-5 ${scanResult.isRecommended ? 'border-secondary bg-secondary/10' : 'border-destructive/30 bg-destructive/5'}`}>
             <div className="flex items-start gap-4">
               <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-lg bg-muted">
                 <ShoppingCart className="h-6 w-6 text-muted-foreground" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-primary">
-                  {scanResult.product.brand}
-                </p>
-                <h3 className="text-lg font-semibold text-foreground leading-snug">
-                  {scanResult.product.name}
-                </h3>
-                <p className="text-sm font-bold text-foreground mt-0.5">
-                  {scanResult.product.price}
-                </p>
+                <p className="text-xs font-medium text-primary">{scanResult.product.brand}</p>
+                <h3 className="text-lg font-semibold text-foreground leading-snug">{scanResult.product.name}</h3>
+                <p className="text-sm font-bold text-foreground mt-0.5">{scanResult.product.price}</p>
               </div>
             </div>
 
-            {/* Verdict */}
             <div className="mt-4">
               {scanResult.isRecommended ? (
                 <div className="flex items-center gap-2 rounded-lg bg-secondary/20 px-4 py-3">
                   <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-accent-foreground" />
                   <div>
                     <p className="font-semibold text-foreground">Recommended</p>
-                    <p className="text-sm text-muted-foreground">
-                      This product does not contain any ingredients that conflict
-                      with your health profile or preferences.
-                    </p>
+                    <p className="text-sm text-muted-foreground">This product does not contain any ingredients that conflict with your health profile or preferences.</p>
                   </div>
                 </div>
               ) : (
                 <div className="flex items-start gap-2 rounded-lg bg-destructive/10 px-4 py-3">
                   <AlertTriangle className="mt-0.5 h-5 w-5 flex-shrink-0 text-destructive" />
                   <div>
-                    <p className="font-semibold text-foreground">
-                      Not Recommended
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      This product contains{' '}
-                      {scanResult.flaggedIngredients.length} ingredient
-                      {scanResult.flaggedIngredients.length !== 1 ? 's' : ''}{' '}
-                      that conflict with your profile.
-                    </p>
+                    <p className="font-semibold text-foreground">Not Recommended</p>
+                    <p className="text-sm text-muted-foreground">This product contains {scanResult.flaggedIngredients.length} ingredient{scanResult.flaggedIngredients.length !== 1 ? 's' : ''} that conflict with your profile.</p>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Allergen Warning Banner */}
-            {/* Allergen Warning Banner */}
             {(() => {
               const allergenFlags = scanResult.flaggedIngredients.filter((fi) => fi.flaggedFrom === 'allergens')
-              console.log("[v0] Allergen flags found:", allergenFlags.length, allergenFlags)
               if (allergenFlags.length === 0) return null
               return (
                 <div className="mt-4 flex items-start gap-3 rounded-lg bg-amber-100 border-2 border-amber-400 px-4 py-3">
                   <AlertTriangle className="mt-0.5 h-6 w-6 flex-shrink-0 text-amber-600" />
                   <div>
-                    <p className="font-bold text-amber-800 text-base">
-                      Contains Allergens
-                    </p>
-                    <p className="text-sm text-amber-700 mt-1">
-                      {allergenFlags.map((fi) => fi.ingredient).join(', ')}
-                    </p>
+                    <p className="font-bold text-amber-800 text-base">Contains Allergens</p>
+                    <p className="text-sm text-amber-700 mt-1">{allergenFlags.map((fi) => fi.ingredient).join(', ')}</p>
                   </div>
                 </div>
               )
             })()}
 
-            {/* Flagged Ingredients */}
             {scanResult.flaggedIngredients.length > 0 && (
               <div className="mt-4 flex flex-col gap-3">
                 <p className="text-sm font-semibold text-foreground flex items-center gap-1.5">
@@ -692,27 +552,14 @@ export function ProductScanner() {
                   Why this product is flagged:
                 </p>
                 {scanResult.flaggedIngredients.map((fi, idx) => (
-                  <div
-                    key={`${fi.ingredient}-${idx}`}
-                    className="rounded-lg border border-border bg-card p-3"
-                  >
+                  <div key={`${fi.ingredient}-${idx}`} className="rounded-lg border border-border bg-card p-3">
                     <div className="flex items-start gap-3">
                       <div className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-destructive/10">
-                        {fi.source === 'ailment' ? (
-                          <Heart className="h-3.5 w-3.5 text-destructive" />
-                        ) : fi.flaggedFrom === 'packaging' ? (
-                          <Package className="h-3.5 w-3.5 text-destructive" />
-                        ) : (
-                          <Leaf className="h-3.5 w-3.5 text-destructive" />
-                        )}
+                        {fi.source === 'ailment' ? <Heart className="h-3.5 w-3.5 text-destructive" /> : fi.flaggedFrom === 'packaging' ? <Package className="h-3.5 w-3.5 text-destructive" /> : <Leaf className="h-3.5 w-3.5 text-destructive" />}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-card-foreground">
-                          {fi.ingredient}
-                        </p>
-                        <p className="mt-0.5 text-sm text-muted-foreground">
-                          {fi.reason}
-                        </p>
+                        <p className="font-medium text-card-foreground">{fi.ingredient}</p>
+                        <p className="mt-0.5 text-sm text-muted-foreground">{fi.reason}</p>
                         <div className="mt-2 flex flex-wrap items-center gap-2">
                           {fi.source === 'ailment' ? (
                             <span className="inline-flex items-center gap-1.5 rounded-full bg-destructive/10 px-3 py-1 text-xs font-medium text-destructive">
@@ -733,14 +580,7 @@ export function ProductScanner() {
                           )}
                           {fi.sources && fi.sources.length > 0 && (
                             <button
-                              onClick={() =>
-                                setSourcesDialog({
-                                  ingredient: fi.ingredient,
-                                  reason: fi.reason,
-                                  sourceName: fi.sourceName,
-                                  sources: fi.sources!,
-                                })
-                              }
+                              onClick={() => setSourcesDialog({ ingredient: fi.ingredient, reason: fi.reason, sourceName: fi.sourceName, sources: fi.sources! })}
                               className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-3 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary/10"
                             >
                               <BookOpen className="h-3 w-3" />
@@ -755,27 +595,13 @@ export function ProductScanner() {
               </div>
             )}
 
-            {/* Ingredients list */}
             <div className="mt-4">
-              <p className="mb-2 text-sm font-semibold text-foreground">
-                Full ingredient list:
-              </p>
+              <p className="mb-2 text-sm font-semibold text-foreground">Full ingredient list:</p>
               <div className="flex flex-wrap gap-1.5">
                 {scanResult.product.ingredients.map((ing) => {
-                  const isFlagged = scanResult.flaggedIngredients.some(
-                    (fi) =>
-                      ing.toLowerCase().includes(fi.ingredient.toLowerCase()) ||
-                      fi.ingredient.toLowerCase().includes(ing.toLowerCase())
-                  )
+                  const isFlagged = scanResult.flaggedIngredients.some((fi) => ing.toLowerCase().includes(fi.ingredient.toLowerCase()) || fi.ingredient.toLowerCase().includes(ing.toLowerCase()))
                   return (
-                    <span
-                      key={ing}
-                      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs ${
-                        isFlagged
-                          ? 'bg-destructive/10 text-destructive font-medium'
-                          : 'bg-muted text-muted-foreground'
-                      }`}
-                    >
+                    <span key={ing} className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs ${isFlagged ? 'bg-destructive/10 text-destructive font-medium' : 'bg-muted text-muted-foreground'}`}>
                       {isFlagged && <AlertTriangle className="h-3 w-3" />}
                       {ing}
                     </span>
@@ -785,90 +611,44 @@ export function ProductScanner() {
             </div>
           </div>
 
-          {/* Alternative Products */}
-          {scanResult.alternatives.length > 0 &&
-            !scanResult.isRecommended && (
-              <div>
-                <h2 className="mb-4 text-lg font-semibold text-foreground">
-                  Recommended Alternatives
-                </h2>
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {scanResult.alternatives.map((alt: Product & { slug?: string }) => {
-                    const altSlug = getProductSlug(alt)
-                    const saved = isProductSaved(altSlug)
-                    return (
-                      <div
-                        key={alt.id}
-                        className="rounded-xl border border-border bg-card p-4 flex flex-col"
-                      >
-                        <div className="mb-3 flex h-28 items-center justify-center rounded-lg bg-muted">
-                          <CheckCircle2 className="h-8 w-8 text-secondary" />
-                        </div>
-                        <p className="text-xs font-medium text-primary">
-                          {alt.brand}
-                        </p>
-                        <h3 className="mt-1 text-sm font-semibold text-card-foreground leading-snug flex-1">
-                          {alt.name}
-                        </h3>
-                        <p className="mt-1 text-sm font-bold text-card-foreground">
-                          {alt.price}
-                        </p>
-                        <div className="mt-3 flex gap-2">
-                          <Button
-                            size="sm"
-                            className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 gap-1.5"
-                            asChild
-                          >
-                            <a
-                              href={alt.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <ExternalLink className="h-3.5 w-3.5" />
-                              Shop Now
-                            </a>
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() =>
-                              saved
-                                ? unsaveProduct(altSlug)
-                                : saveProduct(alt)
-                            }
-                            className={`border-border gap-1.5 ${
-                              saved
-                                ? 'bg-primary/10 text-primary border-primary/30'
-                                : 'text-foreground hover:bg-accent'
-                            }`}
-                          >
-                            {saved ? (
-                              <BookmarkCheck className="h-3.5 w-3.5" />
-                            ) : (
-                              <Bookmark className="h-3.5 w-3.5" />
-                            )}
-                            {saved ? 'Saved' : 'Save'}
-                          </Button>
-                        </div>
+          {scanResult.alternatives.length > 0 && !scanResult.isRecommended && (
+            <div>
+              <h2 className="mb-4 text-lg font-semibold text-foreground">Recommended Alternatives</h2>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {scanResult.alternatives.map((alt: Product & { slug?: string }) => {
+                  const altSlug = getProductSlug(alt)
+                  const saved = isProductSaved(altSlug)
+                  return (
+                    <div key={alt.id} className="rounded-xl border border-border bg-card p-4 flex flex-col">
+                      <div className="mb-3 flex h-28 items-center justify-center rounded-lg bg-muted">
+                        <CheckCircle2 className="h-8 w-8 text-secondary" />
                       </div>
-                    )
-                  })}
-                </div>
+                      <p className="text-xs font-medium text-primary">{alt.brand}</p>
+                      <h3 className="mt-1 text-sm font-semibold text-card-foreground leading-snug flex-1">{alt.name}</h3>
+                      <p className="mt-1 text-sm font-bold text-card-foreground">{alt.price}</p>
+                      <div className="mt-3 flex gap-2">
+                        <Button size="sm" className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 gap-1.5" asChild>
+                          <a href={alt.url} target="_blank" rel="noopener noreferrer">
+                            <ExternalLink className="h-3.5 w-3.5" />
+                            Shop Now
+                          </a>
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => saved ? unsaveProduct(altSlug) : saveProduct(alt)} className={`border-border gap-1.5 ${saved ? 'bg-primary/10 text-primary border-primary/30' : 'text-foreground hover:bg-accent'}`}>
+                          {saved ? <BookmarkCheck className="h-3.5 w-3.5" /> : <Bookmark className="h-3.5 w-3.5" />}
+                          {saved ? 'Saved' : 'Save'}
+                        </Button>
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
-            )}
+            </div>
+          )}
 
-          {/* If recommended, show save option */}
           {scanResult.isRecommended && (
             <div className="flex gap-3">
-              <Button
-                className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2"
-                asChild
-              >
-                <a
-                  href={scanResult.product.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+              <Button className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2" asChild>
+                <a href={scanResult.product.url} target="_blank" rel="noopener noreferrer">
                   <ExternalLink className="h-4 w-4" />
                   Shop This Product
                 </a>
@@ -877,24 +657,8 @@ export function ProductScanner() {
                 const slug = getProductSlug(scanResult.product as Product & { slug?: string })
                 const saved = isProductSaved(slug)
                 return (
-                  <Button
-                    variant="outline"
-                    onClick={() =>
-                      saved
-                        ? unsaveProduct(slug)
-                        : saveProduct(scanResult.product)
-                    }
-                    className={`border-border gap-2 ${
-                      saved
-                        ? 'bg-primary/10 text-primary border-primary/30'
-                        : 'text-foreground hover:bg-accent'
-                    }`}
-                  >
-                    {saved ? (
-                      <BookmarkCheck className="h-4 w-4" />
-                    ) : (
-                      <Bookmark className="h-4 w-4" />
-                    )}
+                  <Button variant="outline" onClick={() => saved ? unsaveProduct(slug) : saveProduct(scanResult.product)} className={`border-border gap-2 ${saved ? 'bg-primary/10 text-primary border-primary/30' : 'text-foreground hover:bg-accent'}`}>
+                    {saved ? <BookmarkCheck className="h-4 w-4" /> : <Bookmark className="h-4 w-4" />}
                     {saved ? 'Saved' : 'Save Product'}
                   </Button>
                 )
@@ -904,7 +668,6 @@ export function ProductScanner() {
         </div>
       )}
 
-      {/* Find Out Why - Sources Dialog */}
       <Dialog open={!!sourcesDialog} onOpenChange={(open) => { if (!open) setSourcesDialog(null) }}>
         <DialogContent className="bg-card border-border max-w-lg">
           <DialogHeader>
@@ -917,19 +680,12 @@ export function ProductScanner() {
             </DialogDescription>
           </DialogHeader>
           <div className="mt-2 rounded-lg bg-muted/50 p-4">
-            <p className="text-sm text-muted-foreground mb-3">
-              {sourcesDialog?.reason}
-            </p>
+            <p className="text-sm text-muted-foreground mb-3">{sourcesDialog?.reason}</p>
             <ul className="flex flex-col gap-3">
               {sourcesDialog?.sources.map((source, idx) => (
                 <li key={idx} className="flex items-start gap-2">
                   <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
-                  <a
-                    href={source.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-primary underline underline-offset-2 hover:text-primary/80 transition-colors"
-                  >
+                  <a href={source.url} target="_blank" rel="noopener noreferrer" className="text-sm text-primary underline underline-offset-2 hover:text-primary/80 transition-colors">
                     {source.title}
                   </a>
                 </li>
