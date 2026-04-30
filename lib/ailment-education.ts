@@ -1082,6 +1082,294 @@ export const ailmentEducationData: Record<string, AilmentEducation> = {
   },
 
   // Women\'s Health
+  'breastfeeding': {
+    description: 'While breastfeeding, certain ingredients in food, drink, and personal care products can pass through breast milk to your baby. Being mindful of what you consume and apply helps protect your newborn\'s health and development.',
+    generalSources: [
+      { title: 'La Leche League - Foods and Breastfeeding', url: 'https://www.llli.org/breastfeeding-info/food/' },
+      { title: 'CDC - Breastfeeding Nutrition', url: 'https://www.cdc.gov/breastfeeding/breastfeeding-special-circumstances/diet-and-micronutrients/maternal-diet.html' },
+      { title: 'Mayo Clinic - Breastfeeding Nutrition', url: 'https://www.mayoclinic.org/healthy-lifestyle/infant-and-toddler-health/in-depth/breastfeeding-nutrition/art-20046912' },
+    ],
+    ingredientInfo: {
+      'Caffeine': {
+        reason: 'Caffeine passes into breast milk, typically peaking 1–2 hours after consumption. While small amounts are generally considered safe, high intake can cause infant irritability, poor sleep, and fussiness.',
+        sources: [
+          { title: 'CDC - Caffeine and Breastfeeding', url: 'https://www.cdc.gov/breastfeeding/breastfeeding-special-circumstances/diet-and-micronutrients/maternal-diet.html' },
+          { title: 'AAP - Breastfeeding and Caffeine', url: 'https://www.healthychildren.org/English/ages-stages/baby/breastfeeding/Pages/Maternal-Diet.aspx' },
+        ],
+      },
+      'Alcohol': {
+        reason: 'Alcohol passes directly into breast milk at concentrations similar to blood alcohol levels. The AAP recommends waiting at least 2 hours per drink before nursing. Regular or heavy alcohol use should be avoided.',
+        sources: [
+          { title: 'CDC - Alcohol and Breastfeeding', url: 'https://www.cdc.gov/breastfeeding/breastfeeding-special-circumstances/vaccinations-medications-drugs/alcohol.html' },
+          { title: 'AAP - Alcohol and Breastfeeding', url: 'https://publications.aap.org/pediatrics/article/142/2/e20181428/39150' },
+        ],
+      },
+      'Peppermint Oil': {
+        reason: 'Menthol and peppermint oil in large amounts have been traditionally associated with reduced milk supply. While occasional dietary use is fine, high-dose peppermint supplements and teas should be used cautiously.',
+        sources: [
+          { title: 'La Leche League - Herbs and Milk Supply', url: 'https://www.llli.org/breastfeeding-info/herbs/' },
+          { title: 'KellyMom - Herbs That Decrease Milk Supply', url: 'https://kellymom.com/bf/can-i-breastfeed/herbs/herbs-that-decrease-milk-supply/' },
+        ],
+      },
+      'Sage': {
+        reason: 'Sage is traditionally known to reduce breast milk supply and has been used historically as a weaning herb. Large amounts — such as in supplements or strong teas — should be avoided while breastfeeding.',
+        sources: [
+          { title: 'KellyMom - Herbs That Decrease Milk Supply', url: 'https://kellymom.com/bf/can-i-breastfeed/herbs/herbs-that-decrease-milk-supply/' },
+        ],
+      },
+      'Parsley': {
+        reason: 'In large amounts, parsley may reduce milk supply. Culinary use in normal food portions is considered safe, but parsley supplements or teas should be avoided.',
+        sources: [
+          { title: 'La Leche League - Herbs and Breastfeeding', url: 'https://www.llli.org/breastfeeding-info/herbs/' },
+        ],
+      },
+      'Retinol': {
+        reason: 'Topical retinoids can potentially pass into breast milk. Most dermatologists and the AAP recommend avoiding prescription retinoids and high-dose retinol products during breastfeeding as a precaution.',
+        sources: [
+          { title: 'AAD - Skin Care While Breastfeeding', url: 'https://www.aad.org/public/everyday-care/skin-care-basics/anti-aging/is-it-safe-to-use-retinol-while-pregnant' },
+          { title: 'LactMed - Tretinoin', url: 'https://www.ncbi.nlm.nih.gov/books/NBK501906/' },
+        ],
+      },
+      'Parabens': {
+        reason: 'Parabens have been detected in breast milk and can act as endocrine disruptors. Many healthcare providers recommend minimizing paraben exposure during breastfeeding.',
+        sources: [
+          { title: 'EWG - Parabens', url: 'https://www.ewg.org/what-are-parabens' },
+          { title: 'Journal of Exposure Science - Parabens in Breast Milk', url: 'https://pubmed.ncbi.nlm.nih.gov/22237635/' },
+        ],
+      },
+      'Artificial Sweeteners': {
+        reason: 'Some artificial sweeteners can pass into breast milk. Research is limited, but many health organizations recommend caution. Saccharin in particular is generally advised against during breastfeeding.',
+        sources: [
+          { title: 'CDC - Breastfeeding and Diet', url: 'https://www.cdc.gov/breastfeeding/breastfeeding-special-circumstances/diet-and-micronutrients/maternal-diet.html' },
+        ],
+      },
+      'Mercury': {
+        reason: 'Mercury passes into breast milk and can affect infant neurological development. High-mercury fish should be limited during breastfeeding for the same reasons as during pregnancy.',
+        sources: [
+          { title: 'FDA - Fish Advice for Breastfeeding Mothers', url: 'https://www.fda.gov/food/environmental-contaminants-food/advice-about-eating-fish' },
+          { title: 'EPA - Mercury and Breastfeeding', url: 'https://www.epa.gov/mercury/guidelines-mercury-exposure-pregnant-women-nursing-mothers-and-young-children' },
+        ],
+      },
+      'Sodium Nitrite': {
+        reason: 'Nitrites found in processed and cured meats can pass into breast milk. Minimizing intake of processed meats is generally recommended during breastfeeding.',
+        sources: [
+          { title: 'CDC - Breastfeeding Maternal Diet', url: 'https://www.cdc.gov/breastfeeding/breastfeeding-special-circumstances/diet-and-micronutrients/maternal-diet.html' },
+        ],
+      },
+      'Formaldehyde': {
+        reason: 'Formaldehyde is a carcinogen found in some hair treatments and nail products. Exposure should be minimized during breastfeeding as it can enter the bloodstream through skin and respiratory absorption.',
+        sources: [
+          { title: 'CDC - Formaldehyde', url: 'https://www.cdc.gov/niosh/topics/formaldehyde/default.html' },
+        ],
+      },
+      'BPA': {
+        reason: 'BPA has been detected in breast milk and can affect infant hormonal development. Using BPA-free bottles and containers and avoiding canned foods with BPA linings is recommended during breastfeeding.',
+        sources: [
+          { title: 'NIH - BPA', url: 'https://www.niehs.nih.gov/health/topics/agents/sya-bpa' },
+          { title: 'AAP - BPA and Children', url: 'https://www.healthychildren.org/English/safety-prevention/all-around/Pages/Bisphenol-A-BPA.aspx' },
+        ],
+      },
+      'Salicylic Acid': {
+        reason: 'High-dose topical salicylic acid may be absorbed into the bloodstream and potentially pass into breast milk. High-concentration formulas should be discussed with a doctor while breastfeeding.',
+        sources: [
+          { title: 'LactMed - Salicylic Acid', url: 'https://www.ncbi.nlm.nih.gov/books/NBK501864/' },
+        ],
+      },
+    },
+  },
+  'pregnant': {
+    description: 'Pregnancy is a time when what you eat, drink, and apply to your skin can affect both your health and your baby\'s development. Certain ingredients in food, skincare, and household products should be avoided or minimized during pregnancy.',
+    generalSources: [
+      { title: 'ACOG - Nutrition During Pregnancy', url: 'https://www.acog.org/womens-health/faqs/nutrition-during-pregnancy' },
+      { title: 'CDC - Pregnancy Health', url: 'https://www.cdc.gov/pregnancy/index.html' },
+      { title: 'Mayo Clinic - Pregnancy Nutrition', url: 'https://www.mayoclinic.org/healthy-lifestyle/pregnancy-week-by-week/in-depth/pregnancy-nutrition/art-20045082' },
+    ],
+    ingredientInfo: {
+      'Retinol': {
+        reason: 'High-dose vitamin A derivatives are teratogenic — meaning they can cause birth defects. Prescription retinoids (tretinoin, adapalene) and high-dose supplements must be avoided. Skincare with retinol should also be discontinued during pregnancy.',
+        sources: [
+          { title: 'AAD - Skin Care During Pregnancy', url: 'https://www.aad.org/public/everyday-care/skin-care-basics/anti-aging/is-it-safe-to-use-retinol-while-pregnant' },
+          { title: 'March of Dimes - Vitamins During Pregnancy', url: 'https://www.marchofdimes.org/pregnancy/vitamins-and-other-nutrients-during-pregnancy.aspx' },
+        ],
+      },
+      'Oxybenzone': {
+        reason: 'Oxybenzone is a chemical UV filter that can be absorbed through the skin into the bloodstream. Studies suggest it may act as an endocrine disruptor. Mineral sunscreens with zinc oxide or titanium dioxide are recommended during pregnancy instead.',
+        sources: [
+          { title: 'EWG - Sunscreen During Pregnancy', url: 'https://www.ewg.org/sunscreen/report/the-trouble-with-sunscreen-chemicals/' },
+          { title: 'American Pregnancy Association - Safe Sunscreen', url: 'https://americanpregnancy.org/healthy-pregnancy/is-it-safe/sunscreen-during-pregnancy/' },
+        ],
+      },
+      'Formaldehyde': {
+        reason: 'Formaldehyde is a known carcinogen and developmental toxin. It is found in some hair straightening treatments, nail hardeners, and cosmetics. Exposure during pregnancy should be avoided.',
+        sources: [
+          { title: 'CDC - Formaldehyde', url: 'https://www.cdc.gov/niosh/topics/formaldehyde/default.html' },
+          { title: 'FDA - Hair Smoothing Products', url: 'https://www.fda.gov/cosmetics/cosmetic-products/hair-smoothing-products-release-formaldehyde' },
+        ],
+      },
+      'Phthalates': {
+        reason: 'Phthalates are endocrine disruptors commonly hidden under the term "fragrance" on ingredient labels. Studies have linked prenatal phthalate exposure to developmental issues in babies.',
+        sources: [
+          { title: 'NIH - Phthalates and Pregnancy', url: 'https://www.niehs.nih.gov/health/topics/agents/endocrine' },
+          { title: 'Harvard Health - Phthalates', url: 'https://www.health.harvard.edu/staying-healthy/phthalates-everywhere-and-the-health-risks-arent-clear' },
+        ],
+      },
+      'Parabens': {
+        reason: 'Parabens can cross the placental barrier and have been detected in newborn cord blood. They can mimic estrogen and may affect fetal development.',
+        sources: [
+          { title: 'Environmental Working Group - Parabens', url: 'https://www.ewg.org/what-are-parabens' },
+          { title: 'FDA - Parabens in Cosmetics', url: 'https://www.fda.gov/cosmetics/cosmetic-ingredients/parabens-cosmetics' },
+        ],
+      },
+      'Artificial Sweeteners': {
+        reason: 'Some artificial sweeteners, particularly saccharin, are not recommended during pregnancy as they can cross the placenta. Research on others like aspartame and sucralose during pregnancy is limited.',
+        sources: [
+          { title: 'American Pregnancy Association - Artificial Sweeteners', url: 'https://americanpregnancy.org/healthy-pregnancy/pregnancy-health-wellness/artificial-sweeteners-and-pregnancy/' },
+          { title: 'Mayo Clinic - Sweeteners During Pregnancy', url: 'https://www.mayoclinic.org/healthy-lifestyle/pregnancy-week-by-week/expert-answers/pregnancy-and-aspartame/faq-20058128' },
+        ],
+      },
+      'Caffeine': {
+        reason: 'Caffeine crosses the placenta and fetuses cannot metabolize it efficiently. High caffeine intake is associated with low birth weight and increased miscarriage risk. Most guidelines recommend limiting intake to under 200mg per day.',
+        sources: [
+          { title: 'ACOG - Caffeine During Pregnancy', url: 'https://www.acog.org/womens-health/faqs/moderate-caffeine-consumption-during-pregnancy' },
+          { title: 'March of Dimes - Caffeine', url: 'https://www.marchofdimes.org/find-support/topics/pregnancy/caffeine-pregnancy' },
+        ],
+      },
+      'Alcohol': {
+        reason: 'No safe level of alcohol consumption during pregnancy has been established. Alcohol crosses the placenta and can cause fetal alcohol spectrum disorders (FASDs), which include physical, behavioral, and learning disabilities.',
+        sources: [
+          { title: 'CDC - Alcohol During Pregnancy', url: 'https://www.cdc.gov/ncbddd/fasd/alcohol-use.html' },
+          { title: 'ACOG - Alcohol and Pregnancy', url: 'https://www.acog.org/womens-health/faqs/alcohol-and-pregnancy' },
+        ],
+      },
+      'Mercury': {
+        reason: 'High-mercury fish (shark, swordfish, king mackerel, tilefish, and bigeye tuna) should be avoided during pregnancy. Mercury can damage the fetal nervous system and brain development.',
+        sources: [
+          { title: 'FDA - Advice About Eating Fish During Pregnancy', url: 'https://www.fda.gov/food/environmental-contaminants-food/advice-about-eating-fish' },
+          { title: 'EPA - Mercury and Pregnancy', url: 'https://www.epa.gov/mercury/guidelines-mercury-exposure-pregnant-women-nursing-mothers-and-young-children' },
+        ],
+      },
+      'BPA': {
+        reason: 'BPA (bisphenol A) is an endocrine disruptor found in plastics and can linings. It can cross the placenta and has been linked to developmental issues, behavioral problems, and altered hormonal function in children.',
+        sources: [
+          { title: 'NIH - BPA and Pregnancy', url: 'https://www.niehs.nih.gov/health/topics/agents/sya-bpa' },
+          { title: 'Mayo Clinic - BPA', url: 'https://www.mayoclinic.org/healthy-lifestyle/nutrition-and-healthy-eating/expert-answers/bpa/faq-20058331' },
+        ],
+      },
+      'Sodium Nitrite': {
+        reason: 'Nitrates and nitrites found in processed and cured meats can form nitrosamines, which are potentially harmful. High intake during pregnancy has been associated with adverse outcomes and is best minimized.',
+        sources: [
+          { title: 'American Pregnancy Association - Foods to Avoid', url: 'https://americanpregnancy.org/healthy-pregnancy/pregnancy-health-wellness/foods-to-avoid-during-pregnancy/' },
+        ],
+      },
+      'Unpasteurized Ingredients': {
+        reason: 'Raw and unpasteurized dairy products, juices, and soft cheeses can harbor listeria, a bacteria especially dangerous during pregnancy that can cause miscarriage, stillbirth, or severe illness in newborns.',
+        sources: [
+          { title: 'CDC - Listeria and Pregnancy', url: 'https://www.cdc.gov/listeria/risk-groups/pregnant-women.html' },
+          { title: 'FDA - Foods to Avoid During Pregnancy', url: 'https://www.fda.gov/food/buy-store-serve-safe-food/food-safety-for-pregnant-women-and-their-unborn-babies' },
+        ],
+      },
+      'Salicylic Acid': {
+        reason: 'High-dose oral salicylates are associated with complications during pregnancy. Topical salicylic acid in skincare is a lower risk but high concentrations or large surface area application should be avoided as a precaution.',
+        sources: [
+          { title: 'AAD - Acne Treatment During Pregnancy', url: 'https://www.aad.org/public/diseases/acne/diy/pregnancy-safe' },
+        ],
+      },
+    },
+  },
+  'postpartum': {
+    description: 'The postpartum period is a time of physical recovery and hormonal shifts after childbirth. Whether or not you are breastfeeding, certain ingredients in food, personal care products, and household items may affect your recovery, hormone balance, and overall wellbeing during this sensitive time.',    generalSources: [
+      { title: 'La Leche League - Foods and Breastfeeding', url: 'https://www.llli.org/breastfeeding-info/food/' },
+      { title: 'CDC - Breastfeeding Nutrition', url: 'https://www.cdc.gov/breastfeeding/breastfeeding-special-circumstances/diet-and-micronutrients/maternal-diet.html' },
+      { title: 'Mayo Clinic - Breastfeeding Nutrition', url: 'https://www.mayoclinic.org/healthy-lifestyle/infant-and-toddler-health/in-depth/breastfeeding-nutrition/art-20046912' },
+    ],
+    ingredientInfo: {
+      'Caffeine': {
+        reason: 'Caffeine passes into breast milk, typically peaking 1–2 hours after consumption. While small amounts are generally considered safe, high intake can cause infant irritability, poor sleep, and fussiness.',
+        sources: [
+          { title: 'CDC - Caffeine and Breastfeeding', url: 'https://www.cdc.gov/breastfeeding/breastfeeding-special-circumstances/diet-and-micronutrients/maternal-diet.html' },
+          { title: 'AAP - Breastfeeding and Caffeine', url: 'https://www.healthychildren.org/English/ages-stages/baby/breastfeeding/Pages/Maternal-Diet.aspx' },
+        ],
+      },
+      'Alcohol': {
+        reason: 'Alcohol passes directly into breast milk at concentrations similar to blood alcohol levels. The AAP recommends waiting at least 2 hours per drink before nursing. Regular or heavy alcohol use should be avoided.',
+        sources: [
+          { title: 'CDC - Alcohol and Breastfeeding', url: 'https://www.cdc.gov/breastfeeding/breastfeeding-special-circumstances/vaccinations-medications-drugs/alcohol.html' },
+          { title: 'AAP - Alcohol and Breastfeeding', url: 'https://publications.aap.org/pediatrics/article/142/2/e20181428/39150' },
+        ],
+      },
+      'Peppermint Oil': {
+        reason: 'Menthol and peppermint oil in large amounts have been traditionally associated with reduced milk supply. While occasional dietary use is fine, high-dose peppermint supplements and certain teas should be used cautiously.',
+        sources: [
+          { title: 'La Leche League - Herbs and Milk Supply', url: 'https://www.llli.org/breastfeeding-info/herbs/' },
+          { title: 'KellyMom - Herbs That Decrease Milk Supply', url: 'https://kellymom.com/bf/can-i-breastfeed/herbs/herbs-that-decrease-milk-supply/' },
+        ],
+      },
+      'Sage': {
+        reason: 'Sage is traditionally known to reduce breast milk supply and has been used historically as a weaning herb. Large amounts — such as in supplements or strong teas — should be avoided while breastfeeding.',
+        sources: [
+          { title: 'KellyMom - Herbs That Decrease Milk Supply', url: 'https://kellymom.com/bf/can-i-breastfeed/herbs/herbs-that-decrease-milk-supply/' },
+        ],
+      },
+      'Parsley': {
+        reason: 'In large amounts, parsley may reduce milk supply. Culinary use in normal food portions is considered safe, but parsley supplements or teas should be avoided.',
+        sources: [
+          { title: 'La Leche League - Herbs and Breastfeeding', url: 'https://www.llli.org/breastfeeding-info/herbs/' },
+        ],
+      },
+      'Retinol': {
+        reason: 'Topical retinoids can potentially pass into breast milk. Most dermatologists and the AAP recommend avoiding prescription retinoids and high-dose retinol products during breastfeeding as a precaution.',
+        sources: [
+          { title: 'AAD - Skin Care While Breastfeeding', url: 'https://www.aad.org/public/everyday-care/skin-care-basics/anti-aging/is-it-safe-to-use-retinol-while-pregnant' },
+          { title: 'LactMed - Tretinoin', url: 'https://www.ncbi.nlm.nih.gov/books/NBK501906/' },
+        ],
+      },
+      'Parabens': {
+        reason: 'Parabens have been detected in breast milk and can act as endocrine disruptors. Many healthcare providers recommend minimizing paraben exposure during breastfeeding.',
+        sources: [
+          { title: 'EWG - Parabens', url: 'https://www.ewg.org/what-are-parabens' },
+          { title: 'Journal of Exposure Science - Parabens in Breast Milk', url: 'https://pubmed.ncbi.nlm.nih.gov/22237635/' },
+        ],
+      },
+      'Artificial Sweeteners': {
+        reason: 'Some artificial sweeteners can pass into breast milk. Research is limited, but many health organizations recommend caution. Saccharin in particular is generally advised against during breastfeeding.',
+        sources: [
+          { title: 'CDC - Breastfeeding and Diet', url: 'https://www.cdc.gov/breastfeeding/breastfeeding-special-circumstances/diet-and-micronutrients/maternal-diet.html' },
+        ],
+      },
+      'Mercury': {
+        reason: 'Mercury passes into breast milk and can affect infant neurological development. High-mercury fish should be limited during breastfeeding for the same reasons as during pregnancy.',
+        sources: [
+          { title: 'FDA - Fish Advice for Breastfeeding Mothers', url: 'https://www.fda.gov/food/environmental-contaminants-food/advice-about-eating-fish' },
+          { title: 'EPA - Mercury and Breastfeeding', url: 'https://www.epa.gov/mercury/guidelines-mercury-exposure-pregnant-women-nursing-mothers-and-young-children' },
+        ],
+      },
+      'Sodium Nitrite': {
+        reason: 'Nitrites found in processed and cured meats can pass into breast milk. While occasional consumption is unlikely to cause harm, minimizing intake of processed meats is generally recommended for overall health during breastfeeding.',
+        sources: [
+          { title: 'CDC - Breastfeeding Maternal Diet', url: 'https://www.cdc.gov/breastfeeding/breastfeeding-special-circumstances/diet-and-micronutrients/maternal-diet.html' },
+        ],
+      },
+      'Formaldehyde': {
+        reason: 'Formaldehyde is a carcinogen found in some hair treatments and nail products. Exposure should be minimized during breastfeeding as it can enter the bloodstream through skin and respiratory absorption.',
+        sources: [
+          { title: 'CDC - Formaldehyde', url: 'https://www.cdc.gov/niosh/topics/formaldehyde/default.html' },
+        ],
+      },
+      'BPA': {
+        reason: 'BPA has been detected in breast milk and can affect infant hormonal development. Using BPA-free bottles, containers, and avoiding canned foods with BPA linings is recommended during breastfeeding.',
+        sources: [
+          { title: 'NIH - BPA', url: 'https://www.niehs.nih.gov/health/topics/agents/sya-bpa' },
+          { title: 'AAP - BPA and Children', url: 'https://www.healthychildren.org/English/safety-prevention/all-around/Pages/Bisphenol-A-BPA.aspx' },
+        ],
+      },
+      'Salicylic Acid': {
+        reason: 'High-dose topical salicylic acid may be absorbed into the bloodstream and potentially pass into breast milk. Using it on small, limited areas is generally considered low risk, but high-concentration formulas should be discussed with a doctor.',
+        sources: [
+          { title: 'LactMed - Salicylic Acid', url: 'https://www.ncbi.nlm.nih.gov/books/NBK501864/' },
+        ],
+      },
+    },
+  },
   'perimenopause': {
     description: 'Perimenopause is the transition period before menopause when hormone levels fluctuate. Certain substances may worsen symptoms like hot flashes and mood changes.',
     generalSources: [
