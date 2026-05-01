@@ -159,7 +159,7 @@ export function ProductScanner() {
     searchTimerRef.current = setTimeout(async () => {
       try {
         const res = await api.searchProducts(normalizedQuery, 'all')
-        const results = (res as { products?: Product[] }).products ?? []
+        const results = ((res as { products?: unknown[] }).products ?? []) as unknown[]
         
         const inferCategory = (product: Record<string, unknown>): string => {
           const existingCategory = (product.category as string)?.toLowerCase()
@@ -184,28 +184,31 @@ export function ProductScanner() {
           return 'food'
         }
         
-        const mappedResults = results.map((p: Record<string, unknown>) => ({
-          id: (p.slug as string) || (p.id as string) || String(Math.random()),
-          slug: (p.slug as string) || (p.id as string),
-          name: (p.name as string) || (p.product_name as string) || 'Unknown Product',
-          brand: (p.brand as string) || (p.brands as string) || 'Unknown Brand',
-          image: (p.image as string) || (p.image_url as string) || '',
-          price: (p.price as string) || '',
-          url: (p.url as string) || '#',
-          ingredients: Array.isArray(p.ingredients)
-            ? p.ingredients.map((i: unknown) => typeof i === 'string' ? i : (i as Record<string, unknown>).name as string || String(i))
-            : typeof p.ingredients_text === 'string'
-              ? (p.ingredients_text as string).split(',').map((s: string) => s.trim()).filter(Boolean)
-              : [],
-          category: inferCategory(p),
-          packaging: Array.isArray(p.packaging) ? p.packaging as string[] : [],
-          allergens: Array.isArray(p.allergens)
-            ? p.allergens as string[]
-            : typeof p.allergens_tags === 'string'
-              ? (p.allergens_tags as string).split(',').map((s: string) => s.trim()).filter(Boolean)
-              : [],
-          barcode: (p.barcode as string) || (p.code as string) || undefined,
-        }))
+        const mappedResults = results.map((p) => {
+          const prod = p as Record<string, unknown>
+          return {
+            id: (prod.slug as string) || (prod.id as string) || String(Math.random()),
+            slug: (prod.slug as string) || (prod.id as string),
+            name: (prod.name as string) || (prod.product_name as string) || 'Unknown Product',
+            brand: (prod.brand as string) || (prod.brands as string) || 'Unknown Brand',
+            image: (prod.image as string) || (prod.image_url as string) || '',
+            price: (prod.price as string) || '',
+            url: (prod.url as string) || '#',
+            ingredients: Array.isArray(prod.ingredients)
+              ? prod.ingredients.map((i: unknown) => typeof i === 'string' ? i : (i as Record<string, unknown>).name as string || String(i))
+              : typeof prod.ingredients_text === 'string'
+                ? (prod.ingredients_text as string).split(',').map((s: string) => s.trim()).filter(Boolean)
+                : [],
+            category: inferCategory(prod),
+            packaging: Array.isArray(prod.packaging) ? prod.packaging as string[] : [],
+            allergens: Array.isArray(prod.allergens)
+              ? prod.allergens as string[]
+              : typeof prod.allergens_tags === 'string'
+                ? (prod.allergens_tags as string).split(',').map((s: string) => s.trim()).filter(Boolean)
+                : [],
+            barcode: (prod.barcode as string) || (prod.code as string) || undefined,
+          }
+        })        
         setApiSearchResults(mappedResults)
       } catch (err) {
         console.error("[v0] Search error:", err)
@@ -248,7 +251,7 @@ export function ProductScanner() {
       const prefInfoMap = new Map<string, { name: string; reason?: string }>()
       for (const cat of preferenceCategories) {
         for (const pref of cat.preferences) {
-          prefInfoMap.set(pref.id, { name: pref.name, reason: pref.reason })
+          prefInfoMap.set(pref.id, { name: pref.name, reason: pref.description })
         }
       }
       const flaggedPrefIds = new Set<string>()
