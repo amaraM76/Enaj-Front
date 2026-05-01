@@ -48,6 +48,13 @@ export function ProfileSettings() {
     .find((p) => p.id === 'enaj-baseline' || p.name === 'Enaj Non-Toxic Baseline')
   const baselineId = baselinePref?.id ?? 'enaj-baseline'
 
+  const BASELINE_COVERED_PREFS = new Set([
+    'Parabens', 'Phthalates', 'Synthetic Fragrance', 'Oxybenzone', 'BPA & BPS',
+    'Sulfates', 'Formaldehyde', 'Triclosan', 'Nitrates/Nitrites', 'Artificial Flavors',
+    'Food Dyes', 'MSG', 'Artificial Sweeteners', 'High Fructose Corn Syrup',
+    'Trans Fats', 'Seed Oils', 'PFAS (Forever Chemicals)', 'Microplastics',
+  ])
+
   const handleSave = async () => {
     const updatedFields = {
       firstName,
@@ -326,19 +333,28 @@ export function ProfileSettings() {
           </p>
         ) : (
           <div className="flex flex-wrap gap-2">
-            {preferenceCategories.flatMap((c) => c.preferences)
+            {preferenceCategories
+              .flatMap((c) => c.preferences)
               .filter((p) => profile.selectedPreferences.includes(p.id) && p.id !== baselineId)
-              .map((p) => (
-                <button
-                  key={p.id}
-                  onClick={() => togglePreference(p.id)}
-                  className="group inline-flex items-center gap-1.5 rounded-full bg-secondary/30 px-3 py-1.5 text-sm text-accent-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
-                  title="Click to remove"
-                >
-                  <Check className="h-3 w-3" />
-                  {p.name}
-                </button>
-              ))}
+              .map((p) => {
+                const baselineCovered =
+                  profile.selectedPreferences.includes(baselineId) &&
+                  BASELINE_COVERED_PREFS.has(p.name)
+
+                return (
+                  <button
+                    key={p.id}
+                    onClick={() => togglePreference(p.id)}
+                    className={`group inline-flex items-center gap-1.5 rounded-full bg-secondary/30 px-3 py-1.5 text-sm text-accent-foreground transition-colors hover:bg-destructive/10 hover:text-destructive ${
+                      baselineCovered ? 'ring-1 ring-primary/30' : ''
+                    }`}
+                    title="Click to remove"
+                  >
+                    <Check className="h-3 w-3" />
+                    {p.name}
+                  </button>
+                )
+              })}
           </div>
         )}
       </div>

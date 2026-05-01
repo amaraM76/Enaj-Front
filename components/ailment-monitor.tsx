@@ -33,9 +33,69 @@ import {
   Check,
   Undo2,
   Info,
+  Sparkles,
 } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { getPreferenceEducation } from '@/lib/preference-education'
+
+const BASELINE_CATEGORIES = [
+  { label: 'Synthetic Chemicals & Preservatives', items: ['Parabens', 'Formaldehyde', 'Phthalates', 'Triclosan', 'Sulfates (SLS/SLES)', 'Oxybenzone', 'PFAS'] },
+  { label: 'Food Additives', items: ['High Fructose Corn Syrup', 'Artificial Colors & Dyes', 'Artificial Sweeteners', 'MSG', 'Sodium Nitrite/Nitrate', 'Carrageenan', 'Trans Fats'] },
+  { label: 'Seed Oils', items: ['Canola Oil', 'Soybean Oil', 'Corn Oil', 'Cottonseed Oil', 'Sunflower Oil'] },
+  { label: 'Heavy Metals & Toxins', items: ['Lead', 'Mercury', 'Aluminum', 'BPA/BPS'] },
+  { label: 'Microplastics', items: ['Polyethylene Beads', 'Polypropylene Beads', 'Microplastic Particles'] },
+]
+
+function BaselineMonitorCard({ categories }: { categories: { label: string; items: string[] }[] }) {
+  const [expanded, setExpanded] = useState(false)
+
+  return (
+    <div className="rounded-xl border-2 border-primary/20 bg-primary/5 p-4">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-start gap-3">
+          <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10">
+            <Sparkles className="h-4 w-4 text-primary" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2 mb-0.5">
+              <p className="text-sm font-semibold text-foreground">Enaj Non-Toxic Baseline</p>
+              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">Active</span>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Monitoring {categories.reduce((sum, c) => sum + c.items.length, 0)} commonly flagged toxic ingredients across all product scans.
+            </p>
+          </div>
+        </div>
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="flex-shrink-0 text-xs text-primary hover:underline font-medium"
+        >
+          {expanded ? 'Hide' : "See what's monitored"}
+        </button>
+      </div>
+
+      {expanded && (
+        <div className="mt-4 flex flex-col gap-3">
+          {categories.map((cat) => (
+            <div key={cat.label}>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">{cat.label}</p>
+              <div className="flex flex-wrap gap-1.5">
+                {cat.items.map((item) => (
+                  <span
+                    key={item}
+                    className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-1 text-xs text-primary"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
 
 export function AilmentMonitor() {
   const {
@@ -53,7 +113,6 @@ export function AilmentMonitor() {
   const [pendingAilments, setPendingAilments] = useState<string[]>([])
   const [pendingPrefChanges, setPendingPrefChanges] = useState(false)
 
-  // Confirmation states
   const [pendingDelete, setPendingDelete] = useState<{
     ailmentId: string
     ingredientId: string
@@ -69,6 +128,12 @@ export function AilmentMonitor() {
   } | null>(null)
 
   if (!profile) return null
+
+  const baselinePref = preferenceCategories
+    .flatMap((c) => c.preferences)
+    .find((p) => p.name === 'Enaj Non-Toxic Baseline')
+  const baselineId = baselinePref?.id ?? 'enaj-baseline'
+  const baselineActive = profile.selectedPreferences.includes(baselineId)
 
   const totalMonitored = profile.selectedAilments.reduce(
     (sum, sa) => sum + sa.activeIngredients.length,
@@ -103,6 +168,7 @@ export function AilmentMonitor() {
   return (
     <TooltipProvider>
       <div className="flex flex-col gap-6">
+
         {/* Confirmation Dialogs */}
         <AlertDialog open={!!pendingAilmentRemove} onOpenChange={(open) => { if (!open) setPendingAilmentRemove(null) }}>
           <AlertDialogContent className="bg-card border-border">
@@ -272,12 +338,8 @@ export function AilmentMonitor() {
                   const removedIngredients = sa.ailment.flaggedIngredients.filter(
                     (fi) => !sa.activeIngredients.find((ai) => ai.id === fi.id)
                   )
-                  
-                  // Conditions that show summary only (all-or-nothing allergies)
                   const summaryOnlyConditions = ['dairy-allergy', 'gluten-intolerance', 'soy-allergy']
                   const isSummaryOnly = summaryOnlyConditions.includes(sa.ailment.id)
-                  
-                  // Get summary label based on condition
                   const getSummaryLabel = (ailmentId: string) => {
                     switch (ailmentId) {
                       case 'dairy-allergy': return 'All dairy ingredients monitored'
@@ -286,7 +348,6 @@ export function AilmentMonitor() {
                       default: return null
                     }
                   }
-                  
                   return (
                     <div key={sa.ailment.id} className="rounded-lg border border-border bg-muted/30 p-4">
                       <div className="flex items-center justify-between mb-3">
@@ -311,7 +372,6 @@ export function AilmentMonitor() {
                         </Button>
                       </div>
 
-                      {/* Currently Monitoring */}
                       <div className="mb-3">
                         <p className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wide flex items-center gap-1">
                           <Eye className="h-3 w-3" />
@@ -320,7 +380,6 @@ export function AilmentMonitor() {
                         {sa.activeIngredients.length === 0 ? (
                           <p className="text-sm text-muted-foreground italic">All ingredients removed.</p>
                         ) : isSummaryOnly ? (
-                          // Summary-only conditions: show a simple summary instead of individual ingredients
                           <div className="rounded-lg bg-primary/5 border border-primary/20 px-4 py-3">
                             <p className="text-sm font-medium text-primary flex items-center gap-2">
                               <Check className="h-4 w-4" />
@@ -331,7 +390,6 @@ export function AilmentMonitor() {
                             </p>
                           </div>
                         ) : (
-                          // Other conditions: show individual ingredients with remove option
                           <div className="flex flex-wrap gap-2">
                             {sa.activeIngredients.map((ing) => (
                               <Tooltip key={ing.id}>
@@ -355,7 +413,6 @@ export function AilmentMonitor() {
                         )}
                       </div>
 
-                      {/* Removed Ingredients - only show for non-summary conditions */}
                       {!isSummaryOnly && removedIngredients.length > 0 && (
                         <div className="rounded-lg bg-muted p-3">
                           <p className="mb-2 text-xs font-medium text-muted-foreground flex items-center gap-1">
@@ -447,46 +504,55 @@ export function AilmentMonitor() {
             </Dialog>
           </div>
 
-          <div className="p-5">
-            {profile.selectedPreferences.length === 0 ? (
+          <div className="p-5 flex flex-col gap-4">
+            {/* Enaj Non-Toxic Baseline card */}
+            {baselineActive && (
+              <BaselineMonitorCard categories={BASELINE_CATEGORIES} />
+            )}
+
+            {/* All other preferences */}
+            {profile.selectedPreferences.filter((id) => id !== baselineId).length === 0 && !baselineActive ? (
               <div className="flex flex-col items-center py-6 text-center">
                 <Leaf className="mb-3 h-8 w-8 text-muted-foreground" />
                 <p className="text-muted-foreground">No preferences set yet.</p>
               </div>
             ) : (
               <div className="flex flex-wrap gap-2">
-                {profile.selectedPreferences.map((prefId) => {
-                  const pref = preferenceCategories.flatMap((c) => c.preferences).find((p) => p.id === prefId)
-                  const prefName = pref?.name || prefId
-                  const prefEducation = getPreferenceEducation(prefId)
-                  return (
-                    <Tooltip key={prefId}>
-                      <TooltipTrigger asChild>
-                        <button
-                          onClick={() => setPendingPrefRemove({ prefId, prefName })}
-                          className="group inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1.5 text-sm text-emerald-700 transition-colors hover:bg-destructive/10 hover:text-destructive"
-                        >
-                          <Leaf className="h-3 w-3" />
-                          {prefName}
-                          <X className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
-                          <Info className="h-3 w-3 opacity-50 group-hover:opacity-0" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent className="max-w-sm bg-popover text-popover-foreground border-border p-3" side="top">
-                        {prefEducation ? (
-                          <p className="text-xs leading-relaxed">{prefEducation.whatItIs.slice(0, 200)}{prefEducation.whatItIs.length > 200 ? '...' : ''}</p>
-                        ) : (
-                          <p className="text-xs">Products containing {prefName.toLowerCase()} ingredients will be flagged.</p>
-                        )}
-                        <p className="mt-2 text-xs text-muted-foreground italic">Click to remove from preferences</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  )
-                })}
+                {profile.selectedPreferences
+                  .filter((id) => id !== baselineId)
+                  .map((prefId) => {
+                    const pref = preferenceCategories.flatMap((c) => c.preferences).find((p) => p.id === prefId)
+                    const prefName = pref?.name || prefId
+                    const prefEducation = getPreferenceEducation(prefId)
+                    return (
+                      <Tooltip key={prefId}>
+                        <TooltipTrigger asChild>
+                          <button
+                            onClick={() => setPendingPrefRemove({ prefId, prefName })}
+                            className="group inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1.5 text-sm text-emerald-700 transition-colors hover:bg-destructive/10 hover:text-destructive"
+                          >
+                            <Leaf className="h-3 w-3" />
+                            {prefName}
+                            <X className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
+                            <Info className="h-3 w-3 opacity-50 group-hover:opacity-0" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent className="max-w-sm bg-popover text-popover-foreground border-border p-3" side="top">
+                          {prefEducation ? (
+                            <p className="text-xs leading-relaxed">{prefEducation.whatItIs.slice(0, 200)}{prefEducation.whatItIs.length > 200 ? '...' : ''}</p>
+                          ) : (
+                            <p className="text-xs">Products containing {prefName.toLowerCase()} ingredients will be flagged.</p>
+                          )}
+                          <p className="mt-2 text-xs text-muted-foreground italic">Click to remove from preferences</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    )
+                  })}
               </div>
             )}
           </div>
         </div>
+
       </div>
     </TooltipProvider>
   )

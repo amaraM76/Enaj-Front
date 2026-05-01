@@ -268,6 +268,13 @@ export function Onboarding() {
     .find((p) => p.id === 'enaj-baseline' || p.name === 'Enaj Non-Toxic Baseline')
   const baselineId = baselinePref?.id ?? 'enaj-baseline'
 
+  const BASELINE_COVERED_PREFS = new Set([
+    'Parabens', 'Phthalates', 'Synthetic Fragrance', 'Oxybenzone', 'BPA & BPS',
+    'Sulfates', 'Formaldehyde', 'Triclosan', 'Nitrates/Nitrites', 'Artificial Flavors',
+    'Food Dyes', 'MSG', 'Artificial Sweeteners', 'High Fructose Corn Syrup',
+    'Trans Fats', 'Seed Oils', 'PFAS (Forever Chemicals)', 'Microplastics',
+  ])
+
 
   return (
     <div className="relative flex min-h-screen flex-col" style={{ background: 'linear-gradient(170deg, #f0faf9 0%, #ddf3ef 30%, #cfeee6 60%, #ddf3ef 100%)' }}>
@@ -683,6 +690,7 @@ export function Onboarding() {
                           {category.preferences.map((pref) => {
                             const selected = selectedPreferenceIds.has(pref.id)
                             const isLinked = linkedPrefs.has(pref.id)
+                            const baselineCovered = selectedPreferenceIds.has(baselineId) && BASELINE_COVERED_PREFS.has(pref.name)
                             const showEndocrineIcon = ENDOCRINE_INFO_PREFS.has(pref.id)
                             const showingInfo = endocrineInfoId === pref.id
                             return (
@@ -693,10 +701,13 @@ export function Onboarding() {
                                     className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm transition-colors ${
                                       selected
                                         ? 'bg-primary text-primary-foreground'
+                                        : baselineCovered
+                                        ? 'border border-primary/40 bg-primary/10 text-primary'
                                         : 'border border-border bg-card text-card-foreground hover:bg-accent hover:text-accent-foreground'
                                     } ${isLinked && selected ? 'ring-2 ring-primary/30' : ''}`}
                                   >
                                     {selected && <Check className="h-3.5 w-3.5" />}
+                                    {baselineCovered && !selected && <Sparkles className="h-3 w-3 opacity-60" />}
                                     {pref.name}
                                   </button>
                                   {showEndocrineIcon && (
