@@ -32,6 +32,30 @@ export const PREFERENCE_INGREDIENT_MAP: Record<string, string[]> = {
   "Microplastics": ["microplastic", "polyethylene", "polypropylene", "nylon", "polyester", "acrylic", "PET", "plastic micro", "plastic particle", "polymethyl methacrylate", "PMMA", "polytetrafluoroethylene", "plastic bottle", "plastic cap", "plastic wrap", "plastic film", "plastic bag", "plastic lining", "plastic straw", "plastic shrink wrap", "plastic tube", "plastic pump", "plastic sprayer", "plastic wand", "plastic jar", "plastic lid", "plastic trigger", "plastic inner bag"],
   "Bleached Fabrics": ["chlorine bleach", "sodium hypochlorite", "bleached", "chlorine", "optical brightener"],
   "Eco-Friendly Packaging": ["plastic"],
+  "Enaj Non-Toxic Baseline": [
+    // Synthetic chemicals & preservatives
+    "fragrance", "parfum", "parabens", "methylparaben", "propylparaben", "butylparaben",
+    "formaldehyde", "DMDM hydantoin", "diazolidinyl urea", "imidazolidinyl urea",
+    "phthalate", "triclosan", "triclocarban",
+    "sodium lauryl sulfate", "SLS", "sodium laureth sulfate", "SLES",
+    "BPA", "bisphenol", "PFAS", "PFOA", "perfluoro",
+    // Food additives
+    "high fructose corn syrup", "HFCS",
+    "artificial flavor", "artificial colour", "artificial color",
+    "Red 40", "Yellow 5", "Yellow 6", "Blue 1", "FD&C",
+    "monosodium glutamate", "MSG",
+    "aspartame", "sucralose", "saccharin", "acesulfame",
+    "sodium nitrite", "sodium nitrate",
+    "carrageenan", "polysorbate 80", "carboxymethylcellulose",
+    "partially hydrogenated", "trans fat",
+    // Seed oils
+    "canola oil", "soybean oil", "sunflower oil", "corn oil", "cottonseed oil",
+    // Heavy metals & toxic chemicals
+    "lead", "mercury", "aluminum", "talc",
+    "oxybenzone", "octinoxate",
+    // Microplastics
+    "microplastic", "polyethylene beads", "polypropylene beads",
+  ],
 }
 
 // Helper to get keywords for a preference (falls back to preference name itself)

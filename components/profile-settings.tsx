@@ -25,6 +25,7 @@ import {
   Download,
   ChevronRight,
   Chrome,
+  Sparkles,
 } from 'lucide-react'
 
 export function ProfileSettings() {
@@ -41,6 +42,11 @@ export function ProfileSettings() {
   const [addAilmentOpen, setAddAilmentOpen] = useState(false)
 
   if (!profile) return null
+
+  const baselinePref = preferenceCategories
+    .flatMap((c) => c.preferences)
+    .find((p) => p.id === 'enaj-baseline' || p.name === 'Enaj Non-Toxic Baseline')
+  const baselineId = baselinePref?.id ?? 'enaj-baseline'
 
   const handleSave = async () => {
     const updatedFields = {
@@ -273,8 +279,47 @@ export function ProfileSettings() {
           <Leaf className="h-5 w-5 text-accent-foreground" />
           Active Preferences ({profile.selectedPreferences.length})
         </h2>
+        {/* Enaj Non-Toxic Baseline */}
+        <div className={`mb-4 rounded-xl border-2 p-4 transition-colors ${
+          profile.selectedPreferences.includes(baselineId)
+            ? 'border-primary/40 bg-primary/5'
+            : 'border-border bg-muted/30'
+        }`}>
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                <Sparkles className="h-4 w-4 text-primary" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 mb-0.5">
+                  <p className="text-sm font-semibold text-foreground">Enaj Non-Toxic Baseline</p>
+                  <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                    Recommended
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Monitors for the most commonly flagged toxic ingredients across all products you scan — synthetic chemicals, harmful additives, endocrine disruptors, and more.
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => togglePreference(baselineId)}
+              role="switch"
+              aria-checked={profile.selectedPreferences.includes(baselineId)}
+              className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                profile.selectedPreferences.includes(baselineId) ? 'bg-primary' : 'bg-muted-foreground/30'
+              }`}
+            >
+              <span
+                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ${
+                  profile.selectedPreferences.includes(baselineId) ? 'translate-x-5' : 'translate-x-0'
+                }`}
+              />
+            </button>
+          </div>
+        </div>
 
-        {profile.selectedPreferences.length === 0 ? (
+        {profile.selectedPreferences.filter((id) => id !== baselineId).length === 0 ? (
           <p className="text-sm text-muted-foreground">
             No preferences set. Add preferences to filter products by your
             lifestyle choices.
@@ -282,7 +327,7 @@ export function ProfileSettings() {
         ) : (
           <div className="flex flex-wrap gap-2">
             {preferenceCategories.flatMap((c) => c.preferences)
-              .filter((p) => profile.selectedPreferences.includes(p.id))
+              .filter((p) => profile.selectedPreferences.includes(p.id) && p.id !== baselineId)
               .map((p) => (
                 <button
                   key={p.id}

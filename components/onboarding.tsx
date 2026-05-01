@@ -263,6 +263,11 @@ export function Onboarding() {
 
   // Get set of linked preferences for display purposes
   const linkedPrefs = getLinkedPreferences(selectedAilmentIds, ailmentCategories)
+  const baselinePref = preferenceCategories
+    .flatMap((c) => c.preferences)
+    .find((p) => p.id === 'enaj-baseline' || p.name === 'Enaj Non-Toxic Baseline')
+  const baselineId = baselinePref?.id ?? 'enaj-baseline'
+
 
   return (
     <div className="relative flex min-h-screen flex-col" style={{ background: 'linear-gradient(170deg, #f0faf9 0%, #ddf3ef 30%, #cfeee6 60%, #ddf3ef 100%)' }}>
@@ -599,103 +604,143 @@ export function Onboarding() {
                   <p className="mt-3 text-sm text-muted-foreground">Loading preferences...</p>
                 </div>
               ) : (
-              <div className="flex flex-col gap-6">
-                {preferenceCategories.map((category) => {
-                  const showingCatInfo = categoryInfoId === category.id
-                  return (
-                  <div key={category.id}>
-                    <div className="mb-3 relative">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-semibold text-foreground">{category.label}</h3>
-                        {category.description && (
-                          <button
-                            onClick={() => setCategoryInfoId(showingCatInfo ? null : category.id)}
-                            className="flex h-5 w-5 items-center justify-center rounded-full border border-border text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-                            aria-label={`Learn more about ${category.label}`}
-                          >
-                            <HelpCircle className="h-3.5 w-3.5" />
-                          </button>
-                        )}
-                      </div>
-                      {showingCatInfo && category.description && (
-                        <div className="mt-2 w-full rounded-xl border border-border bg-card p-4 shadow-lg">
-                          <div className="flex items-start justify-between gap-2">
-                            <p className="text-sm leading-relaxed text-muted-foreground">
-                              {category.description}
-                            </p>
-                            <button
-                              onClick={() => setCategoryInfoId(null)}
-                              className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-                              aria-label="Close"
-                            >
-                              <X className="h-3.5 w-3.5" />
-                            </button>
-                          </div>
+                <div className="flex flex-col gap-6">
+
+                  {/* ── Enaj Non-Toxic Baseline ── */}
+                  <div className="rounded-xl border-2 border-primary/30 bg-primary/5 p-5">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-start gap-3">
+                        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10">
+                          <Sparkles className="h-5 w-5 text-primary" />
                         </div>
-                      )}
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {category.preferences.map((pref) => {
-                        const selected = selectedPreferenceIds.has(pref.id)
-                        const isLinked = linkedPrefs.has(pref.id)
-                        const showEndocrineIcon = ENDOCRINE_INFO_PREFS.has(pref.id)
-                        const showingInfo = endocrineInfoId === pref.id
-                        return (
-                          <div key={pref.id} className="relative">
-                            <div className="flex items-center gap-1">
-                              <button
-                                onClick={() => togglePreference(pref.id)}
-                                className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm transition-colors ${
-                                  selected
-                                    ? 'bg-primary text-primary-foreground'
-                                    : 'border border-border bg-card text-card-foreground hover:bg-accent hover:text-accent-foreground'
-                                } ${isLinked && selected ? 'ring-2 ring-primary/30' : ''}`}
-                              >
-                                {selected && <Check className="h-3.5 w-3.5" />}
-                                {pref.name}
-                              </button>
-                              {showEndocrineIcon && (
-                                <button
-                                  onClick={() => setEndocrineInfoId(showingInfo ? null : pref.id)}
-                                  className="flex h-5 w-5 items-center justify-center rounded-full text-primary hover:bg-primary/10 transition-colors"
-                                  aria-label="More info"
-                                >
-                                  <Info className="h-3.5 w-3.5" />
-                                </button>
-                              )}
-                            </div>
-                            {showingInfo && (
-                              <div className="absolute left-0 top-full z-20 mt-2 w-72 rounded-xl border border-primary/30 bg-card p-5 shadow-lg">
-                                <div className="flex items-start justify-between gap-2">
-                                  <div className="flex items-center gap-2">
-                                    <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary/10">
-                                      <Info className="h-4 w-4 text-primary" />
-                                    </div>
-                                    <p className="text-sm font-semibold text-foreground">
-                                      Known Endocrine Disruptor
-                                    </p>
-                                  </div>
-                                  <button
-                                    onClick={() => setEndocrineInfoId(null)}
-                                    className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-                                    aria-label="Close"
-                                  >
-                                    <X className="h-4 w-4" />
-                                  </button>
-                                </div>
-                                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                                  This ingredient is classified as an endocrine disruptor. It can interfere with hormone function and has been linked to reproductive, developmental, and metabolic health concerns.
-                                </p>
-                              </div>
-                            )}
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="font-semibold text-foreground">Enaj Non-Toxic Baseline</h3>
+                            <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                              Recommended
+                            </span>
                           </div>
-                        )
-                      })}
+                          <p className="text-sm text-muted-foreground leading-relaxed">
+                            Not sure exactly what to avoid? Select this and Enaj will automatically monitor for the most commonly flagged toxic ingredients — synthetic chemicals, harmful food additives, endocrine disruptors, and more — across everything you scan.
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => togglePreference(baselineId)}
+                        role="switch"
+                        aria-checked={selectedPreferenceIds.has(baselineId)}
+                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                          selectedPreferenceIds.has(baselineId) ? 'bg-primary' : 'bg-muted-foreground/30'
+                        }`}
+                      >
+                        <span
+                          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ${
+                            selectedPreferenceIds.has(baselineId) ? 'translate-x-5' : 'translate-x-0'
+                          }`}
+                        />
+                      </button>
                     </div>
                   </div>
-                  )
-                })}
-              </div>
+
+                  {/* All other preference categories */}
+                  {preferenceCategories
+                    .filter((category) => category.label !== 'Non-Toxic Lifestyle')
+                    .map((category) => {
+                    const showingCatInfo = categoryInfoId === category.id
+                    return (
+                      <div key={category.id}>
+                        <div className="mb-3 relative">
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-semibold text-foreground">{category.label}</h3>
+                            {category.description && (
+                              <button
+                                onClick={() => setCategoryInfoId(showingCatInfo ? null : category.id)}
+                                className="flex h-5 w-5 items-center justify-center rounded-full border border-border text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                                aria-label={`Learn more about ${category.label}`}
+                              >
+                                <HelpCircle className="h-3.5 w-3.5" />
+                              </button>
+                            )}
+                          </div>
+                          {showingCatInfo && category.description && (
+                            <div className="mt-2 w-full rounded-xl border border-border bg-card p-4 shadow-lg">
+                              <div className="flex items-start justify-between gap-2">
+                                <p className="text-sm leading-relaxed text-muted-foreground">
+                                  {category.description}
+                                </p>
+                                <button
+                                  onClick={() => setCategoryInfoId(null)}
+                                  className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                                  aria-label="Close"
+                                >
+                                  <X className="h-3.5 w-3.5" />
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {category.preferences.map((pref) => {
+                            const selected = selectedPreferenceIds.has(pref.id)
+                            const isLinked = linkedPrefs.has(pref.id)
+                            const showEndocrineIcon = ENDOCRINE_INFO_PREFS.has(pref.id)
+                            const showingInfo = endocrineInfoId === pref.id
+                            return (
+                              <div key={pref.id} className="relative">
+                                <div className="flex items-center gap-1">
+                                  <button
+                                    onClick={() => togglePreference(pref.id)}
+                                    className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm transition-colors ${
+                                      selected
+                                        ? 'bg-primary text-primary-foreground'
+                                        : 'border border-border bg-card text-card-foreground hover:bg-accent hover:text-accent-foreground'
+                                    } ${isLinked && selected ? 'ring-2 ring-primary/30' : ''}`}
+                                  >
+                                    {selected && <Check className="h-3.5 w-3.5" />}
+                                    {pref.name}
+                                  </button>
+                                  {showEndocrineIcon && (
+                                    <button
+                                      onClick={() => setEndocrineInfoId(showingInfo ? null : pref.id)}
+                                      className="flex h-5 w-5 items-center justify-center rounded-full text-primary hover:bg-primary/10 transition-colors"
+                                      aria-label="More info"
+                                    >
+                                      <Info className="h-3.5 w-3.5" />
+                                    </button>
+                                  )}
+                                </div>
+                                {showingInfo && (
+                                  <div className="absolute left-0 top-full z-20 mt-2 w-72 rounded-xl border border-primary/30 bg-card p-5 shadow-lg">
+                                    <div className="flex items-start justify-between gap-2">
+                                      <div className="flex items-center gap-2">
+                                        <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary/10">
+                                          <Info className="h-4 w-4 text-primary" />
+                                        </div>
+                                        <p className="text-sm font-semibold text-foreground">
+                                          Known Endocrine Disruptor
+                                        </p>
+                                      </div>
+                                      <button
+                                        onClick={() => setEndocrineInfoId(null)}
+                                        className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                                        aria-label="Close"
+                                      >
+                                        <X className="h-4 w-4" />
+                                      </button>
+                                    </div>
+                                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                                      This ingredient is classified as an endocrine disruptor. It can interfere with hormone function and has been linked to reproductive, developmental, and metabolic health concerns.
+                                    </p>
+                                  </div>
+                                )}
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
               )}
 
               {/* Custom preference box */}
