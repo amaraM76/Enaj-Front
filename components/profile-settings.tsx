@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useEnaj } from '@/lib/enaj-context'
 import { api } from '@/lib/api'
 import { Button } from '@/components/ui/button'
@@ -27,6 +27,8 @@ import {
   Chrome,
   Sparkles,
 } from 'lucide-react'
+import { US_STATES } from '@/lib/us-cities'
+import { Loader2 } from 'lucide-react'
 
 export function ProfileSettings() {
   const { profile, setProfile, addAilment, togglePreference, setCurrentStep, ailmentCategories, preferenceCategories, clerkUserId } =
@@ -40,6 +42,21 @@ export function ProfileSettings() {
   const [shoppingStores, setShoppingStores] = useState(profile?.shoppingStores || '')
   const [saved, setSaved] = useState(false)
   const [addAilmentOpen, setAddAilmentOpen] = useState(false)
+  const [selectedState, setSelectedState] = useState(() => {
+    const parts = (profile?.location || '').split(', ')
+    return parts.length === 2 ? parts[1] : ''
+  })
+  const [selectedCity, setSelectedCity] = useState(() => {
+    const parts = (profile?.location || '').split(', ')
+    return parts.length === 2 ? parts[0] : ''
+  })
+  const [citySearch, setCitySearch] = useState(() => {
+    const parts = (profile?.location || '').split(', ')
+    return parts.length === 2 ? parts[0] : ''
+  })
+  const [cityDropdownOpen, setCityDropdownOpen] = useState(false)
+  const [cities, setCities] = useState<string[]>([])
+  const [citiesLoading, setCitiesLoading] = useState(false)
 
   if (!profile) return null
 
@@ -55,7 +72,26 @@ export function ProfileSettings() {
     'Trans Fats', 'Seed Oils', 'PFAS (Forever Chemicals)', 'Microplastics',
   ])
 
+  useEffect(() => {
+    if (!selectedState) { setCities([]); return }
+    setCitiesLoading(true)
+    fetch(
+      `https://secure.geonames.org/searchJSON?country=US&adminCode1=${selectedState}&featureClass=P&maxRows=1000&orderby=population&username=${process.env.NEXT_PUBLIC_GEONAMES_USERNAME}`
+    )
+      .then((r) => r.json())
+      .then((data) => {
+        const names: string[] = (data.geonames ?? [])
+          .map((g: { name: string }) => g.name)
+          .filter((n: string, i: number, arr: string[]) => arr.indexOf(n) === i)
+          .sort()
+        setCities(names)
+      })
+      .catch(() => setCities([]))
+      .finally(() => setCitiesLoading(false))
+  }, [selectedState])
+
   const handleSave = async () => {
+    const location = selectedCity && selectedState ? `${selectedCity}, ${selectedState}` : ''
     const updatedFields = {
       firstName,
       lastName,
@@ -77,8 +113,6 @@ export function ProfileSettings() {
     })
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
-
-    // Persist to backend
     if (clerkUserId) {
       api.updateProfile(clerkUserId, updatedFields).catch(() => {})
     }
@@ -133,14 +167,77 @@ export function ProfileSettings() {
               />
             </div>
           </div>
+          {/* State */}
           <div>
-            <Label htmlFor="settings-location" className="text-foreground">Location</Label>
-            <Input
-              id="settings-location"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              className="mt-1.5 bg-background border-border text-foreground"
-            />
+            <Label htmlFor="settings-state" className="text-foreground">State</Label>
+            <select
+              id="settings-state"
+              value={selectedState}
+              onChange={(e) => {
+                setSelectedState(e.target.value)
+                setSelectedCity('')
+                setCitySearch('')
+                setCities([])
+              }}
+              className="mt-1.5 h-9 w-full rounded-md border border-border bg-background px-3 py-1 text-sm text-foreground"
+            >
+              <option value="">Select state</option>
+              {US_STATES.map((s) => (
+                <option key={s.abbr} value={s.abbr}>{s.name}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* City */}
+          <div className="relative">
+            <Label htmlFor="settings-city" className="text-foreground">City</Label>
+            <div className="relative mt-1.5">
+              <input
+                id="settings-city"
+                type="text"
+                placeholder={selectedState ? 'Search city...' : 'Select a state first'}
+                disabled={!selectedState}
+                value={citySearch}
+                onChange={(e) => {
+                  setCitySearch(e.target.value)
+                  setSelectedCity('')
+                  setCityDropdownOpen(true)
+                }}
+                onFocus={() => selectedState && setCityDropdownOpen(true)}
+                onBlur={() => setTimeout(() => setCityDropdownOpen(false), 150)}
+                className="h-9 w-full rounded-md border border-border bg-background px-3 py-1 text-sm text-foreground placeholder:text-muted-foreground disabled:opacity-50 disabled:cursor-not-allowed"
+              />
+              {cityDropdownOpen && selectedState && (
+                <div className="absolute z-50 mt-1 w-full rounded-md border border-border bg-card shadow-lg max-h-48 overflow-y-auto">
+                  {citiesLoading ? (
+                    <div className="flex items-center justify-center py-4">
+                      <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                    </div>
+                  ) : cities
+                      .filter((c) => c.toLowerCase().includes(citySearch.toLowerCase()))
+                      .map((city) => (
+                        <button
+                          key={city}
+                          type="button"
+                          onMouseDown={() => {
+                            setSelectedCity(city)
+                            setCitySearch(city)
+                            setCityDropdownOpen(false)
+                          }}
+                          className="w-full px-3 py-2 text-left text-sm text-foreground hover:bg-accent transition-colors"
+                        >
+                          {city}
+                        </button>
+                      ))
+                  }
+                  {!citiesLoading && cities.filter((c) =>
+                    c.toLowerCase().includes(citySearch.toLowerCase())
+                  ).length === 0 && (
+                    <p className="px-3 py-2 text-sm text-muted-foreground">No cities found</p>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
           <div>
             <Label htmlFor="settings-age" className="text-foreground">Age</Label>

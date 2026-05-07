@@ -37,6 +37,8 @@ import {
   HelpCircle,
   Loader2,
 } from 'lucide-react'
+import { US_STATES } from '@/lib/us-cities'
+
 
 type OnboardingStep = 'welcome' | 'profile' | 'ailments' | 'preferences' | 'review' | 'extension'
 
@@ -72,6 +74,12 @@ export function Onboarding() {
   const [endocrineInfoId, setEndocrineInfoId] = useState<string | null>(null)
   const [menopauseConflict, setMenopauseConflict] = useState(false)
   const [categoryInfoId, setCategoryInfoId] = useState<string | null>(null)
+  const [selectedState, setSelectedState] = useState('')
+  const [selectedCity, setSelectedCity] = useState('')
+  const [citySearch, setCitySearch] = useState('')
+  const [cityDropdownOpen, setCityDropdownOpen] = useState(false)
+  const [cities, setCities] = useState<string[]>([])
+  const [citiesLoading, setCitiesLoading] = useState(false)
 
   const currentStepIndex = STEPS.indexOf(step)
   const progress = ((currentStepIndex + 1) / STEPS.length) * 100
@@ -81,6 +89,25 @@ export function Onboarding() {
       setStep('profile')
     }
   }, [isSignedIn, step])
+
+  useEffect(() => {
+    if (!selectedState) { setCities([]); return }
+    setCitiesLoading(true)
+    const stateCode = selectedState // already the 2-letter abbr
+    fetch(
+      `https://secure.geonames.org/searchJSON?country=US&adminCode1=${stateCode}&featureClass=P&maxRows=1000&orderby=population&username=${process.env.NEXT_PUBLIC_GEONAMES_USERNAME}`
+    )
+      .then((r) => r.json())
+      .then((data) => {
+        const names: string[] = (data.geonames ?? [])
+          .map((g: { name: string }) => g.name)
+          .filter((n: string, i: number, arr: string[]) => arr.indexOf(n) === i)
+          .sort()
+        setCities(names)
+      })
+      .catch(() => setCities([]))
+      .finally(() => setCitiesLoading(false))
+  }, [selectedState])
 
   // When arriving at preferences step, auto-select linked preferences from selected ailments
   useEffect(() => {
@@ -131,7 +158,8 @@ export function Onboarding() {
 
   const isProfileValid = () => {
     return (
-      location.trim() !== '' &&
+      selectedState !== '' &&
+      selectedCity !== '' &&
       age.trim() !== '' &&
       gender !== '' &&
       shoppingStores.trim() !== ''
@@ -218,6 +246,7 @@ export function Onboarding() {
     }
     setSaving(true)
     setSaveError('')
+    const location = `${selectedCity}, ${selectedState}`
     try {
       await saveProfileWithClerk(userId, {
         location: location || undefined,
@@ -399,18 +428,85 @@ export function Onboarding() {
                 </div>
               </div>
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+
+                {/* State */}
                 <div>
-                  <Label htmlFor="location" className="text-foreground">
-                    Location <span className="text-destructive">*</span>
+                  <Label htmlFor="state" className="text-foreground">
+                    State <span className="text-destructive">*</span>
                   </Label>
-                  <Input
-                    id="location"
-                    placeholder="City, State"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                    className="mt-1.5 bg-card border-border text-foreground placeholder:text-muted-foreground"
-                  />
+                  <select
+                    id="state"
+                    value={selectedState}
+                    onChange={(e) => {
+                      setSelectedState(e.target.value)
+                      setSelectedCity('')
+                      setCitySearch('')
+                      setCities([])
+                    }}
+                    className="mt-1.5 h-9 w-full min-w-0 rounded-md border border-input bg-card px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none md:text-sm text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+                  >
+                    <option value="">Select state</option>
+                    {US_STATES.map((s) => (
+                      <option key={s.abbr} value={s.abbr}>{s.name}</option>
+                    ))}
+                  </select>
                 </div>
+
+                {/* City */}
+                <div className="relative">
+                  <Label htmlFor="city" className="text-foreground">
+                    City <span className="text-destructive">*</span>
+                  </Label>
+                  <div className="relative mt-1.5">
+                    <input
+                      id="city"
+                      type="text"
+                      placeholder={selectedState ? 'Search city...' : 'Select a state first'}
+                      disabled={!selectedState}
+                      value={citySearch}
+                      onChange={(e) => {
+                        setCitySearch(e.target.value)
+                        setSelectedCity('')
+                        setCityDropdownOpen(true)
+                      }}
+                      onFocus={() => selectedState && setCityDropdownOpen(true)}
+                      onBlur={() => setTimeout(() => setCityDropdownOpen(false), 150)}
+                      className="h-9 w-full rounded-md border border-input bg-card px-3 py-1 text-base shadow-xs outline-none md:text-sm text-foreground placeholder:text-muted-foreground disabled:opacity-50 disabled:cursor-not-allowed focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+                    />
+                    {cityDropdownOpen && selectedState && (
+                      <div className="absolute z-50 mt-1 w-full rounded-md border border-border bg-card shadow-lg max-h-48 overflow-y-auto">
+                        {citiesLoading ? (
+                          <div className="flex items-center justify-center py-4">
+                            <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                          </div>
+                        ) : cities
+                            .filter((c) => c.toLowerCase().includes(citySearch.toLowerCase()))
+                            .map((city) => (
+                              <button
+                                key={city}
+                                type="button"
+                                onMouseDown={() => {
+                                  setSelectedCity(city)
+                                  setCitySearch(city)
+                                  setCityDropdownOpen(false)
+                                }}
+                                className="w-full px-3 py-2 text-left text-sm text-foreground hover:bg-accent transition-colors"
+                              >
+                                {city}
+                              </button>
+                            ))
+                        }
+                        {!citiesLoading && cities.filter((c) =>
+                          c.toLowerCase().includes(citySearch.toLowerCase())
+                        ).length === 0 && (
+                          <p className="px-3 py-2 text-sm text-muted-foreground">No cities found</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Age */}
                 <div>
                   <Label htmlFor="age" className="text-foreground">
                     Age <span className="text-destructive">*</span>
@@ -426,6 +522,8 @@ export function Onboarding() {
                     max="120"
                   />
                 </div>
+
+                {/* Gender */}
                 <div>
                   <Label htmlFor="gender" className="text-foreground">
                     Gender <span className="text-destructive">*</span>
@@ -434,7 +532,7 @@ export function Onboarding() {
                     id="gender"
                     value={gender}
                     onChange={(e) => setGender(e.target.value)}
-                    className="mt-1.5 h-9 w-full min-w-0 rounded-md border border-input bg-card px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none md:text-sm text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+                    className="mt-1.5 h-9 w-full min-w-0 rounded-md border border-input bg-card px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none md:text-sm text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
                   >
                     <option value="">Select gender</option>
                     <option value="female">Female</option>
@@ -442,6 +540,8 @@ export function Onboarding() {
                     <option value="prefer-not-to-say">Prefer not to say</option>
                   </select>
                 </div>
+
+                {/* Shopping Stores */}
                 <div className="sm:col-span-2">
                   <Label htmlFor="shoppingStores" className="text-foreground">
                     Where do you mainly shop? <span className="text-destructive">*</span>
@@ -454,6 +554,7 @@ export function Onboarding() {
                     className="mt-1.5 bg-card border-border text-foreground placeholder:text-muted-foreground"
                   />
                 </div>
+
               </div>
             </div>
           )}
