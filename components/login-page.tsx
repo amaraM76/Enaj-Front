@@ -41,7 +41,6 @@ export function LoginPage() {
       
       {/* Header */}
       <header className="relative z-10 flex items-center justify-between px-6 py-4 lg:px-8">
-        <EnajLogo />
         <Button
           variant="ghost"
           onClick={() => setCurrentStep('landing')}
@@ -50,6 +49,7 @@ export function LoginPage() {
           <ArrowLeft className="h-4 w-4" />
           Back
         </Button>
+        <EnajLogo />
       </header>
 
       {/* Clerk SignIn */}
