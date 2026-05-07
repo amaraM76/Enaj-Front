@@ -10,13 +10,10 @@ export async function GET(request: NextRequest) {
   try {
     const res = await fetch(url, { cache: 'no-store' })
     const data = await res.json()
-
-    const cities: string[] = (data.geonames ?? [])
-      .map((g: { name: string }) => g.name)
-      .filter((n: string, i: number, arr: string[]) => arr.indexOf(n) === i)
-      .sort()
-
-    return NextResponse.json({ cities })
+    
+    if (!data.geonames || data.geonames.length === 0) {
+      return NextResponse.json({ cities: [], raw: data })
+    }
   } catch {
     return NextResponse.json({ cities: [] })
   }
