@@ -75,16 +75,10 @@ export function ProfileSettings() {
   useEffect(() => {
     if (!selectedState) { setCities([]); return }
     setCitiesLoading(true)
-    fetch(
-      `https://secure.geonames.org/searchJSON?country=US&adminCode1=${selectedState}&featureClass=P&maxRows=1000&orderby=population&username=${process.env.NEXT_PUBLIC_GEONAMES_USERNAME}`
-    )
+    fetch(`/api/cities?state=${selectedState}`)
       .then((r) => r.json())
       .then((data) => {
-        const names: string[] = (data.geonames ?? [])
-          .map((g: { name: string }) => g.name)
-          .filter((n: string, i: number, arr: string[]) => arr.indexOf(n) === i)
-          .sort()
-        setCities(names)
+        setCities(data.cities ?? [])
       })
       .catch(() => setCities([]))
       .finally(() => setCitiesLoading(false))

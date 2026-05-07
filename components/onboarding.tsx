@@ -94,19 +94,13 @@ export function Onboarding() {
     if (!selectedState) { setCities([]); return }
     setCitiesLoading(true)
     const stateCode = selectedState // already the 2-letter abbr
-    fetch(
-      `https://secure.geonames.org/searchJSON?country=US&adminCode1=${stateCode}&featureClass=P&maxRows=1000&orderby=population&username=${process.env.NEXT_PUBLIC_GEONAMES_USERNAME}`
-    )
-      .then((r) => r.json())
-      .then((data) => {
-        const names: string[] = (data.geonames ?? [])
-          .map((g: { name: string }) => g.name)
-          .filter((n: string, i: number, arr: string[]) => arr.indexOf(n) === i)
-          .sort()
-        setCities(names)
-      })
-      .catch(() => setCities([]))
-      .finally(() => setCitiesLoading(false))
+    fetch(`/api/cities?state=${stateCode}`)
+    .then((r) => r.json())
+    .then((data) => {
+      setCities(data.cities ?? [])
+    })
+    .catch(() => setCities([]))
+    .finally(() => setCitiesLoading(false))
   }, [selectedState])
 
   // When arriving at preferences step, auto-select linked preferences from selected ailments
