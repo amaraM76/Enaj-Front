@@ -153,6 +153,92 @@ export const ailmentEducationData: Record<string, AilmentEducation> = {
       },
     },
   },
+  'ms': {
+    description: 'Multiple Sclerosis (MS) is a chronic autoimmune disease where the immune system attacks the myelin sheath protecting nerve fibers, disrupting communication between the brain and body. Diet and lifestyle factors may help manage inflammation and symptoms.',
+    generalSources: [
+      { title: 'National MS Society', url: 'https://www.nationalmssociety.org/What-is-MS' },
+      { title: 'Mayo Clinic - MS', url: 'https://www.mayoclinic.org/diseases-conditions/multiple-sclerosis/symptoms-causes/syc-20350269' },
+    ],
+    ingredientInfo: {
+      'Gluten': {
+        reason: 'Some research suggests gluten sensitivity may be more prevalent in MS patients, and a gluten-free diet may help reduce inflammation in sensitive individuals.',
+        sources: [
+          { title: 'National MS Society - Diet', url: 'https://www.nationalmssociety.org/Living-Well-With-MS/Diet-Exercise-Healthy-Behaviors/Diet-Nutrition' },
+          { title: 'NIH - MS and Diet', url: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6413101/' },
+        ],
+      },
+      'Dairy': {
+        reason: 'Butyrophilin, a protein in cow\'s milk, shares molecular similarities with myelin and may trigger immune responses in MS patients.',
+        sources: [
+          { title: 'Autoimmunity Journal Study', url: 'https://pubmed.ncbi.nlm.nih.gov/9360298/' },
+          { title: 'MS Society - Nutrition', url: 'https://www.mssociety.org.uk/about-ms/treatments-and-therapies/diet' },
+        ],
+      },
+      'Saturated Fat': {
+        reason: 'High saturated fat intake may worsen MS symptoms and promote neuroinflammation. The Swank Diet, which limits saturated fat, has been studied for MS management.',
+        sources: [
+          { title: 'National MS Society - Swank Diet', url: 'https://www.nationalmssociety.org/Living-Well-With-MS/Diet-Exercise-Healthy-Behaviors/Diet-Nutrition' },
+          { title: 'Lancet Study - Saturated Fat and MS', url: 'https://pubmed.ncbi.nlm.nih.gov/13982627/' },
+        ],
+      },
+      'Refined Sugar': {
+        reason: 'Excess sugar promotes systemic inflammation which may exacerbate MS symptoms and fatigue.',
+        sources: [
+          { title: 'MS Society - Healthy Eating', url: 'https://www.mssociety.org.uk/about-ms/treatments-and-therapies/diet' },
+        ],
+      },
+      'Artificial Sweeteners': {
+        reason: 'Some artificial sweeteners may affect gut microbiome composition, which is increasingly being studied for its role in MS immune function.',
+        sources: [
+          { title: 'NIH - Gut Microbiome and MS', url: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5490583/' },
+        ],
+      },
+    },
+  },
+  'als': {
+    description: 'Amyotrophic Lateral Sclerosis (ALS), also known as Lou Gehrig\'s disease, is a progressive neurodegenerative disease that affects nerve cells in the brain and spinal cord controlling voluntary muscle movement. Research is ongoing into environmental and dietary factors that may influence disease progression.',
+    generalSources: [
+      { title: 'ALS Association', url: 'https://www.als.org/understanding-als/what-is-als' },
+      { title: 'Mayo Clinic - ALS', url: 'https://www.mayoclinic.org/diseases-conditions/amyotrophic-lateral-sclerosis/symptoms-causes/syc-20354022' },
+      { title: 'NIH - ALS', url: 'https://www.ninds.nih.gov/health-information/disorders/amyotrophic-lateral-sclerosis-als' },
+    ],
+    ingredientInfo: {
+      'Monosodium Glutamate': {
+        reason: 'MSG is an excitotoxin that may contribute to motor neuron damage by overstimulating glutamate receptors, a mechanism studied in ALS research.',
+        sources: [
+          { title: 'NIH - Excitotoxicity and ALS', url: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4117557/' },
+          { title: 'ALS Association - Research', url: 'https://www.als.org/research' },
+        ],
+      },
+      'Aspartame': {
+        reason: 'Aspartame breaks down into aspartate, an excitatory amino acid. Some researchers have explored whether excitotoxins like aspartate may contribute to motor neuron vulnerability in ALS.',
+        sources: [
+          { title: 'Journal of Neuropathology - Excitotoxins', url: 'https://pubmed.ncbi.nlm.nih.gov/1385189/' },
+        ],
+      },
+      'Mercury': {
+        reason: 'Heavy metal exposure, including mercury, has been studied as a potential environmental risk factor for ALS. High-mercury fish and mercury-containing products should be avoided.',
+        sources: [
+          { title: 'Environmental Health Perspectives - ALS and Metals', url: 'https://ehp.niehs.nih.gov/doi/10.1289/ehp.1306900' },
+          { title: 'ALS Association - Environmental Factors', url: 'https://www.als.org/understanding-als/causes' },
+        ],
+      },
+      'Lead': {
+        reason: 'Some epidemiological studies suggest occupational or environmental lead exposure may be associated with increased ALS risk.',
+        sources: [
+          { title: 'Neurology Journal - Lead and ALS', url: 'https://pubmed.ncbi.nlm.nih.gov/16170087/' },
+          { title: 'NIH - Heavy Metals and Neurodegeneration', url: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4477227/' },
+        ],
+      },
+      'Pesticide Residue': {
+        reason: 'Multiple studies have linked occupational and environmental pesticide exposure to elevated ALS risk, particularly organophosphate and organochlorine compounds.',
+        sources: [
+          { title: 'European Journal of Epidemiology - Pesticides and ALS', url: 'https://pubmed.ncbi.nlm.nih.gov/22068561/' },
+          { title: 'ALS Association - Environmental Causes', url: 'https://www.als.org/understanding-als/causes' },
+        ],
+      },
+    },
+  },
   'epilepsy': {
     description: 'Epilepsy is a neurological disorder characterized by recurrent seizures. Certain substances and dietary factors may influence seizure activity.',
     generalSources: [

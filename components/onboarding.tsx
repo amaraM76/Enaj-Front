@@ -566,7 +566,7 @@ export function Onboarding() {
                 <div>
                   <h2 className="text-2xl font-bold text-foreground">Health Conditions</h2>
                   <p className="text-sm text-muted-foreground">
-                    Select any conditions you have. Enaj will monitor related ingredients.
+                    Select any conditions you have. Enaj will monitor conflicting ingredients.
                   </p>
                 </div>
               </div>
