@@ -85,30 +85,38 @@ export function ProfileSettings() {
   }, [selectedState])
 
   const handleSave = async () => {
-    const location = selectedCity && selectedState ? `${selectedCity}, ${selectedState}` : ''
+    const formattedLocation =
+      selectedCity && selectedState ? `${selectedCity}, ${selectedState}` : location
+  
     const updatedFields = {
       firstName,
       lastName,
       email,
-      location,
+      location: formattedLocation,
       age: age ? Number(age) : undefined,
       gender,
       shoppingStores,
     }
+  
     setProfile({
       ...profile,
       firstName,
       lastName,
       email,
-      location,
+      location: formattedLocation,
       age,
       gender,
       shoppingStores,
     })
+  
+    setLocation(formattedLocation)
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
+  
     if (clerkUserId) {
-      api.updateProfile(clerkUserId, updatedFields).catch(() => {})
+      api.updateProfile(clerkUserId, updatedFields).catch((err) => {
+        console.error('Failed to update profile:', err)
+      })
     }
   }
 
@@ -193,9 +201,11 @@ export function ProfileSettings() {
                 disabled={!selectedState}
                 value={citySearch}
                 onChange={(e) => {
-                  setCitySearch(e.target.value)
+                  setSelectedState(e.target.value)
                   setSelectedCity('')
-                  setCityDropdownOpen(true)
+                  setCitySearch('')
+                  setLocation('')
+                  setCities([])
                 }}
                 onFocus={() => selectedState && setCityDropdownOpen(true)}
                 onBlur={() => setTimeout(() => setCityDropdownOpen(false), 150)}
@@ -216,6 +226,7 @@ export function ProfileSettings() {
                           onMouseDown={() => {
                             setSelectedCity(city)
                             setCitySearch(city)
+                            setLocation(`${city}, ${selectedState}`)
                             setCityDropdownOpen(false)
                           }}
                           className="w-full px-3 py-2 text-left text-sm text-foreground hover:bg-accent transition-colors"
