@@ -105,8 +105,18 @@ export function Onboarding() {
 
   // When arriving at preferences step, auto-select linked preferences from selected ailments
   useEffect(() => {
-    setHasAutoSelected(false)
-  }, [selectedAilmentIds])
+    if (step !== 'preferences') return
+    const linked = getLinkedPreferences(selectedAilmentIds, ailmentCategories)
+    if (linked.size > 0) {
+      setSelectedPreferenceIds((prev) => {
+        const merged = new Set(prev)
+        for (const id of linked) {
+          merged.add(id)
+        }
+        return merged
+      })
+    }
+  }, [step, selectedAilmentIds, ailmentCategories])
 
   const toggleAilment = (id: string) => {
     setSelectedAilmentIds((prev) => {
