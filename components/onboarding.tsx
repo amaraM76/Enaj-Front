@@ -171,7 +171,7 @@ export function Onboarding() {
 
     try {
       await saveProfileWithClerk(userId, {
-        location,
+        location: location || `${selectedCity}, ${selectedState}`,
         age: age ? Number(age) : undefined,
         gender: gender || undefined,
         shoppingStores: shoppingStores || undefined,
@@ -208,7 +208,7 @@ export function Onboarding() {
         firstName: clerkUser?.firstName || '',
         lastName: clerkUser?.lastName || '',
         email: clerkUser?.primaryEmailAddress?.emailAddress || '',
-        location,
+        location: location || `${selectedCity}, ${selectedState}`,
         age,
         gender,
         shoppingStores,
@@ -240,14 +240,17 @@ export function Onboarding() {
     }
     setSaving(true)
     setSaveError('')
-    const location = `${selectedCity}, ${selectedState}`
+    const formattedLocation = `${selectedCity}, ${selectedState}`
+    setLocation(formattedLocation)
+    
     try {
       await saveProfileWithClerk(userId, {
-        location: location || undefined,
+        location: formattedLocation,
         age: age ? Number(age) : undefined,
         gender: gender || undefined,
         shoppingStores: shoppingStores || undefined,
       })
+    
       goNext()
     } catch (err) {
       setSaveError(err instanceof Error ? err.message : 'Something went wrong.')
