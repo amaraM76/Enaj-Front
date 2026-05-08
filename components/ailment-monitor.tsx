@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useEnaj } from '@/lib/enaj-context'
-
+import { getLinkedPreferences } from '@/lib/enaj-data'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -164,6 +164,11 @@ export function AilmentMonitor() {
       setPendingPrefRemove(null)
     }
   }
+
+  const linkedPrefs = getLinkedPreferences(
+    new Set(profile.selectedAilments.map((sa) => sa.ailment.id)),
+    ailmentCategories
+  )
 
   return (
     <TooltipProvider>
@@ -519,7 +524,7 @@ export function AilmentMonitor() {
             ) : (
               <div className="flex flex-wrap gap-2">
                 {profile.selectedPreferences
-                  .filter((id) => id !== baselineId)
+                  .filter((id) => id !== baselineId && !linkedPrefs.has(id))
                   .map((prefId) => {
                     const pref = preferenceCategories.flatMap((c) => c.preferences).find((p) => p.id === prefId)
                     const prefName = pref?.name || prefId
