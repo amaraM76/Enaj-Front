@@ -66,8 +66,6 @@ export function Onboarding() {
   const [selectedPreferenceIds, setSelectedPreferenceIds] = useState<Set<string>>(new Set())
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null)
   const [profileSaved, setProfileSaved] = useState(false)
-  const [customHealthCondition, setCustomHealthCondition] = useState('')
-  const [customPreference, setCustomPreference] = useState('')
   const [hasAutoSelected, setHasAutoSelected] = useState(false)
   const [healthConditionSubmitted, setHealthConditionSubmitted] = useState(false)
   const [preferenceSubmitted, setPreferenceSubmitted] = useState(false)
@@ -213,8 +211,6 @@ export function Onboarding() {
         selectedAilments,
         selectedPreferences: Array.from(selectedPreferenceIds),
         savedProducts: [],
-        customHealthCondition: customHealthCondition.trim() || undefined,
-        customPreference: customPreference.trim() || undefined,
       })
   
       setProfileSaved(true)

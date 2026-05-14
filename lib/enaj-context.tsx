@@ -16,8 +16,6 @@ export interface UserProfile {
   selectedAilments: SelectedAilment[]
   selectedPreferences: string[]
   savedProducts: Product[]
-  customHealthCondition?: string
-  customPreference?: string
 }
 
 export interface SelectedAilment {
@@ -86,8 +84,6 @@ export function EnajProvider({ children }: { children: ReactNode }) {
         selectedAilments: user.selectedAilments ?? [],
         selectedPreferences: user.selectedPreferences ?? [],
         savedProducts: user.savedProducts ?? [],
-        customHealthCondition: undefined,
-        customPreference: undefined,
       }
       setProfileState(profileData)
       return profileData
@@ -241,7 +237,7 @@ export function EnajProvider({ children }: { children: ReactNode }) {
       // Persist to backend using Clerk userId
       if (clerkUserId) {
         const allSlugs = updated.selectedAilments.map((sa) => sa.ailment.id)
-        api.saveUserAilments(clerkUserId, allSlugs, prev.customHealthCondition).catch(() => {})
+        api.saveUserAilments(clerkUserId, allSlugs).catch(() => {})
       }
       return updated
     })
@@ -257,7 +253,7 @@ export function EnajProvider({ children }: { children: ReactNode }) {
       // Persist to backend using Clerk userId
       if (clerkUserId) {
         const allSlugs = updated.selectedAilments.map((sa) => sa.ailment.id)
-        api.saveUserAilments(clerkUserId, allSlugs, prev.customHealthCondition).catch(() => {})
+        api.saveUserAilments(clerkUserId, allSlugs).catch(() => {})
       }
       return updated
     })
