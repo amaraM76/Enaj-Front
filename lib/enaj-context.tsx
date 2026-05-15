@@ -6,6 +6,7 @@ import type { Ailment, AilmentCategory, FlaggedIngredient, PreferenceCategory, P
 import { api } from './api'
 
 export interface UserProfile {
+  id?: string
   firstName: string
   lastName: string
   email: string
@@ -72,6 +73,7 @@ export function EnajProvider({ children }: { children: ReactNode }) {
     try {
       const { user } = await api.getUser(userId)
       const profileData = {
+        id: user.id,
         firstName: user.firstName ?? clerkUser?.firstName ?? '',
         lastName: user.lastName ?? clerkUser?.lastName ?? '',
         email: user.email ?? clerkUser?.primaryEmailAddress?.emailAddress ?? '',

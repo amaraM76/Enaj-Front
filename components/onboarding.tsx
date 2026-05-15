@@ -52,7 +52,7 @@ const PERIMENOPAUSE_ID = 'perimenopause'
 const STEPS: OnboardingStep[] = ['welcome', 'profile', 'ailments', 'preferences', 'review', 'extension']
 
 export function Onboarding() {
-  const { setProfile, setCurrentStep, ailmentCategories, preferenceCategories, fetchUserProfile, saveProfileWithClerk } = useEnaj()
+  const { setProfile, setCurrentStep, ailmentCategories, preferenceCategories, fetchUserProfile, saveProfileWithClerk, profile } = useEnaj()
   const { isSignedIn, userId } = useAuth()
   const { user: clerkUser } = useUser() 
   const [step, setStep] = useState<OnboardingStep>('welcome')
@@ -80,6 +80,8 @@ export function Onboarding() {
   const [cityDropdownOpen, setCityDropdownOpen] = useState(false)
   const [cities, setCities] = useState<string[]>([])
   const [citiesLoading, setCitiesLoading] = useState(false)
+  const dbUserId = profile?.id || userId || ''
+
 
   const currentStepIndex = STEPS.indexOf(step)
   const progress = ((currentStepIndex + 1) / STEPS.length) * 100
@@ -176,7 +178,7 @@ export function Onboarding() {
       })
 
       await api.saveUserAilments(
-        userId,
+        dbUserId,
         Array.from(selectedAilmentIds),
         customHealthCondition.trim() || undefined
       )
@@ -191,8 +193,8 @@ export function Onboarding() {
         prefsArray.push({ customEntry: customPreference.trim(), source: 'CUSTOM' })
       }
   
-      await api.saveUserPreferences(userId, prefsArray)
-      await fetchUserProfile(userId)
+      await api.saveUserPreferences(dbUserId, prefsArray)
+      await fetchUserProfile(dbUserId)
   
       const allAilments = ailmentCategories.flatMap((c) => c.ailments)
       const selectedAilments = allAilments
