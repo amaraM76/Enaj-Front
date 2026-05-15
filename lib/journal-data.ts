@@ -401,7 +401,7 @@ export interface JournalCondition {
     },
     {
       id: 'womens-health',
-      label: "Women's Health (Short-Term)",
+      label: "Women's Health",
       icon: 'Heart',
       conditions: [
         {
