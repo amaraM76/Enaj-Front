@@ -8,6 +8,7 @@ export interface AilmentCategory {
 export interface Ailment {
   id: string
   name: string
+  description?: string
   flaggedIngredients: FlaggedIngredient[]
   /** IDs of preferences that should be auto-selected when this ailment is chosen */
   linkedPreferences?: string[]

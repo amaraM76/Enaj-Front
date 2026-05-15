@@ -1208,4 +1208,42 @@ export const preferenceEducationData: Record<string, PreferenceEducation> = {
       { title: 'NIH - Seed Oils Review', url: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7468872/' },
     ],
   },
+  'enaj-baseline': {
+    whatItIs: 'The Enaj Non-Toxic Baseline is for people who want to live a healthier lifestyle but aren\'t sure exactly what to avoid yet. It\'s a curated list of the most commonly flagged toxic and harmful ingredients that health-conscious people typically avoid. Enable this one preference and Enaj will monitor for all of them across every product you scan.',
+    commonlyFoundIn: [
+      'Processed and packaged foods',
+      'Skincare and moisturizers',
+      'Shampoos and conditioners',
+      'Makeup and cosmetics',
+      'Sunscreens',
+      'Household cleaning products',
+      'Deodorants and antiperspirants',
+      'Canned and preserved foods',
+      'Fast food and restaurant meals',
+      'Personal care products',
+    ],
+    whyPeopleAvoid: `The Enaj Non-Toxic Baseline monitors for ingredients across five categories that health-conscious people most commonly avoid:
+  
+  Synthetic Chemicals & Preservatives: Fragrance and parfum (which can hide hundreds of undisclosed chemicals), parabens (methylparaben, propylparaben, butylparaben), formaldehyde and formaldehyde-releasing preservatives (DMDM hydantoin, diazolidinyl urea, imidazolidinyl urea), phthalates, triclosan and triclocarban, and sulfates (SLS and SLES). These are commonly found in personal care products and are linked to hormone disruption, skin irritation, and long-term health concerns.
+  
+  Plastics & Forever Chemicals: BPA, bisphenol compounds, PFAS, PFOA, and perfluoro chemicals — known as "forever chemicals" because they don't break down in the body or environment. They are linked to cancer, thyroid disease, immune system effects, and reproductive issues.
+  
+  Harmful Food Additives: High fructose corn syrup, artificial flavors and colors (Red 40, Yellow 5, Yellow 6, Blue 1, FD&C dyes), MSG, artificial sweeteners (aspartame, sucralose, saccharin, acesulfame), sodium nitrite and nitrate, carrageenan, polysorbate 80, carboxymethylcellulose, and trans fats and partially hydrogenated oils. These additives are associated with inflammation, metabolic issues, digestive problems, and increased disease risk.
+  
+  Inflammatory Seed Oils: Canola oil, soybean oil, sunflower oil, corn oil, and cottonseed oil. These heavily processed oils are high in omega-6 fatty acids and are avoided by many following anti-inflammatory or ancestral diets.
+  
+  Heavy Metals, Toxins & Chemical UV Filters: Lead, mercury, aluminum compounds, talc, oxybenzone, and octinoxate. These ingredients are linked to neurological damage, hormonal disruption, and environmental harm — oxybenzone and octinoxate in particular are banned in several locations for damaging coral reefs.
+  
+  Microplastics: Polyethylene beads and polypropylene beads found in exfoliants and cosmetics. They don't biodegrade and have been detected in human blood, lungs, and organs.`,
+    sources: [
+      { title: 'EWG - Toxic Twelve Chemicals in Cosmetics', url: 'https://www.ewg.org/the-toxic-twelve-chemicals-and-contaminants-in-cosmetics' },
+      { title: 'NIH - Endocrine Disruptors', url: 'https://www.niehs.nih.gov/health/topics/agents/endocrine' },
+      { title: 'WHO - Chemical Safety', url: 'https://www.who.int/health-topics/chemical-safety' },
+      { title: 'FDA - Food Additives Overview', url: 'https://www.fda.gov/food/food-ingredients-packaging/overview-food-ingredients-additives-colors' },
+      { title: 'EPA - PFAS Explained', url: 'https://www.epa.gov/pfas/pfas-explained' },
+      { title: 'NIH - Microplastics Health Effects', url: 'https://www.niehs.nih.gov/health/topics/agents/microplastics' },
+      { title: 'AHA - Trans Fats', url: 'https://www.heart.org/en/healthy-living/healthy-eating/eat-smart/fats/trans-fat' },
+      { title: 'American Cancer Society - Processed Meat', url: 'https://www.cancer.org/cancer/risk-prevention/diet-physical-activity/does-eating-processed-or-red-meat-cause-cancer.html' },
+    ],
+  },
 }

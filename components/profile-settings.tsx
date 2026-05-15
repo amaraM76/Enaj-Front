@@ -113,8 +113,13 @@ export function ProfileSettings() {
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
   
-    if (clerkUserId) {
-      api.updateProfile(clerkUserId, updatedFields).catch((err) => {
+    const dbUserId = profile?.id || clerkUserId
+    if (dbUserId) {
+      fetch(`/api/users/${dbUserId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedFields),
+      }).catch((err) => {
         console.error('Failed to update profile:', err)
       })
     }
@@ -201,11 +206,9 @@ export function ProfileSettings() {
                 disabled={!selectedState}
                 value={citySearch}
                 onChange={(e) => {
-                  setSelectedState(e.target.value)
+                  setCitySearch(e.target.value)
                   setSelectedCity('')
-                  setCitySearch('')
-                  setLocation('')
-                  setCities([])
+                  setCityDropdownOpen(true)
                 }}
                 onFocus={() => selectedState && setCityDropdownOpen(true)}
                 onBlur={() => setTimeout(() => setCityDropdownOpen(false), 150)}
@@ -462,7 +465,7 @@ export function ProfileSettings() {
       </div>
 
       {/* Extension Download */}
-      <div className="rounded-xl border border-primary/20 bg-primary/5 p-6">
+      <div className="rounded-xl border border-border bg-card p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-3">
             <EnajLogo size="md" />

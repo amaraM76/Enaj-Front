@@ -25,16 +25,16 @@ export default function EducationPage() {
           className="relative z-10 flex items-center justify-between border-b border-border px-4 py-3 lg:px-8"
           style={{ background: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(12px)' }}
         >
-          <div className="flex items-center gap-3">
-            <EnajLogo size="sm" />
-            <span className="text-lg font-bold text-foreground">enaj</span>
-          </div>
           <Link href="/">
             <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
               <ArrowLeft className="h-4 w-4" />
               Back to Dashboard
             </Button>
           </Link>
+          <div className="flex items-center gap-3">
+            <EnajLogo size="sm" />
+            <span className="text-lg font-bold text-foreground">enaj</span>
+          </div>
         </header>
 
         <main className="relative z-10 px-4 py-6 lg:px-8 lg:py-8">
