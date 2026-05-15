@@ -155,16 +155,16 @@ export default function EducationDetailPage() {
         className="relative z-10 flex items-center justify-between border-b border-border px-4 py-3 lg:px-8"
         style={{ background: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(12px)' }}
       >
-        <div className="flex items-center gap-3">
-          <EnajLogo size="sm" />
-          <span className="text-lg font-bold text-foreground">enaj</span>
-        </div>
         <Link href={backHref}>
           <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
             <ArrowLeft className="h-4 w-4" />
             Back to Learn
           </Button>
         </Link>
+        <div className="flex items-center gap-3">
+          <EnajLogo size="sm" />
+          <span className="text-lg font-bold text-foreground">enaj</span>
+        </div>
       </header>
 
       <main className="relative z-10 px-4 py-6 lg:px-8 lg:py-8">
@@ -330,10 +330,13 @@ export default function EducationDetailPage() {
                       <AlertTriangle className="h-4 w-4 text-amber-600" />
                       Why Some People Avoid This
                     </p>
-                    <p className="text-sm text-amber-700 leading-relaxed">{preference.whyPeopleAvoid}</p>
+                    <div className="text-sm text-amber-700 leading-relaxed space-y-3">
+                      {preference.whyPeopleAvoid.split(/\n\n|\n/).map((paragraph, idx) => (
+                        paragraph.trim() ? <p key={idx}>{paragraph.trim()}</p> : null
+                      ))}
+                    </div>
                   </div>
                 )}
-
                 {/* Ingredients to Watch For */}
                 {preference.flaggedIngredients && preference.flaggedIngredients.length > 0 && (
                   <div className="rounded-lg bg-muted/50 p-4">

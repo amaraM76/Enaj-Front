@@ -465,7 +465,7 @@ export function ProfileSettings() {
       </div>
 
       {/* Extension Download */}
-      <div className="rounded-xl border border-border bg-card p-6">
+      <div className="rounded-xl border border-border bg-white p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-3">
             <EnajLogo size="md" />
