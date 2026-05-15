@@ -77,3 +77,16 @@ export function getLinkedPreferences(ailmentIds: Set<string>, ailmentCategories:
   }
   return linked
 }
+
+/** Helper: Given a preference ID, return the ailments that caused it to be linked */
+export function getAilmentsForPreference(preferenceId: string, ailmentIds: Set<string>, ailmentCategories: AilmentCategory[]): Ailment[] {
+  const allAilments = ailmentCategories.flatMap((c) => c.ailments)
+  const linkedAilments: Ailment[] = []
+  for (const id of ailmentIds) {
+    const ailment = allAilments.find((a) => a.id === id)
+    if (ailment?.linkedPreferences?.includes(preferenceId)) {
+      linkedAilments.push(ailment)
+    }
+  }
+  return linkedAilments
+}

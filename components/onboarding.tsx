@@ -5,7 +5,7 @@ import { useAuth, useUser, SignUp } from '@clerk/nextjs'
 import { useEnaj } from '@/lib/enaj-context'
 import { EnajLogo } from '@/components/enaj-logo'
 import { CloudBackground } from '@/components/cloud-background'
-import { getLinkedPreferences } from '@/lib/enaj-data'
+import { getLinkedPreferences, getAilmentsForPreference } from '@/lib/enaj-data'
 import { api } from '@/lib/api'
 import { Button } from '@/components/ui/button'
 import {
@@ -352,6 +352,115 @@ export function Onboarding() {
 
       {/* Content */}
       <main className="relative z-10 flex flex-1 flex-col items-center px-6 py-8">
+        {/* Selection Sidebar - Only shows on ailments, preferences, and journal steps */}
+        {(step === 'ailments' || step === 'preferences' || step === 'journal') && (
+          <div className="fixed left-6 top-32 z-20 hidden w-72 xl:block">
+            <div className="rounded-xl border border-border bg-card/95 backdrop-blur-sm shadow-lg overflow-hidden">
+              {/* Your Selections Header */}
+              <div className="border-b border-border bg-muted/50 px-4 py-3">
+                <h3 className="font-semibold text-card-foreground text-sm">Your Selections</h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  View what Enaj monitors on your dashboard
+                </p>
+              </div>
+
+              <div className="max-h-[calc(100vh-280px)] overflow-y-auto">
+                {/* Ailments Section */}
+                <div className="border-b border-border p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Heart className="h-4 w-4 text-primary" />
+                    <span className="text-sm font-medium text-card-foreground">Health Conditions</span>
+                    <span className="ml-auto text-xs text-muted-foreground">{selectedAilmentIds.size}</span>
+                  </div>
+                  {selectedAilmentIds.size === 0 ? (
+                    <p className="text-xs text-muted-foreground italic">No conditions selected yet</p>
+                  ) : (
+                    <div className="flex flex-wrap gap-1.5">
+                      {ailmentCategories.flatMap((c) => c.ailments)
+                        .filter((a) => selectedAilmentIds.has(a.id))
+                        .map((ailment) => (
+                          <span
+                            key={ailment.id}
+                            className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-1 text-xs text-primary"
+                          >
+                            {ailment.name}
+                          </span>
+                        ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Preferences Section - Only show on preferences and journal steps */}
+                {(step === 'preferences' || step === 'journal') && (
+                  <div className="border-b border-border p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Leaf className="h-4 w-4 text-accent-foreground" />
+                      <span className="text-sm font-medium text-card-foreground">Preferences</span>
+                      <span className="ml-auto text-xs text-muted-foreground">{selectedPreferenceIds.size}</span>
+                    </div>
+                    {selectedPreferenceIds.size === 0 ? (
+                      <p className="text-xs text-muted-foreground italic">No preferences selected yet</p>
+                    ) : (
+                      <div className="flex flex-col gap-2">
+                        {preferenceCategories.flatMap((c) => c.preferences)
+                          .filter((p) => selectedPreferenceIds.has(p.id))
+                          .map((pref) => {
+                            const linkedAilments = getAilmentsForPreference(pref.id, selectedAilmentIds, ailmentCategories)
+                            return (
+                              <div key={pref.id} className="rounded-lg bg-muted/50 p-2">
+                                <span className="inline-flex items-center rounded-full bg-secondary/50 px-2.5 py-1 text-xs text-accent-foreground">
+                                  {pref.name}
+                                </span>
+                                {linkedAilments.length > 0 && (
+                                  <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">
+                                    <span className="text-primary font-medium">Pre-selected</span> because you have{' '}
+                                    {linkedAilments.map((a, i) => (
+                                      <span key={a.id}>
+                                        <span className="font-medium text-foreground">{a.name}</span>
+                                        {i < linkedAilments.length - 1 && (i === linkedAilments.length - 2 ? ' and ' : ', ')}
+                                      </span>
+                                    ))}
+                                  </p>
+                                )}
+                              </div>
+                            )
+                          })}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Journal Section - Only show on journal step */}
+                {step === 'journal' && (
+                  <div className="p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Sparkles className="h-4 w-4 text-amber-600" />
+                      <span className="text-sm font-medium text-card-foreground">Journal</span>
+                      <span className="ml-auto text-xs text-muted-foreground">{selectedJournalIds.size}</span>
+                    </div>
+                    {selectedJournalIds.size === 0 ? (
+                      <p className="text-xs text-muted-foreground italic">No temporary conditions added yet</p>
+                    ) : (
+                      <div className="flex flex-wrap gap-1.5">
+                        {journalCategories.flatMap((c) => c.conditions)
+                          .filter((c) => selectedJournalIds.has(c.id))
+                          .map((condition) => (
+                            <span
+                              key={condition.id}
+                              className="inline-flex items-center rounded-full bg-amber-500/10 px-2.5 py-1 text-xs text-amber-700"
+                            >
+                              {condition.name}
+                            </span>
+                          ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="w-full max-w-2xl">
           {/* Welcome Step - Show Clerk SignUp if not signed in */}
           {step === 'welcome' && (
