@@ -38,18 +38,30 @@ import {
   Loader2,
 } from 'lucide-react'
 import { US_STATES } from '@/lib/us-cities'
+import { journalCategories, type JournalCondition } from '@/lib/journal-data'
+import { Thermometer, Activity, Eye, Zap, Wind, Pill } from 'lucide-react'
 
-
-type OnboardingStep = 'welcome' | 'profile' | 'ailments' | 'preferences' | 'review' | 'extension'
+type OnboardingStep = 'welcome' | 'profile' | 'ailments' | 'preferences' | 'journal' | 'review' | 'extension'
 
 // Only these two preferences show the endocrine disruptor info icon
 const ENDOCRINE_INFO_PREFS = new Set(['no-pfas', 'no-triclosan'])
+
+// Map icon names to components for journal categories
+const JOURNAL_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  Thermometer,
+  Heart,
+  Activity,
+  Eye,
+  Zap,
+  Wind,
+  Pill,
+}
 
 // Menopause / perimenopause mutual exclusion
 const MENOPAUSE_ID = 'menopause'
 const PERIMENOPAUSE_ID = 'perimenopause'
 
-const STEPS: OnboardingStep[] = ['welcome', 'profile', 'ailments', 'preferences', 'review', 'extension']
+const STEPS: OnboardingStep[] = ['welcome', 'profile', 'ailments', 'preferences', 'journal', 'review', 'extension']
 
 export function Onboarding() {
   const { setProfile, setCurrentStep, ailmentCategories, preferenceCategories, fetchUserProfile, saveProfileWithClerk, profile } = useEnaj()
@@ -80,6 +92,8 @@ export function Onboarding() {
   const [cityDropdownOpen, setCityDropdownOpen] = useState(false)
   const [cities, setCities] = useState<string[]>([])
   const [citiesLoading, setCitiesLoading] = useState(false)
+  const [selectedJournalIds, setSelectedJournalIds] = useState<Set<string>>(new Set())
+  const [expandedJournalCategory, setExpandedJournalCategory] = useState<string | null>(null)
   const dbUserId = profile?.id || userId || ''
 
 
@@ -143,6 +157,15 @@ export function Onboarding() {
 
   const togglePreference = (id: string) => {
     setSelectedPreferenceIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
+  const toggleJournalCondition = (id: string) => {
+    setSelectedJournalIds((prev) => {
       const next = new Set(prev)
       if (next.has(id)) next.delete(id)
       else next.add(id)
@@ -899,6 +922,116 @@ export function Onboarding() {
             </div>
           )}
 
+          {/* Weekly Health Journal Step */}
+          {step === 'journal' && (
+            <div>
+              <div className="mb-4 flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10">
+                  <Sparkles className="h-5 w-5 text-amber-600" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-foreground">Weekly Health Journal</h2>
+                  <p className="text-sm text-muted-foreground">
+                    Dealing with something temporary? Let us help you shop smarter.
+                  </p>
+                </div>
+              </div>
+
+              {/* Info box */}
+              <div className="mb-6 rounded-xl border border-amber-500/20 bg-amber-500/5 p-4">
+                <p className="text-sm text-foreground leading-relaxed">
+                  Unlike your permanent health conditions, these are temporary issues you might be dealing with right now. 
+                  Enaj will monitor relevant ingredients while you recover. You can update your journal anytime from your dashboard.
+                </p>
+              </div>
+
+              {/* Journal Categories */}
+              <div className="flex flex-col gap-4">
+                {journalCategories.map((category) => {
+                  const IconComponent = JOURNAL_ICONS[category.icon] || Heart
+                  const selectedInCategory = category.conditions.filter((c) => selectedJournalIds.has(c.id)).length
+                  return (
+                    <div key={category.id} className="rounded-xl border border-border bg-card overflow-hidden">
+                      <button
+                        onClick={() =>
+                          setExpandedJournalCategory(expandedJournalCategory === category.id ? null : category.id)
+                        }
+                        className="flex w-full items-center justify-between px-5 py-4 text-left hover:bg-accent/50 transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <IconComponent className="h-5 w-5 text-amber-600" />
+                          <span className="font-semibold text-card-foreground">{category.label}</span>
+                        </div>
+                        <span className="text-xs text-muted-foreground">
+                          {selectedInCategory > 0 ? `${selectedInCategory} selected` : `${category.conditions.length} options`}
+                        </span>
+                      </button>
+                      {expandedJournalCategory === category.id && (
+                        <div className="border-t border-border px-3 pb-3 pt-2">
+                          <div className="flex flex-wrap gap-2">
+                            {category.conditions.map((condition) => {
+                              const selected = selectedJournalIds.has(condition.id)
+                              return (
+                                <button
+                                  key={condition.id}
+                                  onClick={() => toggleJournalCondition(condition.id)}
+                                  className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm transition-colors ${
+                                    selected
+                                      ? 'bg-amber-500 text-white'
+                                      : 'border border-border bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                                  }`}
+                                >
+                                  {selected && <Check className="h-3.5 w-3.5" />}
+                                  {condition.name}
+                                </button>
+                              )
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+
+              {/* Selected summary */}
+              {selectedJournalIds.size > 0 && (
+                <div className="mt-6 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4">
+                  <p className="text-sm font-medium text-foreground mb-2">
+                    Currently tracking ({selectedJournalIds.size}):
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {journalCategories.flatMap((c) => c.conditions)
+                      .filter((c) => selectedJournalIds.has(c.id))
+                      .map((c) => (
+                        <span
+                          key={c.id}
+                          className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-3 py-1.5 text-sm text-amber-700"
+                        >
+                          {c.name}
+                          <button
+                            onClick={() => toggleJournalCondition(c.id)}
+                            className="ml-0.5 hover:text-amber-900"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        </span>
+                      ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Skip hint */}
+              <div className="mt-6 rounded-xl border border-dashed border-border bg-muted/30 p-4">
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  <span className="font-medium text-foreground">Nothing going on right now?</span>{' '}
+                  No problem! You can skip this step and add entries later from your <span className="font-medium text-primary">Journal</span> tab 
+                  whenever you need to.
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Review Step */}
           {step === 'review' && (
             <div>
@@ -998,9 +1131,35 @@ export function Onboarding() {
                     </div>
                   )}
                 </div>
+
+                {/* Weekly Health Journal */}
+                <div className="rounded-xl border border-border bg-card p-5">
+                  <p className="mb-3 text-sm text-muted-foreground">
+                    Weekly Health Journal ({selectedJournalIds.size})
+                  </p>
+                  {selectedJournalIds.size === 0 ? (
+                    <p className="text-sm text-muted-foreground">No temporary conditions selected</p>
+                  ) : (
+                    <div className="flex flex-wrap gap-2">
+                      {journalCategories.flatMap((c) => c.conditions)
+                        .filter((c) => selectedJournalIds.has(c.id))
+                        .map((c) => (
+                          <span
+                            key={c.id}
+                            className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-3 py-1.5 text-sm text-amber-700"
+                          >
+                            <Sparkles className="h-3 w-3" />
+                            {c.name}
+                          </span>
+                        ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           )}
+
+
 
           {/* Browser Extension Step */}
           {step === 'extension' && (
