@@ -1168,6 +1168,59 @@ export const ailmentEducationData: Record<string, AilmentEducation> = {
   },
 
   // Women\'s Health
+  'pcos': {
+    description: 'Polycystic Ovary Syndrome (PCOS) is a hormonal disorder affecting women of reproductive age, causing irregular periods, excess androgen levels, and sometimes small cysts on the ovaries. Diet plays a significant role in managing insulin resistance, inflammation, and hormonal balance.',
+    generalSources: [
+      { title: 'ACOG - PCOS', url: 'https://www.acog.org/womens-health/faqs/polycystic-ovary-syndrome-pcos' },
+      { title: 'Mayo Clinic - PCOS', url: 'https://www.mayoclinic.org/diseases-conditions/pcos/symptoms-causes/syc-20353439' },
+    ],
+    ingredientInfo: {
+      'Refined Sugar': {
+        reason: 'High sugar intake worsens insulin resistance, a key driver of PCOS symptoms including weight gain, irregular periods, and elevated androgens.',
+        sources: [{ title: 'PCOS Awareness Association', url: 'https://www.pcosaa.org/pcos-diet' }],
+      },
+      'Dairy': {
+        reason: 'Dairy contains hormones and growth factors like IGF-1 that may increase androgen levels and worsen hormonal imbalance in PCOS.',
+        sources: [{ title: 'Journal of the Academy of Nutrition and Dietetics', url: 'https://jandonline.org/article/S2212-2672(17)30013-X/fulltext' }],
+      },
+      'Soy': {
+        reason: 'Phytoestrogens in soy may interfere with hormonal regulation in women with PCOS, though research is mixed.',
+        sources: [{ title: 'Mayo Clinic - PCOS', url: 'https://www.mayoclinic.org/diseases-conditions/pcos/symptoms-causes/syc-20353439' }],
+      },
+      'Seed Oils': {
+        reason: 'High omega-6 fatty acids in seed oils promote inflammation that can worsen insulin resistance and hormonal imbalance in PCOS.',
+        sources: [{ title: 'NIH - Inflammation and PCOS', url: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6266413/' }],
+      },
+    },
+  },
+  'hormonal-acne': {
+    description: 'Hormonal acne is triggered by fluctuations in hormones — particularly androgens like testosterone — that increase oil production and clog pores. It typically appears along the jawline, chin, and neck and is influenced by diet, stress, and skincare products.',
+    generalSources: [
+      { title: 'AAD - Hormonal Acne', url: 'https://www.aad.org/public/diseases/acne/causes/hormonal' },
+      { title: 'Mayo Clinic - Acne', url: 'https://www.mayoclinic.org/diseases-conditions/acne/symptoms-causes/syc-20368047' },
+    ],
+    ingredientInfo: {
+      'Dairy': {
+        reason: 'Dairy products contain hormones and growth factors that stimulate oil glands and increase androgen activity, directly contributing to hormonal acne.',
+        sources: [
+          { title: 'AAD - Diet and Acne', url: 'https://www.aad.org/public/diseases/acne/causes/diet' },
+          { title: 'Journal of the Academy of Nutrition and Dietetics - Dairy and Acne', url: 'https://pubmed.ncbi.nlm.nih.gov/16029679/' },
+        ],
+      },
+      'Whey Protein': {
+        reason: 'Whey protein spikes insulin and IGF-1 levels, both of which increase sebum production and androgen activity linked to hormonal acne.',
+        sources: [{ title: 'AAD - Diet and Acne', url: 'https://www.aad.org/public/diseases/acne/causes/diet' }],
+      },
+      'Refined Sugar': {
+        reason: 'High glycemic foods cause insulin spikes that trigger androgen production and increase sebum, worsening hormonal acne.',
+        sources: [{ title: 'Harvard Health - Acne and Diet', url: 'https://www.health.harvard.edu/diseases-and-conditions/can-the-right-diet-get-rid-of-acne' }],
+      },
+      'Coconut Oil': {
+        reason: 'Coconut oil is highly comedogenic and clogs pores, worsening acne breakouts especially in hormonal acne-prone skin.',
+        sources: [{ title: 'AAD - Acne Skin Care', url: 'https://www.aad.org/public/diseases/acne/skin-care/tips' }],
+      },
+    },
+  },
   'breastfeeding': {
     description: 'While breastfeeding, certain ingredients in food, drink, and personal care products can pass through breast milk to your baby. Being mindful of what you consume and apply helps protect your newborn\'s health and development.',
     generalSources: [
