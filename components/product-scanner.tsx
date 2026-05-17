@@ -161,26 +161,95 @@ export function ProductScanner() {
         const res = await api.searchProducts(normalizedQuery, 'all')
         const results = ((res as { products?: unknown[] }).products ?? []) as unknown[]
         
+        const normalizeText = (value: unknown): string => {
+          if (Array.isArray(value)) return value.join(' ').toLowerCase()
+          if (typeof value === 'string') return value.toLowerCase()
+          return ''
+        }
+        
+        const includesAny = (text: string, words: string[]) =>
+          words.some((word) => text.includes(word))
+        
         const inferCategory = (product: Record<string, unknown>): string => {
-          const existingCategory = (product.category as string)?.toLowerCase()
-          if (existingCategory && ['skin-body', 'haircare', 'makeup', 'food', 'cleaning', 'fragrance', 'household'].includes(existingCategory)) {
-            return existingCategory
-          }
-          const source = (product.source as string)?.toLowerCase() || ''
-          const name = ((product.name as string) || (product.product_name as string) || '').toLowerCase()
-          const categories = ((product.categories as string) || (product.categories_tags as string) || '').toLowerCase()
-          if (source.includes('beauty') || source.includes('obf') || source === 'openbeautyfacts') {
-            if (categories.includes('hair') || name.includes('shampoo') || name.includes('conditioner') || name.includes('hair')) return 'haircare'
-            if (categories.includes('makeup') || categories.includes('cosmetic') || name.includes('lipstick') || name.includes('mascara') || name.includes('foundation') || name.includes('eyeshadow')) return 'makeup'
-            if (categories.includes('fragrance') || categories.includes('perfume') || name.includes('perfume') || name.includes('cologne')) return 'fragrance'
-            return 'skin-body'
-          }
-          if (categories.includes('beauty') || categories.includes('cosmetic') || categories.includes('personal care') || categories.includes('skin') || categories.includes('body care') || categories.includes('lotion') || name.includes('lotion') || name.includes('moisturizer') || name.includes('soap') || name.includes('body wash') || name.includes('sunscreen') || name.includes('deodorant') || name.includes('toothpaste') || name.includes('face wash') || name.includes('serum')) return 'skin-body'
-          if (categories.includes('hair') || name.includes('shampoo') || name.includes('conditioner') || name.includes('hair gel') || name.includes('hair spray')) return 'haircare'
-          if (categories.includes('makeup') || name.includes('lipstick') || name.includes('mascara') || name.includes('foundation') || name.includes('concealer')) return 'makeup'
-          if (categories.includes('fragrance') || categories.includes('perfume') || name.includes('perfume') || name.includes('cologne') || name.includes('eau de')) return 'fragrance'
-          if (categories.includes('cleaning') || categories.includes('detergent') || categories.includes('cleaner') || name.includes('detergent') || name.includes('cleaner') || name.includes('dish soap') || name.includes('laundry')) return 'cleaning'
-          if (categories.includes('household') || name.includes('paper towel') || name.includes('tissue') || name.includes('trash bag')) return 'household'
+          const validCategories = ['skin-body', 'haircare', 'makeup', 'food', 'cleaning', 'fragrance', 'household']
+          const existingCategory = normalizeText(product.category)
+          if (validCategories.includes(existingCategory)) return existingCategory
+        
+          const source = normalizeText(product.source)
+          const name = normalizeText(product.name || product.product_name || product.productName || product.generic_name || product.brands)
+          const categories = normalizeText(product.categories || product.categories_tags || product.categories_hierarchy || product.compared_to_category)
+          const labels = normalizeText(product.labels || product.labels_tags)
+          const ingredients = normalizeText(product.ingredients_text)
+          const text = `${source} ${name} ${categories} ${labels} ${ingredients}`
+        
+          const makeupWords = [
+            'makeup', 'cosmetic', 'eyeliner', 'eye liner', 'mascara', 'foundation',
+            'concealer', 'blush', 'bronzer', 'highlighter', 'primer', 'setting spray',
+            'setting powder', 'lipstick', 'lip gloss', 'lip liner', 'lip stain',
+            'eyeshadow', 'eye shadow', 'brow gel', 'brow pencil', 'eyebrow pencil',
+            'kajal', 'kohl', 'contour', 'cc cream', 'bb cream', 'tinted moisturizer',
+            'nail polish', 'nail lacquer', 'false lashes', 'colour cosmetic',
+            'color cosmetic', 'gel liner', 'liquid liner', 'eye pencil',
+          ]
+        
+          const hairWords = [
+            'shampoo', 'conditioner', 'dry shampoo', 'hair mask', 'hair oil',
+            'hair serum', 'hair spray', 'hairspray', 'hair gel', 'hair mousse',
+            'pomade', 'curl cream', 'leave-in', 'scalp treatment', 'detangler',
+            'hair treatment', 'hair care', 'haircare', 'hair color', 'hair dye',
+          ]
+        
+          const fragranceWords = [
+            'eau de parfum', 'eau de toilette', 'eau de cologne', 'body mist',
+            'fragrance mist', 'parfum', 'perfume', 'cologne',
+          ]
+        
+          const skinBodyWords = [
+            'skincare', 'skin care', 'body care', 'body wash', 'body lotion',
+            'moisturizer', 'moisturiser', 'face wash', 'facial cleanser', 'toner',
+            'sunscreen', 'face sunscreen', 'spf', 'deodorant', 'antiperspirant',
+            'hand wash', 'hand cream', 'body butter', 'exfoliant', 'face scrub',
+            'retinol', 'vitamin c serum', 'hyaluronic acid', 'niacinamide',
+            'toothpaste', 'mouthwash', 'lip balm', 'micellar', 'cleansing oil',
+            'face mask', 'sheet mask', 'eye cream', 'night cream', 'day cream',
+            'petroleum jelly', 'healing ointment', 'body oil', 'bath oil',
+            'salicylic acid', 'benzoyl peroxide', 'face serum',
+          ]
+        
+          const cleaningWords = [
+            'cleaning', 'cleaner', 'detergent', 'dish soap', 'dishwasher pod',
+            'laundry detergent', 'laundry pod', 'disinfectant', 'disinfecting',
+            'bleach', 'all purpose cleaner', 'glass cleaner', 'toilet cleaner',
+            'bathroom cleaner', 'kitchen cleaner', 'floor cleaner', 'fabric softener',
+            'dryer sheet', 'stain remover', 'oven cleaner', 'drain cleaner',
+          ]
+        
+          const householdWords = [
+            'paper towel', 'tissue', 'toilet paper', 'trash bag', 'garbage bag',
+            'storage bag', 'aluminum foil', 'plastic wrap', 'air freshener',
+            'scented candle', 'wax candle', 'hand soap', 'dish soap',
+          ]
+        
+          const foodWords = [
+            'food', 'snack', 'beverage', 'drink', 'water', 'juice', 'coffee', 'tea',
+            'bread', 'cereal', 'pasta', 'sauce', 'cookie', 'chocolate', 'candy',
+            'chips', 'protein bar', 'granola', 'yogurt', 'milk', 'cheese', 'egg',
+            'rice', 'oat', 'fruit', 'vegetable', 'meat', 'fish', 'seafood', 'nut',
+            'seed', 'oil', 'vinegar', 'condiment', 'seasoning', 'spice', 'soup',
+            'cracker', 'pretzel', 'popcorn', 'energy drink', 'soda', 'sparkling water',
+          ]
+        
+          if (includesAny(text, makeupWords)) return 'makeup'
+          if (includesAny(text, hairWords)) return 'haircare'
+          if (includesAny(text, fragranceWords)) return 'fragrance'
+          if (includesAny(text, cleaningWords)) return 'cleaning'
+          if (includesAny(text, householdWords)) return 'household'
+          if (includesAny(text, skinBodyWords)) return 'skin-body'
+          if (includesAny(text, foodWords)) return 'food'
+        
+          if (source.includes('openfoodfacts') || source.includes('off')) return 'food'
+          if (source.includes('openbeautyfacts') || source.includes('beauty') || source.includes('obf')) return 'skin-body'
+        
           return 'food'
         }
         
