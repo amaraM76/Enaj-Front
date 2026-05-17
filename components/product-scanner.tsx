@@ -527,6 +527,25 @@ export function ProductScanner() {
               </div>
             </div>
 
+            <div className="mt-4 flex gap-3">
+              <Button className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2" asChild>
+                <a href={scanResult.product.url} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="h-4 w-4" />
+                  Shop This Product
+                </a>
+              </Button>
+              {(() => {
+                const slug = getProductSlug(scanResult.product as Product & { slug?: string })
+                const saved = isProductSaved(slug)
+                return (
+                  <Button variant="outline" onClick={() => saved ? unsaveProduct(slug) : saveProduct(scanResult.product)} className={`border-border gap-2 ${saved ? 'bg-primary/10 text-primary border-primary/30' : 'text-foreground hover:bg-accent'}`}>
+                    {saved ? <BookmarkCheck className="h-4 w-4" /> : <Bookmark className="h-4 w-4" />}
+                    {saved ? 'Saved' : 'Save Product'}
+                  </Button>
+                )
+              })()}
+            </div>
+
             <div className="mt-4">
               {scanResult.isRecommended ? (
                 <div className="flex items-center gap-2 rounded-lg bg-secondary/20 px-4 py-3">
@@ -660,25 +679,6 @@ export function ProductScanner() {
               </div>
             </div>
           )}
-
-          <div className="flex gap-3">
-            <Button className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2" asChild>
-              <a href={scanResult.product.url} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="h-4 w-4" />
-                Shop This Product
-              </a>
-            </Button>
-            {(() => {
-              const slug = getProductSlug(scanResult.product as Product & { slug?: string })
-              const saved = isProductSaved(slug)
-              return (
-                <Button variant="outline" onClick={() => saved ? unsaveProduct(slug) : saveProduct(scanResult.product)} className={`border-border gap-2 ${saved ? 'bg-primary/10 text-primary border-primary/30' : 'text-foreground hover:bg-accent'}`}>
-                  {saved ? <BookmarkCheck className="h-4 w-4" /> : <Bookmark className="h-4 w-4" />}
-                  {saved ? 'Saved' : 'Save Product'}
-                </Button>
-              )
-            })()}
-          </div>
         </div>
       )}
 
