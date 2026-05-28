@@ -88,6 +88,11 @@ export function EnajProvider({ children }: { children: ReactNode }) {
         savedProducts: user.savedProducts ?? [],
       }
       setProfileState(profileData)
+      // Store userId for browser extension sync
+      if (typeof window !== 'undefined' && userId) {
+        localStorage.setItem('enaj-userId', userId)
+      }
+
       return profileData
     } catch {
       return null
