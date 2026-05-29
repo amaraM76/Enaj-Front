@@ -276,6 +276,11 @@ export function LandingPage() {
         <div className="pointer-events-none absolute left-[8%] top-1/2 -translate-y-1/2 z-[1] hidden md:block" aria-hidden="true">
           <FlyingLogoWithBag />
         </div>
+
+        {/* Flying Logo with Gold Bag */}
+        <div className="pointer-events-none absolute right-[8%] top-1/2 -translate-y-1/2 z-[1] hidden md:block" aria-hidden="true">
+          <FlyingLogoWithBag />
+        </div>
         <div className="relative z-10 mx-auto max-w-3xl text-center"></div>
 
         <div className="relative z-10 mx-auto max-w-3xl text-center">
