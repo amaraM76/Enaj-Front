@@ -258,7 +258,13 @@ export function LandingPage() {
 
       {/* CTA Section */}
       <section className="relative px-6 py-20 lg:py-28 overflow-hidden">
-        {/* Background gradient */}
+        {/* Clouds for CTA section */}
+        <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
+          <Cloud className="animate-cloud-1" style={{ top: '10%', left: '-5%' }} width={180} />
+          <Cloud className="animate-cloud-2" style={{ top: '20%', right: '-3%' }} width={150} />
+          <Cloud className="animate-cloud-3" style={{ top: '60%', left: '5%' }} width={120} />
+          <Cloud className="animate-cloud-4" style={{ top: '50%', right: '0%' }} width={160} />
+        </div>
         <div
           className="pointer-events-none absolute inset-0"
           style={{
@@ -266,53 +272,27 @@ export function LandingPage() {
           }}
           aria-hidden="true"
         />
-        
-        {/* Flying Logo with Gold Shopping Bag */}
-        <div className="pointer-events-none absolute inset-0 z-[1]" aria-hidden="true">
-          <div className="animate-fly-around-1 absolute">
-            <FlyingLogoWithBag />
-          </div>
+        {/* Flying Logo with Gold Bag */}
+        <div className="pointer-events-none absolute left-[8%] top-1/2 -translate-y-1/2 z-[1] hidden md:block" aria-hidden="true">
+          <FlyingLogoWithBag />
         </div>
-        
-        <div className="relative z-10 mx-auto max-w-3xl flex justify-center">
-          {/* Giant Stationary Cloud containing content */}
-          <div className="relative">
-            {/* Cloud SVG */}
-            <svg
-              viewBox="0 0 500 280"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-[340px] md:w-[420px] lg:w-[500px] h-auto"
-              aria-hidden="true"
-            >
-              <ellipse cx="250" cy="180" rx="180" ry="80" fill="white" fillOpacity="0.95"/>
-              <ellipse cx="150" cy="160" rx="100" ry="70" fill="white" fillOpacity="0.95"/>
-              <ellipse cx="350" cy="160" rx="100" ry="70" fill="white" fillOpacity="0.95"/>
-              <ellipse cx="200" cy="120" rx="90" ry="60" fill="white" fillOpacity="0.95"/>
-              <ellipse cx="300" cy="120" rx="90" ry="60" fill="white" fillOpacity="0.95"/>
-              <ellipse cx="250" cy="100" rx="70" ry="50" fill="white" fillOpacity="0.95"/>
-              {/* Subtle shadow/depth */}
-              <ellipse cx="250" cy="200" rx="160" ry="50" fill="black" fillOpacity="0.03"/>
-            </svg>
-            
-            {/* Content positioned over the cloud */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center px-8 pt-4">
-              <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-foreground text-center text-balance">
-                Ready to Take Control?
-              </h2>
-              <p className="mt-2 text-xs md:text-sm text-muted-foreground text-center text-pretty max-w-[280px]">
-                Create your free profile and start shopping with confidence. Your health, your rules.
-              </p>
-              <Button
-                size="default"
-                onClick={() => setCurrentStep('onboarding')}
-                className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-2 text-sm gap-2"
-              >
-                Get Started Free
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
+        <div className="relative z-10 mx-auto max-w-3xl text-center"></div>
+
+        <div className="relative z-10 mx-auto max-w-3xl text-center">
+          <h2 className="text-3xl font-bold text-foreground md:text-4xl text-balance">
+            Ready to Take Control?
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl text-muted-foreground text-pretty">
+            Create your free profile and start shopping with confidence. Your health, your rules.
+          </p>
+          <Button
+            size="lg"
+            onClick={() => setCurrentStep('onboarding')}
+            className="mt-8 bg-primary text-primary-foreground hover:bg-primary/90 px-10 py-6 text-lg gap-2"
+          >
+            Get Started Free
+            <ArrowRight className="h-5 w-5" />
+          </Button>
         </div>
       </section>
 

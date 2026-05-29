@@ -145,6 +145,19 @@
   animation: logo-float 3s ease-in-out infinite;
 }
 
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
 /* Cloud drift animations */
 @keyframes cloud-drift-1 {
   0% { transform: translateX(0) translateY(0); }
@@ -205,47 +218,3 @@
   display: none !important;
 }
 
-@keyframes logo-float {
-  0%, 100% {
-    transform: translateY(0px) rotate(-2deg);
-  }
-  50% {
-    transform: translateY(-10px) rotate(2deg);
-  }
-}
-
-.animate-logo-float {
-  animation: logo-float 4s ease-in-out infinite;
-}
-
-@keyframes fly-around-1 {
-  0% {
-    top: 20%;
-    left: 5%;
-    transform: rotate(-5deg);
-  }
-  25% {
-    top: 10%;
-    left: 50%;
-    transform: rotate(5deg);
-  }
-  50% {
-    top: 25%;
-    left: 85%;
-    transform: rotate(-3deg);
-  }
-  75% {
-    top: 60%;
-    left: 50%;
-    transform: rotate(5deg);
-  }
-  100% {
-    top: 20%;
-    left: 5%;
-    transform: rotate(-5deg);
-  }
-}
-
-.animate-fly-around-1 {
-  animation: fly-around-1 12s ease-in-out infinite;
-}
