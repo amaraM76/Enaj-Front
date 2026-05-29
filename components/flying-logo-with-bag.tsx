@@ -1,55 +1,63 @@
 'use client'
 
-export function FlyingLogoWithBag({ className = '' }: { className?: string }) {
+export function FlyingLogoWithBag() {
   return (
-    <div className={`relative ${className}`}>
+    <div className="animate-logo-float">
       <svg
-        width={120}
-        height={80}
-        viewBox="0 0 120 80"
+        width={160}
+        height={110}
+        viewBox="0 0 160 110"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="animate-logo-float"
         aria-hidden="true"
       >
         {/* Left Wing feathers */}
-        <path d="M36 30C32 26 22 14 10 6C7 4 3 5 4 8C6 14 14 24 28 32C32 34 35 33 36 31Z" fill="url(#flyingWingGrad)" opacity="0.6"/>
-        <path d="M36 29C33 24 24 14 14 8C11 6 8 7 9 10C11 16 18 25 30 32C33 33 35 32 36 30Z" fill="url(#flyingWingGrad)" opacity="0.7"/>
-        <path d="M37 28C34 22 27 14 18 10C15 9 12 10 13 13C15 18 22 26 32 31C35 32 36 31 37 29Z" fill="url(#flyingWingGrad)" opacity="0.85"/>
-        <path d="M37 27C35 22 30 16 23 13C20 12 18 13 19 15C20 19 26 26 33 30C35 31 37 30 37 28Z" fill="url(#flyingWingGrad)" opacity="0.9"/>
+        <path d="M56 45C50 39 36 22 18 10C14 7 8 8 10 13C13 22 24 36 44 48C50 51 55 49 56 46Z" fill="url(#wingGrad)" opacity="0.6"/>
+        <path d="M56 43C51 36 38 22 24 14C20 11 15 13 17 17C20 26 30 38 48 48C52 50 55 48 56 45Z" fill="url(#wingGrad)" opacity="0.7"/>
+        <path d="M57 41C53 33 42 22 30 16C25 14 21 16 23 20C26 28 36 40 52 48C56 49 57 47 57 44Z" fill="url(#wingGrad)" opacity="0.85"/>
+        <path d="M57 39C54 32 46 24 36 20C32 18 28 20 30 24C32 30 40 40 52 46C55 47 57 45 57 42Z" fill="url(#wingGrad)" opacity="0.95"/>
 
         {/* Right Wing feathers */}
-        <path d="M60 30C64 26 74 14 86 6C89 4 93 5 92 8C90 14 82 24 68 32C64 34 61 33 60 31Z" fill="url(#flyingWingGrad)" opacity="0.6"/>
-        <path d="M60 29C63 24 72 14 82 8C85 6 88 7 87 10C85 16 78 25 66 32C63 33 61 32 60 30Z" fill="url(#flyingWingGrad)" opacity="0.7"/>
-        <path d="M59 28C62 22 69 14 78 10C81 9 84 10 83 13C81 18 74 26 64 31C61 32 60 31 59 29Z" fill="url(#flyingWingGrad)" opacity="0.85"/>
-        <path d="M59 27C61 22 66 16 73 13C76 12 78 13 77 15C76 19 70 26 63 30C61 31 59 30 59 28Z" fill="url(#flyingWingGrad)" opacity="0.9"/>
+        <path d="M88 45C94 39 108 22 126 10C130 7 136 8 134 13C131 22 120 36 100 48C94 51 89 49 88 46Z" fill="url(#wingGrad)" opacity="0.6"/>
+        <path d="M88 43C93 36 106 22 120 14C124 11 129 13 127 17C124 26 114 38 96 48C92 50 89 48 88 45Z" fill="url(#wingGrad)" opacity="0.7"/>
+        <path d="M87 41C91 33 102 22 114 16C119 14 123 16 121 20C118 28 108 40 92 48C88 49 87 47 87 44Z" fill="url(#wingGrad)" opacity="0.85"/>
+        <path d="M87 39C90 32 98 24 108 20C112 18 116 20 114 24C112 30 104 40 92 46C89 47 87 45 87 42Z" fill="url(#wingGrad)" opacity="0.95"/>
 
-        {/* Shield */}
-        <path d="M48 10L36 16V30C36 40 48 52 48 52C48 52 60 40 60 30V16L48 10Z" fill="url(#flyingShieldGrad)" stroke="url(#flyingShieldStroke)" strokeWidth="1.5"/>
-        <path d="M43 31L46 35L54 26" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+        {/* Main Shield Body */}
+        <path d="M72 18L54 26V46C54 60 72 76 72 76C72 76 90 60 90 46V26L72 18Z" fill="url(#shieldGrad)" stroke="url(#shieldStroke)" strokeWidth="2"/>
+        
+        {/* Checkmark on shield */}
+        <path d="M64 46L69 52L80 40" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
 
-        {/* Shopping Bag on Right Wing */}
-        <g transform="translate(70, 18)">
+        {/* Gold Shopping Bag on Right Wing */}
+        <g transform="translate(105, 28)">
           {/* Bag body */}
-          <rect x="0" y="8" width="20" height="22" rx="2" fill="#0ABAB5" opacity="0.9"/>
+          <rect x="0" y="10" width="28" height="30" rx="3" fill="url(#goldGrad)"/>
           {/* Bag handle */}
-          <path d="M5 8V5C5 2 7 0 10 0C13 0 15 2 15 5V8" stroke="#0ABAB5" strokeWidth="2" fill="none"/>
+          <path d="M6 10V6C6 2 10 0 14 0C18 0 22 2 22 6V10" stroke="#B8860B" strokeWidth="3" fill="none"/>
           {/* Bag highlight */}
-          <rect x="2" y="10" width="6" height="3" rx="1" fill="white" opacity="0.3"/>
+          <rect x="3" y="14" width="8" height="4" rx="1" fill="white" opacity="0.4"/>
+          {/* Bag shine */}
+          <path d="M4 40L24 14" stroke="white" opacity="0.2" strokeWidth="2"/>
         </g>
 
         <defs>
-          <linearGradient id="flyingWingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <linearGradient id="wingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#0ABAB5"/>
             <stop offset="100%" stopColor="#A8D5BA"/>
           </linearGradient>
-          <linearGradient id="flyingShieldGrad" x1="48" y1="10" x2="48" y2="52">
+          <linearGradient id="shieldGrad" x1="72" y1="18" x2="72" y2="76">
             <stop offset="0%" stopColor="#0ABAB5"/>
             <stop offset="100%" stopColor="#78C9A0"/>
           </linearGradient>
-          <linearGradient id="flyingShieldStroke" x1="48" y1="10" x2="48" y2="52">
+          <linearGradient id="shieldStroke" x1="72" y1="18" x2="72" y2="76">
             <stop offset="0%" stopColor="#0ABAB5"/>
             <stop offset="100%" stopColor="#A8D5BA"/>
+          </linearGradient>
+          <linearGradient id="goldGrad" x1="0" y1="0" x2="28" y2="40">
+            <stop offset="0%" stopColor="#FFD700"/>
+            <stop offset="50%" stopColor="#FFC107"/>
+            <stop offset="100%" stopColor="#FFB300"/>
           </linearGradient>
         </defs>
       </svg>

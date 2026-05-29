@@ -173,7 +173,7 @@ export function LandingPage() {
               </div>
               <h3 className="mb-2 text-lg font-semibold text-card-foreground">Understand What You're Buying</h3>
               <p className="text-sm leading-relaxed text-muted-foreground">
-                When a product does not meet your needs, Enaj will inform you why.
+                When a product does not meet your needs, Enaj will alert you and educate you on why.
                 <><br />COMING SOON: Enaj will suggest products that are better suited for your ailments and preferences. Every recommended product will be shoppable and saveable.</>              </p>
             </div>
           </div>
@@ -255,44 +255,71 @@ export function LandingPage() {
           </div>
         </div>
       </section>
-
       {/* CTA Section */}
       <section className="relative px-6 py-20 lg:py-28 overflow-hidden">
-        {/* Clouds for CTA section */}
+        {/* Clouds */}
         <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
           <Cloud className="animate-cloud-1" style={{ top: '10%', left: '-5%' }} width={180} />
           <Cloud className="animate-cloud-2" style={{ top: '20%', right: '-3%' }} width={150} />
-          <Cloud className="animate-cloud-3" style={{ top: '60%', left: '5%' }} width={120} />
-          <Cloud className="animate-cloud-4" style={{ top: '50%', right: '0%' }} width={160} />
+          <Cloud className="animate-cloud-3" style={{ top: '70%', left: '5%' }} width={120} />
+          <Cloud className="animate-cloud-4" style={{ top: '60%', right: '0%' }} width={160} />
         </div>
-        <div
         
+        {/* Background gradient */}
+        <div
           className="pointer-events-none absolute inset-0"
           style={{
             background: 'linear-gradient(135deg, rgba(168,213,186,0.2) 0%, rgba(10,186,181,0.18) 50%, rgba(176,230,216,0.15) 100%)',
           }}
           aria-hidden="true"
         />
-        {/* Flying logo with shopping bag */}
-        <div className="pointer-events-none absolute inset-0 z-[2] flex items-center justify-center" aria-hidden="true">
-          <FlyingLogoWithBag className="absolute top-8 right-[15%] animate-logo-float" />
+        
+        {/* Flying Logo with Gold Shopping Bag - positioned left */}
+        <div className="pointer-events-none absolute left-[5%] top-1/2 -translate-y-1/2 z-[2]" aria-hidden="true">
+          <FlyingLogoWithBag />
         </div>
-
-        <div className="relative z-10 mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold text-foreground md:text-4xl text-balance">
+        
+        <div className="relative z-10 mx-auto max-w-3xl">
+          {/* Title moved up */}
+          <h2 className="text-3xl font-bold text-foreground md:text-4xl text-balance text-center -mt-4">
             Ready to Take Control?
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-muted-foreground text-pretty">
-            Create your free profile and start shopping with confidence. Your health, your rules.
-          </p>
-          <Button
-            size="lg"
-            onClick={() => setCurrentStep('onboarding')}
-            className="mt-8 bg-primary text-primary-foreground hover:bg-primary/90 px-10 py-6 text-lg gap-2"
-          >
-            Get Started Free
-            <ArrowRight className="h-5 w-5" />
-          </Button>
+          
+          {/* Gold Shield with subtitle and arrow pointing to button */}
+          <div className="flex justify-end mt-6 mr-[-2rem] lg:mr-[-4rem]">
+            <div className="relative">
+              {/* Gold Shield */}
+              <div 
+                className="relative px-6 py-4 max-w-sm"
+                style={{
+                  background: 'linear-gradient(135deg, #FFD700 0%, #FFC107 50%, #FFB300 100%)',
+                  clipPath: 'polygon(0% 10%, 50% 0%, 100% 10%, 100% 90%, 50% 100%, 0% 90%)',
+                  boxShadow: '0 4px 20px rgba(255, 193, 7, 0.3)',
+                }}
+              >
+                <p className="text-center text-sm font-medium text-gray-900 py-2">
+                  Create your free profile and start shopping with confidence. Your health, your rules.
+                </p>
+              </div>
+              {/* Arrow pointing down to button */}
+              <div className="flex justify-center -mt-1">
+                <svg width="24" height="32" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 0V24M12 24L4 16M12 24L20 16" stroke="#FFB300" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          
+          <div className="text-center mt-4">
+            <Button
+              size="lg"
+              onClick={() => setCurrentStep('onboarding')}
+              className="bg-primary text-primary-foreground hover:bg-primary/90 px-10 py-6 text-lg gap-2"
+            >
+              Get Started Free
+              <ArrowRight className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
       </section>
 

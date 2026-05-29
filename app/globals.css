@@ -204,3 +204,16 @@
 .cl-footerAction {
   display: none !important;
 }
+
+@keyframes logo-float {
+  0%, 100% {
+    transform: translateY(0px) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(2deg);
+  }
+}
+
+.animate-logo-float {
+  animation: logo-float 4s ease-in-out infinite;
+}
