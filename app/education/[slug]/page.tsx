@@ -9,8 +9,6 @@ import { ArrowLeft, Heart, Leaf, AlertTriangle, ExternalLink, Loader2, AlertCirc
 import Link from 'next/link'
 import { api } from '@/lib/api'
 import type { Ailment, FlaggedIngredient } from '@/lib/enaj-data'
-import { getPreferenceEducation } from '@/lib/preference-education'
-import { getAilmentEducation } from '@/lib/ailment-education'
 import { useParams, useSearchParams } from 'next/navigation'
 
 
@@ -65,15 +63,12 @@ export default function EducationDetailPage() {
 
         if (foundPref) {
           // Get education content from local hardcoded data (preference-education.ts)
-          const educationContent = getPreferenceEducation(slug)
-          
-          // Use preference info from database but education content from local file
           setPreference({
             ...(foundPref as Preference),
-            whatItIs: educationContent?.whatItIs,
-            commonlyFoundIn: educationContent?.commonlyFoundIn,
-            whyPeopleAvoid: educationContent?.whyPeopleAvoid,
-            sources: educationContent?.sources,
+            whatItIs: (foundPref as any).whatItIs,
+            commonlyFoundIn: (foundPref as any).commonlyFoundIn,
+            whyPeopleAvoid: (foundPref as any).whyPeopleAvoid,
+            sources: (foundPref as any).educationSources,
           })
           setType('preference')
         }
@@ -171,8 +166,7 @@ export default function EducationDetailPage() {
         <div className="mx-auto max-w-3xl">
           {type === 'ailment' && ailment && (() => {
             // Get local education data for this ailment
-            const ailmentEducation = getAilmentEducation(slug)
-            const generalSources = ailment.sources?.length ? ailment.sources : ailmentEducation?.generalSources || []
+            const generalSources = (ailment as any).generalSources || []
 
             return (
               <Card className="border-border bg-card/80 backdrop-blur-sm">
@@ -184,14 +178,14 @@ export default function EducationDetailPage() {
                     </span>
                   </div>
                   <CardTitle className="text-2xl">{ailment.name}</CardTitle>
-                  {(ailment.description || ailmentEducation?.description) && (
-                    <p className="text-muted-foreground">{ailment.description || ailmentEducation?.description}</p>
-                  )}
+                    {ailment.description && (
+                      <p className="text-muted-foreground">{ailment.description}</p>
+                    )}
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  {ailment.longDescription && (
+                  {ailment.description && (
                     <div className="prose prose-sm max-w-none text-card-foreground">
-                      {ailment.longDescription.split('\n\n').map((paragraph, idx) => (
+                      {ailment.description.split('\n\n').map((paragraph, idx) => (
                         <p key={idx} className="mb-4 leading-relaxed">{paragraph}</p>
                       ))}
                     </div>
@@ -205,9 +199,8 @@ export default function EducationDetailPage() {
                     <div className="space-y-3">
                       {ailment.flaggedIngredients.map((ing: FlaggedIngredient) => {
                         // Get local education data for this ingredient
-                        const localIngredientInfo = ailmentEducation?.ingredientInfo?.[ing.name]
-                        const ingredientSources = ing.sources?.length ? ing.sources : localIngredientInfo?.sources || []
-                        const ingredientReason = ing.reason || localIngredientInfo?.reason
+                        const ingredientSources = ing.sources || []
+                        const ingredientReason = ing.reason
 
                         return (
                           <div
