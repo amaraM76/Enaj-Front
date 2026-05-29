@@ -217,3 +217,35 @@
 .animate-logo-float {
   animation: logo-float 4s ease-in-out infinite;
 }
+
+@keyframes fly-around-1 {
+  0% {
+    top: 20%;
+    left: 5%;
+    transform: rotate(-5deg);
+  }
+  25% {
+    top: 10%;
+    left: 50%;
+    transform: rotate(5deg);
+  }
+  50% {
+    top: 25%;
+    left: 85%;
+    transform: rotate(-3deg);
+  }
+  75% {
+    top: 60%;
+    left: 50%;
+    transform: rotate(5deg);
+  }
+  100% {
+    top: 20%;
+    left: 5%;
+    transform: rotate(-5deg);
+  }
+}
+
+.animate-fly-around-1 {
+  animation: fly-around-1 12s ease-in-out infinite;
+}
