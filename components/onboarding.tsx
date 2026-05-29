@@ -359,7 +359,7 @@ export function Onboarding() {
               <div className="border-b border-border bg-muted/50 px-4 py-3">
                 <h3 className="font-semibold text-card-foreground text-sm">Your Selections</h3>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  View what Enaj monitors on your dashboard
+                  You can view the full list of what Enaj monitors for you, once your profile is completed.
                 </p>
               </div>
 
@@ -412,7 +412,7 @@ export function Onboarding() {
                                 </span>
                                 {linkedAilments.length > 0 && (
                                   <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">
-                                    <span className="text-primary font-medium">Pre-selected</span> because you have{' '}
+                                    <span className="text-primary font-medium">Pre-selected</span> because you marked:{'  '}
                                     {linkedAilments.map((a, i) => (
                                       <span key={a.id}>
                                         <span className="font-medium text-foreground">{a.name}</span>
@@ -856,6 +856,7 @@ export function Onboarding() {
                           </div>
                           <p className="text-sm text-muted-foreground leading-relaxed">
                             Not sure exactly what to avoid? Select this and Enaj will automatically monitor for the most commonly flagged toxic ingredients — synthetic chemicals, harmful food additives, endocrine disruptors, and more — across everything you scan.
+                            <br> This feature can be used for yourself, children, or any pets you are shopping for!</br>
                           </p>
                         </div>
                       </div>

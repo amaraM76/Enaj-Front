@@ -2,9 +2,10 @@
 
 import { useEnaj } from '@/lib/enaj-context'
 import { EnajLogo } from '@/components/enaj-logo'
-import { CloudBackground } from '@/components/cloud-background'
 import { Button } from '@/components/ui/button'
 import { Heart, ArrowRight, Check, Sparkles, MousePointer2, LogIn } from 'lucide-react'
+import { CloudBackground, Cloud } from '@/components/cloud-background'
+import { FlyingLogoWithBag } from '@/components/flying-logo-with-bag'
 
 export function LandingPage() {
   const { setCurrentStep } = useEnaj()
@@ -96,7 +97,7 @@ export function LandingPage() {
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl text-pretty">
             No more studying labels or analyzing ingredients.{' '}
             <span className="whitespace-nowrap">We do the work for you.</span>{' '}
-            Enaj scans products on any shopping site in one click, or search directly on our platform. We instantly analyze every ingredient, flag conflicts with your health, and suggest safer alternatives. Zero research. Zero effort.
+            Enaj scans products on any shopping site in one click, or you can search directly on our platform. We instantly analyze every ingredient, flag conflicts with your health, and suggest safer alternatives. Zero research. Zero effort.
           </p>
           <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row">
             <Button
@@ -170,9 +171,10 @@ export function LandingPage() {
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
                 <Sparkles className="h-6 w-6 text-primary" />
               </div>
-              <h3 className="mb-2 text-lg font-semibold text-card-foreground">Smarter Alternatives</h3>
+              <h3 className="mb-2 text-lg font-semibold text-card-foreground">Understand What You're Buying</h3>
               <p className="text-sm leading-relaxed text-muted-foreground">
-                When a product does not meet your needs, Enaj suggests similar products that do. Every recommendation is shoppable and saveable.
+                When a product does not meet your needs, Enaj will inform you why.
+                <br> COMING SOON: Enaj will suggest products that are better suited for your ailemnts and preferences. Every recommended product will be shoppable and saveable.</br>
               </p>
             </div>
           </div>
@@ -230,7 +232,7 @@ export function LandingPage() {
               Built for Real Health Needs
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-muted-foreground text-pretty">
-              Enaj supports a wide range of health conditions and dietary preferences.
+              Enaj supports a wide range of health conditions and dietary preferences such as...
             </p>
           </div>
 
@@ -250,23 +252,33 @@ export function LandingPage() {
                 {condition}
               </span>
             ))}
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm text-card-foreground">
-              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">+</span>
-              and more
-            </span>
+            <p className="mt-6 text-center text-muted-foreground">and many more.</p>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
       <section className="relative px-6 py-20 lg:py-28 overflow-hidden">
+        {/* Clouds for CTA section */}
+        <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
+          <Cloud className="animate-cloud-1" style={{ top: '10%', left: '-5%' }} width={180} />
+          <Cloud className="animate-cloud-2" style={{ top: '20%', right: '-3%' }} width={150} />
+          <Cloud className="animate-cloud-3" style={{ top: '60%', left: '5%' }} width={120} />
+          <Cloud className="animate-cloud-4" style={{ top: '50%', right: '0%' }} width={160} />
+        </div>
         <div
+        
           className="pointer-events-none absolute inset-0"
           style={{
             background: 'linear-gradient(135deg, rgba(168,213,186,0.2) 0%, rgba(10,186,181,0.18) 50%, rgba(176,230,216,0.15) 100%)',
           }}
           aria-hidden="true"
         />
+        {/* Flying logo with shopping bag */}
+        <div className="pointer-events-none absolute inset-0 z-[2] flex items-center justify-center" aria-hidden="true">
+          <FlyingLogoWithBag className="absolute top-8 right-[15%] animate-logo-float" />
+        </div>
+
         <div className="relative z-10 mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-bold text-foreground md:text-4xl text-balance">
             Ready to Take Control?
