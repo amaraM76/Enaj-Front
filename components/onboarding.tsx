@@ -856,7 +856,7 @@ export function Onboarding() {
                           </div>
                           <p className="text-sm text-muted-foreground leading-relaxed">
                             Not sure exactly what to avoid? Select this and Enaj will automatically monitor for the most commonly flagged toxic ingredients — synthetic chemicals, harmful food additives, endocrine disruptors, and more — across everything you scan.
-                            <br> This feature can be used for yourself, children, or any pets you are shopping for!</br>
+                            <br /> This feature can be used for yourself, children, or any pets you are shopping for!
                           </p>
                         </div>
                       </div>
