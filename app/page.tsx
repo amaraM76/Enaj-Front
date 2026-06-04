@@ -65,11 +65,10 @@ function AccessGate({ children }: { children: React.ReactNode }) {
 }
 
 export default function Home() {
+  // Temporarily bypassing AccessGate for preview
   return (
-    <AccessGate>
-      <EnajProvider>
-        <AppContent />
-      </EnajProvider>
-    </AccessGate>
+    <EnajProvider>
+      <AppContent />
+    </EnajProvider>
   )
 }
