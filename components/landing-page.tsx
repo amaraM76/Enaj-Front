@@ -11,7 +11,7 @@ export function LandingPage() {
   const { setCurrentStep } = useEnaj()
 
   return (
-    <div className="relative min-h-screen" style={{ background: 'linear-gradient(170deg, #e0f7f6 0%, #c2ede8 20%, #b0e6d8 45%, #a8d5ba 70%, #c2ede8 100%)' }}>
+    <div className="relative min-h-screen" style={{ background: 'linear-gradient(170deg, #E8EDFF 0%, #B8C8FF 20%, #8AA2E8 45%, #5B7BD1 70%, #0504aa 100%)' }} >
       <CloudBackground />
       {/* Navigation */}
       <nav className="relative z-10 flex items-center justify-between px-6 py-4 lg:px-12" style={{ background: 'rgba(255,255,255,0.45)', backdropFilter: 'blur(12px)' }}>
@@ -54,7 +54,7 @@ export function LandingPage() {
         <div
           className="pointer-events-none absolute inset-0"
           style={{
-            background: 'linear-gradient(160deg, rgba(10,186,181,0.15) 0%, rgba(168,213,186,0.2) 40%, rgba(10,186,181,0.12) 70%, rgba(176,230,216,0.18) 100%)',
+            background: 'linear-gradient(160deg, rgba(5,4,170,0.15) 0%, rgba(91,123,209,0.2) 40%, rgba(5,4,170,0.12) 70%, rgba(184,200,255,0.18) 100%)',
           }}
           aria-hidden="true"
         />
@@ -66,9 +66,9 @@ export function LandingPage() {
               <defs>
                 <path id="archPath" d="M 10,62 Q 210,2 410,62" fill="none" />
                 <linearGradient id="archTextGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#078783" />
-                  <stop offset="50%" stopColor="#3a9e96" />
-                  <stop offset="100%" stopColor="#078783" />
+                  <stop offset="0%" stopColor="#0504aa" />
+                  <stop offset="50%" stopColor="#5B7BD1" />
+                  <stop offset="100%" stopColor="#0504aa" />
                 </linearGradient>
               </defs>
               <text
@@ -92,7 +92,14 @@ export function LandingPage() {
 
           <h1 className="mt-4 max-w-4xl text-4xl font-extrabold leading-tight tracking-tight text-foreground md:text-6xl lg:text-7xl text-balance">
             Putting the Power of Shopping{' '}
-            <span className="bg-gradient-to-r from-[#0ABAB5] to-[#A8D5BA] bg-clip-text text-transparent">Back in Your Hands</span>
+            <span style={{
+              background: 'linear-gradient(135deg, #87CEEB 0%, #00BFFF 15%, #1E90FF 30%, #0504aa 50%, #1E90FF 70%, #00BFFF 85%, #87CEEB 100%)',
+              backgroundSize: '200% 200%',
+              WebkitBackgroundClip: 'text',
+              backgroundClip: 'text',
+              color: 'transparent',
+              filter: 'drop-shadow(0 2px 4px rgba(5,4,170,0.3))',
+            }}>Back in Your Hands</span>
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl text-pretty">
             No more studying labels or analyzing ingredients.{' '}
@@ -211,7 +218,7 @@ export function LandingPage() {
               <div key={item.step} className="relative flex flex-col items-center text-center">
                 <div
                   className="mb-4 flex h-16 w-16 items-center justify-center rounded-full text-primary-foreground"
-                  style={{ background: 'linear-gradient(135deg, #0ABAB5 0%, #A8D5BA 100%)' }}
+                  style={{ background: 'linear-gradient(135deg, #FFD700 0%, #FFC107 100%)' }}
                 >
                   <span className="text-xl font-bold">{item.step}</span>
                 </div>
@@ -278,7 +285,7 @@ export function LandingPage() {
         </div>
 
         {/* Flying Logo with Gold Bag */}
-        <div className="pointer-events-none absolute right-[8%] top-1/2 -translate-y-1/2 z-[1] hidden md:block" aria-hidden="true">
+        <div className="pointer-events-none absolute -[8%] top-1/2 -translate-y-1/2 z-[1] hidden md:block" aria-hidden="true">
           <FlyingLogoWithBag />
         </div>
         <div className="relative z-10 mx-auto max-w-3xl text-center"></div>
