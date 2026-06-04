@@ -9,7 +9,7 @@ import { Onboarding } from '@/components/onboarding'
 import { Dashboard } from '@/components/dashboard'
 
 function AppContent() {
-  const { currentStep, isClerkLoaded, clerkUserId, profileLoaded } = useEnaj()
+  const { currentStep, setCurrentStep, isClerkLoaded, clerkUserId, profileLoaded } = useEnaj()
 
   // Show loading while Clerk initializes
   if (!isClerkLoaded || (clerkUserId && !profileLoaded)) {
@@ -22,7 +22,7 @@ function AppContent() {
 
   switch (currentStep) {
     case 'landing':
-      return <LandingPagePreview />
+      return <LandingPagePreview onNavigate={(step) => setCurrentStep(step as 'landing' | 'login' | 'onboarding' | 'dashboard')} />
     case 'login':
       return <LoginPage />
     case 'onboarding':
@@ -30,7 +30,7 @@ function AppContent() {
     case 'dashboard':
       return <Dashboard />
     default:
-      return <LandingPagePreview />
+      return <LandingPagePreview onNavigate={(step) => setCurrentStep(step as 'landing' | 'login' | 'onboarding' | 'dashboard')} />
   }
 }
 

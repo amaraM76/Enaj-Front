@@ -1,9 +1,8 @@
 'use client'
 
-import { useEnaj } from '@/lib/enaj-context'
 import { Button } from '@/components/ui/button'
 import { Heart, ArrowRight, Check, Sparkles, MousePointer2, LogIn } from 'lucide-react'
-import { CloudBackground, Cloud } from '@/components/cloud-background'
+import { CloudBackground } from '@/components/cloud-background'
 
 // Preview Logo with Gold Shield and Blue/White Wings
 function PreviewEnajLogo({ size = 'md', className = '' }: { size?: 'sm' | 'md' | 'lg' | 'xl'; className?: string }) {
@@ -153,8 +152,12 @@ function WaterText({ children, className = '' }: { children: React.ReactNode; cl
   )
 }
 
-export function LandingPagePreview() {
-  const { setCurrentStep } = useEnaj()
+export function LandingPagePreview({ onNavigate }: { onNavigate?: (step: string) => void }) {
+  const handleNavigate = (step: string) => {
+    if (onNavigate) {
+      onNavigate(step)
+    }
+  }
 
   return (
     <div 
@@ -200,14 +203,14 @@ export function LandingPagePreview() {
         <div className="flex items-center gap-3">
           <Button
             variant="outline"
-            onClick={() => setCurrentStep('login')}
+            onClick={() => handleNavigate('login')}
             className="gap-2 border-[#0504aa] text-[#0504aa] hover:bg-[#0504aa]/10"
           >
             <LogIn className="h-4 w-4" />
             Login
           </Button>
           <Button
-            onClick={() => setCurrentStep('onboarding')}
+            onClick={() => handleNavigate('onboarding')}
             style={{ background: 'linear-gradient(135deg, #FFD700 0%, #FFC107 100%)', color: '#0504aa' }}
             className="font-semibold hover:opacity-90"
           >
@@ -272,7 +275,7 @@ export function LandingPagePreview() {
           <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row">
             <Button
               size="lg"
-              onClick={() => setCurrentStep('onboarding')}
+              onClick={() => handleNavigate('onboarding')}
               style={{ background: 'linear-gradient(135deg, #FFD700 0%, #FFC107 100%)', color: '#0504aa' }}
               className="px-8 py-6 text-lg gap-2 font-semibold hover:opacity-90"
             >
@@ -432,7 +435,7 @@ export function LandingPagePreview() {
           </p>
           <Button
             size="lg"
-            onClick={() => setCurrentStep('onboarding')}
+            onClick={() => handleNavigate('onboarding')}
             style={{ background: 'linear-gradient(135deg, #FFD700 0%, #FFC107 100%)', color: '#0504aa' }}
             className="mt-8 px-10 py-6 text-lg gap-2 font-semibold hover:opacity-90"
           >
