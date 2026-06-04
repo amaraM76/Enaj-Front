@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { EnajProvider, useEnaj } from '@/lib/enaj-context'
-import { LandingPage } from '@/components/landing-page'
+import { LandingPagePreview } from '@/components/landing-page-preview'
 import { LoginPage } from '@/components/login-page'
 import { Onboarding } from '@/components/onboarding'
 import { Dashboard } from '@/components/dashboard'
@@ -22,7 +22,7 @@ function AppContent() {
 
   switch (currentStep) {
     case 'landing':
-      return <LandingPage />
+      return <LandingPagePreview />
     case 'login':
       return <LoginPage />
     case 'onboarding':
@@ -30,7 +30,7 @@ function AppContent() {
     case 'dashboard':
       return <Dashboard />
     default:
-      return <LandingPage />
+      return <LandingPagePreview />
   }
 }
 
