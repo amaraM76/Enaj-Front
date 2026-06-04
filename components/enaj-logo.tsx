@@ -103,7 +103,7 @@ export function EnajLogo({ size = 'md', className = '' }: { size?: 'sm' | 'md' |
       {/* Shield checkmark */}
       <path
         d="M43 31L46 35L54 26"
-        stroke="#0504aa"
+        stroke="white"
         strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -112,22 +112,20 @@ export function EnajLogo({ size = 'md', className = '' }: { size?: 'sm' | 'md' |
 
       <defs>
         <linearGradient id="wingGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#0504aa" />
-          <stop offset="50%" stopColor="#4169E1" />
-          <stop offset="100%" stopColor="#ffffff" />
+          <stop offset="0%" stopColor="#0ABAB5" />
+          <stop offset="100%" stopColor="#A8D5BA" />
         </linearGradient>
         <linearGradient id="wingHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#87CEEB" />
-          <stop offset="100%" stopColor="#ffffff" />
+          <stop offset="0%" stopColor="#B8EBD6" />
+          <stop offset="100%" stopColor="#D4F5E9" />
         </linearGradient>
         <linearGradient id="shieldGradient" x1="48" y1="10" x2="48" y2="52">
-          <stop offset="0%" stopColor="#FFD700" />
-          <stop offset="50%" stopColor="#FFC107" />
-          <stop offset="100%" stopColor="#DAA520" />
+          <stop offset="0%" stopColor="#0ABAB5" />
+          <stop offset="100%" stopColor="#78C9A0" />
         </linearGradient>
         <linearGradient id="shieldStroke" x1="48" y1="10" x2="48" y2="52">
-          <stop offset="0%" stopColor="#FFD700" />
-          <stop offset="100%" stopColor="#B8860B" />
+          <stop offset="0%" stopColor="#0ABAB5" />
+          <stop offset="100%" stopColor="#A8D5BA" />
         </linearGradient>
       </defs>
     </svg>
