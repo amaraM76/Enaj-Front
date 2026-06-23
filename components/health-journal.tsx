@@ -141,7 +141,7 @@ export function HealthJournal() {
                 <div className="rounded-xl border border-primary/20 bg-primary/5 p-5">
                   <div className="flex items-center gap-2 mb-4">
                     <ShieldCheck className="h-5 w-5 text-primary" />
-                    <h3 className="font-semibold text-foreground">What Enaj Monitors For You</h3>
+                    <h3 className="font-semibold text-foreground">What enaJ Monitors For You</h3>
                   </div>
                   <div className="flex flex-col gap-4">
                     {selectedLearnCondition.whatWeMonitor.map((item, index) => (
@@ -329,7 +329,7 @@ export function HealthJournal() {
       <div>
         <h1 className="text-2xl font-bold text-foreground md:text-3xl">Weekly Health Journal</h1>
         <p className="mt-1 text-muted-foreground">
-          Track temporary conditions and let Enaj help you shop smarter while you recover.
+          Track temporary conditions and let enaJ help you shop smarter while you recover.
         </p>
       </div>
 
@@ -536,7 +536,7 @@ export function HealthJournal() {
             <p className="text-sm font-medium text-foreground">A Quick Reminder</p>
             <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
               Your health journal entries are temporary and meant to help you shop smarter while dealing with short-term conditions. 
-              Enaj is not a substitute for medical advice. If you{"'"}re experiencing symptoms, please consult with a healthcare provider.
+              enaJ is not a substitute for medical advice. If you{"'"}re experiencing symptoms, please consult with a healthcare provider.
             </p>
           </div>
         </div>

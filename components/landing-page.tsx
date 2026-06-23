@@ -17,7 +17,7 @@ export function LandingPage() {
       <nav className="relative z-10 flex items-center justify-between px-6 py-4 lg:px-12" style={{ background: 'rgba(255,255,255,0.45)', backdropFilter: 'blur(12px)' }}>
         <div className="flex items-center gap-2">
           <EnajLogo size="md" />
-          <span className="text-xl font-bold text-foreground tracking-tight">enaj</span>
+          <span className="text-xl font-bold text-foreground tracking-tight">enaJ</span>
         </div>
         <div className="hidden items-center gap-8 md:flex">
           <a href="#features" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
@@ -97,7 +97,7 @@ export function LandingPage() {
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl text-pretty">
             No more studying labels or analyzing ingredients.{' '}
             <span className="whitespace-nowrap">We do the work for you.</span>{' '}
-            Enaj scans products on any shopping site in one click, or you can search directly on our platform. We instantly analyze every ingredient, flag conflicts with your health, and suggest safer alternatives. Zero research. Zero effort.
+            enaJ scans products on any shopping site in one click, or you can search directly on our platform. We instantly analyze every ingredient, flag conflicts with your health, and suggest safer alternatives. Zero research. Zero effort.
           </p>
           <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row">
             <Button
@@ -130,7 +130,7 @@ export function LandingPage() {
               Shop with Confidence
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-muted-foreground text-pretty">
-              Enaj is your personal guardian angel, built around your unique health needs.
+              enaJ is your personal guardian angel, built around your unique health needs.
             </p>
           </div>
 
@@ -141,7 +141,7 @@ export function LandingPage() {
               </div>
               <h3 className="mb-2 text-lg font-semibold text-card-foreground">Personalized Health Profile</h3>
               <p className="text-sm leading-relaxed text-muted-foreground">
-                Tell Enaj about your ailments, allergies, and dietary preferences. We will build a custom ingredient watchlist just for you.
+                Tell enaJ about your ailments, allergies, and dietary preferences. We will build a custom ingredient watchlist just for you.
               </p>
             </div>
 
@@ -163,7 +163,7 @@ export function LandingPage() {
               </div>
               <h3 className="mb-2 text-lg font-semibold text-card-foreground">One-Click Product Analysis</h3>
               <p className="text-sm leading-relaxed text-muted-foreground">
-                No camera needed. Just tap the Enaj button while shopping online — we scan the ingredients, check them against your profile, and flag concerns instantly.
+                No camera needed. Just tap the enaJ button while shopping online — we scan the ingredients, check them against your profile, and flag concerns instantly.
               </p>
             </div>
 
@@ -173,8 +173,8 @@ export function LandingPage() {
               </div>
               <h3 className="mb-2 text-lg font-semibold text-card-foreground">Understand What You're Buying</h3>
               <p className="text-sm leading-relaxed text-muted-foreground">
-                When a product does not meet your needs, Enaj will alert you and educate you on why.
-                <><br />COMING SOON: Enaj will suggest products that are better suited for your ailments and preferences. Every recommended product will be shoppable and saveable.</>              </p>
+                When a product does not meet your needs, enaJ will alert you and educate you on why.
+                <><br />COMING SOON: enaJ will suggest products that are better suited for your ailments and preferences. Every recommended product will be shoppable and saveable.</>              </p>
             </div>
           </div>
         </div>
@@ -184,7 +184,7 @@ export function LandingPage() {
       <section id="how-it-works" className="relative z-10 px-6 py-20 lg:py-28">
         <div className="mx-auto max-w-5xl">
           <div className="mb-16 text-center">
-            <h2 className="text-3xl font-bold text-foreground md:text-4xl text-balance">How Enaj Works</h2>
+            <h2 className="text-3xl font-bold text-foreground md:text-4xl text-balance">How enaJ Works</h2>
             <p className="mx-auto mt-4 max-w-2xl text-muted-foreground text-pretty">
               Three simple steps to safer, smarter shopping.
             </p>
@@ -200,7 +200,7 @@ export function LandingPage() {
               {
                 step: '02',
                 title: 'Install the Extension',
-                desc: 'Download the Enaj browser extension. While shopping on any website, just press one button and Enaj scans the product page for you.',
+                desc: 'Download the enaJ browser extension. While shopping on any website, just press one button and enaJ scans the product page for you.',
               },
               {
                 step: '03',
@@ -231,7 +231,7 @@ export function LandingPage() {
               Built for Real Health Needs
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-muted-foreground text-pretty">
-              Enaj supports a wide range of health conditions and dietary preferences such as...
+              enaJ supports a wide range of health conditions and dietary preferences such as...
             </p>
           </div>
 
@@ -309,7 +309,7 @@ export function LandingPage() {
             <div className="md:col-span-1">
               <div className="flex items-center gap-2 mb-3">
                 <EnajLogo size="sm" />
-                <span className="text-sm font-semibold text-foreground">enaj</span>
+                <span className="text-sm font-semibold text-foreground">enaJ</span>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Putting the power of shopping back in your hands.
@@ -378,10 +378,10 @@ export function LandingPage() {
           {/* Bottom bar */}
           <div className="mt-10 pt-6 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-xs text-muted-foreground">
-              &copy; {new Date().getFullYear()} Enaj. All rights reserved.
+              &copy; {new Date().getFullYear()} enaJ. All rights reserved.
             </p>
             <p className="text-xs text-muted-foreground text-center max-w-xl">
-              Disclaimer: Enaj provides information for educational purposes only and is not a substitute for professional medical advice. Always consult with a healthcare provider before making health-related decisions.
+              Disclaimer: enaJ provides information for educational purposes only and is not a substitute for professional medical advice. Always consult with a healthcare provider before making health-related decisions.
             </p>
           </div>
         </div>

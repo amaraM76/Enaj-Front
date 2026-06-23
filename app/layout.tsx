@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Enaj - Putting the Power of Shopping Back in Your Hands',
+  title: 'enaJ - Putting the Power of Shopping Back in Your Hands',
   description:
-    'Enaj scans products for ingredients that conflict with your health conditions and preferences. Shop smarter, live better.',
+    'enaJ scans products for ingredients that conflict with your health conditions and preferences. Shop smarter, live better.',
   icons: {
     icon: [
       {

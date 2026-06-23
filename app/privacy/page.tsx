@@ -15,7 +15,7 @@ export default function PrivacyPage() {
       <nav className="relative z-10 flex items-center justify-between px-6 py-4 lg:px-12" style={{ background: 'rgba(255,255,255,0.45)', backdropFilter: 'blur(12px)' }}>
         <div className="flex items-center gap-2">
           <EnajLogo size="md" />
-          <span className="text-xl font-bold text-foreground tracking-tight">enaj</span>
+          <span className="text-xl font-bold text-foreground tracking-tight">enaJ</span>
         </div>
         <Link href="/">
           <Button variant="outline" className="gap-2">
@@ -36,7 +36,7 @@ export default function PrivacyPage() {
               <section className="mb-8">
                 <h2 className="text-xl font-semibold text-foreground mb-3">1. Information We Collect</h2>
                 <p className="text-muted-foreground leading-relaxed mb-3">
-                  When you use Enaj, we collect information you provide directly to us, including:
+                  When you use enaJ, we collect information you provide directly to us, including:
                 </p>
                 <ul className="list-disc pl-6 text-muted-foreground space-y-1">
                   <li>Account information (username, email, password)</li>

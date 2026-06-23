@@ -121,7 +121,7 @@ export default function EducationDetailPage() {
           </Link>
           <div className="flex items-center gap-3">
             <EnajLogo size="sm" />
-            <span className="text-lg font-bold text-foreground">enaj</span>
+            <span className="text-lg font-bold text-foreground">enaJ</span>
           </div>
         </header>
         <main className="relative z-10 px-4 py-12 lg:px-8 text-center">
@@ -158,7 +158,7 @@ export default function EducationDetailPage() {
         </Link>
         <div className="flex items-center gap-3">
           <EnajLogo size="sm" />
-          <span className="text-lg font-bold text-foreground">enaj</span>
+          <span className="text-lg font-bold text-foreground">enaJ</span>
         </div>
       </header>
 
@@ -379,7 +379,7 @@ export default function EducationDetailPage() {
               <div>
                 <p className="text-sm font-medium text-foreground">A Quick Reminder</p>
                 <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
-                  Enaj is here to help you stay informed, but we're not your doctor. The information we provide is educational — designed to help you make choices that feel right for you. If you ever have health concerns or questions, your healthcare provider is the best resource.
+                  enaJ is here to help you stay informed, but we're not your doctor. The information we provide is educational — designed to help you make choices that feel right for you. If you ever have health concerns or questions, your healthcare provider is the best resource.
                 </p>
               </div>
             </div>

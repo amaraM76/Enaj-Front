@@ -312,8 +312,8 @@ export function Onboarding() {
   const linkedPrefs = getLinkedPreferences(selectedAilmentIds, ailmentCategories)
   const baselinePref = preferenceCategories
     .flatMap((c) => c.preferences)
-    .find((p) => p.id === 'enaj-baseline' || p.name === 'Enaj Non-Toxic Baseline')
-  const baselineId = baselinePref?.id ?? 'enaj-baseline'
+    .find((p) => p.id === 'enaJ-baseline' || p.name === 'enaJ Non-Toxic Baseline')
+  const baselineId = baselinePref?.id ?? 'enaJ-baseline'
 
   const BASELINE_COVERED_PREFS = new Set([
     'Parabens', 'Phthalates', 'Synthetic Fragrance', 'Oxybenzone', 'BPA & BPS',
@@ -336,7 +336,7 @@ export function Onboarding() {
         ) : (
           <div className="flex items-center gap-2">
             <EnajLogo size="sm" />
-            <span className="text-lg font-bold text-foreground">enaj</span>
+            <span className="text-lg font-bold text-foreground">enaJ</span>
           </div>
         )}
         <span className="text-sm text-muted-foreground">
@@ -359,7 +359,7 @@ export function Onboarding() {
               <div className="border-b border-border bg-muted/50 px-4 py-3">
                 <h3 className="font-semibold text-card-foreground text-sm">Your Selections</h3>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  You can view the full list of what Enaj monitors for you, once your profile is completed.
+                  You can view the full list of what enaJ monitors for you, once your profile is completed.
                 </p>
               </div>
 
@@ -469,7 +469,7 @@ export function Onboarding() {
                     <EnajLogo size="xl" />
                   </div>
                   <h1 className="text-3xl font-bold text-foreground md:text-4xl text-balance">
-                    Welcome to Enaj
+                    Welcome to enaJ
                   </h1>
                   <p className="mt-4 max-w-md text-muted-foreground text-pretty leading-relaxed mb-8">
                     Your personal guardian angel for smarter shopping. Create an account to get started.
@@ -523,7 +523,7 @@ export function Onboarding() {
                     <EnajLogo size="xl" />
                   </div>
                   <h1 className="text-3xl font-bold text-foreground md:text-4xl text-balance">
-                    Welcome to Enaj
+                    Welcome to enaJ
                   </h1>
                   <p className="mt-4 max-w-md text-muted-foreground text-pretty leading-relaxed">
                     Your personal guardian angel for smarter shopping. Let us build your health profile so we can protect you from unwanted ingredients.
@@ -695,7 +695,7 @@ export function Onboarding() {
                 <div>
                   <h2 className="text-2xl font-bold text-foreground">Health Conditions</h2>
                   <p className="text-sm text-muted-foreground">
-                    Select any conditions you have. Enaj will monitor conflicting ingredients.
+                    Select any conditions you have. enaJ will monitor conflicting ingredients.
                   </p>
                 </div>
               </div>
@@ -849,13 +849,13 @@ export function Onboarding() {
                         </div>
                         <div>
                           <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-semibold text-foreground">Enaj Non-Toxic Baseline</h3>
+                            <h3 className="font-semibold text-foreground">enaJ Non-Toxic Baseline</h3>
                             <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
                               Recommended
                             </span>
                           </div>
                           <p className="text-sm text-muted-foreground leading-relaxed">
-                            Not sure exactly what to avoid? Select this and Enaj will automatically monitor for the most commonly flagged toxic ingredients — synthetic chemicals, harmful food additives, endocrine disruptors, and more — across everything you scan.
+                            Not sure exactly what to avoid? Select this and enaJ will automatically monitor for the most commonly flagged toxic ingredients — synthetic chemicals, harmful food additives, endocrine disruptors, and more — across everything you scan.
                             <br /> This feature can be used for yourself, children, or any pets you are shopping for!
                           </p>
                         </div>
@@ -1050,7 +1050,7 @@ export function Onboarding() {
               <div className="mb-6 rounded-xl border border-amber-500/20 bg-amber-500/5 p-4">
                 <p className="text-sm text-foreground leading-relaxed">
                   Unlike your permanent health conditions, these are temporary issues you might be dealing with right now. 
-                  Enaj will monitor relevant ingredients while you recover. You can update your journal anytime from your dashboard.
+                  enaJ will monitor relevant ingredients while you recover. You can update your journal anytime from your dashboard.
                 </p>
               </div>
 
@@ -1151,7 +1151,7 @@ export function Onboarding() {
                 <div>
                   <h2 className="text-2xl font-bold text-foreground">Review Your Profile</h2>
                   <p className="text-sm text-muted-foreground">
-                    Here is a summary of your Enaj profile. You can always edit this later.
+                    Here is a summary of your enaJ profile. You can always edit this later.
                   </p>
                 </div>
               </div>
@@ -1280,10 +1280,10 @@ export function Onboarding() {
                 <Download className="h-10 w-10 text-primary" />
               </div>
               <h1 className="text-3xl font-bold text-foreground md:text-4xl text-balance">
-                Get the Enaj Browser Extension
+                Get the enaJ Browser Extension
               </h1>
               <p className="mt-4 max-w-lg text-muted-foreground text-pretty leading-relaxed">
-                Your profile is all set. Now install the Enaj browser extension to activate your guardian angel while you shop. It works on any website.
+                Your profile is all set. Now install the enaJ browser extension to activate your guardian angel while you shop. It works on any website.
               </p>
 
               {/* How the extension works */}
@@ -1305,9 +1305,9 @@ export function Onboarding() {
                         2
                       </div>
                       <div>
-                        <p className="font-medium text-card-foreground">Press the Enaj button</p>
+                        <p className="font-medium text-card-foreground">Press the enaJ button</p>
                         <p className="text-sm text-muted-foreground">
-                          The Enaj icon sits in the bottom corner of your screen. One tap and it scans the product page for you.
+                          The enaJ icon sits in the bottom corner of your screen. One tap and it scans the product page for you.
                         </p>
                       </div>
                     </div>
@@ -1318,7 +1318,7 @@ export function Onboarding() {
                       <div>
                         <p className="font-medium text-card-foreground">Get instant results</p>
                         <p className="text-sm text-muted-foreground">
-                          See if the product is safe for you. If not, Enaj suggests better alternatives right there.
+                          See if the product is safe for you. If not, enaJ suggests better alternatives right there.
                         </p>
                       </div>
                     </div>

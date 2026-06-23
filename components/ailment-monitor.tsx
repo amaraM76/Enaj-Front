@@ -58,7 +58,7 @@ function BaselineMonitorCard({ categories }: { categories: { label: string; item
           </div>
           <div>
             <div className="flex items-center gap-2 mb-0.5">
-              <p className="text-sm font-semibold text-foreground">Enaj Non-Toxic Baseline</p>
+              <p className="text-sm font-semibold text-foreground">enaJ Non-Toxic Baseline</p>
               <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">Active</span>
             </div>
             <p className="text-xs text-muted-foreground">
@@ -131,8 +131,8 @@ export function AilmentMonitor() {
 
   const baselinePref = preferenceCategories
     .flatMap((c) => c.preferences)
-    .find((p) => p.name === 'Enaj Non-Toxic Baseline')
-  const baselineId = baselinePref?.id ?? 'enaj-baseline'
+    .find((p) => p.name === 'enaJ Non-Toxic Baseline')
+  const baselineId = baselinePref?.id ?? 'enaJ-baseline'
   const baselineActive = profile.selectedPreferences.includes(baselineId)
 
   const totalMonitored = profile.selectedAilments.reduce(

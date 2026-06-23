@@ -435,7 +435,7 @@ export function ProductScanner() {
       <div>
         <h1 className="text-2xl font-bold text-foreground md:text-3xl">Search</h1>
         <p className="mt-1 text-muted-foreground">
-          Search for products; Enaj will determine if they match your health conditions and preferences.
+          Search for products; enaJ will determine if they match your health conditions and preferences.
         </p>
       </div>
 
@@ -449,7 +449,7 @@ export function ProductScanner() {
             }
             <div>
               <p className={`text-sm font-semibold ${enajFilterOn ? 'text-primary' : 'text-foreground'}`}>
-                {enajFilterOn ? 'Enaj Filter: On' : 'Enaj Filter: Off'}
+                {enajFilterOn ? 'enaJ Filter: On' : 'enaJ Filter: Off'}
               </p>
               <p className="text-xs text-muted-foreground">
                 {enajFilterOn
@@ -522,7 +522,7 @@ export function ProductScanner() {
               <p className="text-lg font-medium text-foreground">No products found</p>
               <p className="text-sm text-muted-foreground mt-1">
                 {enajFilterOn
-                  ? 'No products match your health profile in this category. Try turning off the Enaj Filter to see all products.'
+                  ? 'No products match your health profile in this category. Try turning off the enaJ Filter to see all products.'
                   : 'Try a different search term or category.'}
               </p>
             </div>

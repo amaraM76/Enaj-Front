@@ -15,7 +15,7 @@ export default function TermsPage() {
       <nav className="relative z-10 flex items-center justify-between px-6 py-4 lg:px-12" style={{ background: 'rgba(255,255,255,0.45)', backdropFilter: 'blur(12px)' }}>
         <div className="flex items-center gap-2">
           <EnajLogo size="md" />
-          <span className="text-xl font-bold text-foreground tracking-tight">enaj</span>
+          <span className="text-xl font-bold text-foreground tracking-tight">enaJ</span>
         </div>
         <Link href="/">
           <Button variant="outline" className="gap-2">
@@ -36,21 +36,21 @@ export default function TermsPage() {
               <section className="mb-8">
                 <h2 className="text-xl font-semibold text-foreground mb-3">1. Acceptance of Terms</h2>
                 <p className="text-muted-foreground leading-relaxed">
-                  By accessing or using Enaj, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.
+                  By accessing or using enaJ, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.
                 </p>
               </section>
 
               <section className="mb-8">
                 <h2 className="text-xl font-semibold text-foreground mb-3">2. Description of Service</h2>
                 <p className="text-muted-foreground leading-relaxed">
-                  Enaj is a health-focused shopping assistant that helps users identify ingredients in products that may conflict with their health conditions, allergies, or dietary preferences. Our service provides information for educational purposes only.
+                  enaJ is a health-focused shopping assistant that helps users identify ingredients in products that may conflict with their health conditions, allergies, or dietary preferences. Our service provides information for educational purposes only.
                 </p>
               </section>
 
               <section className="mb-8">
                 <h2 className="text-xl font-semibold text-foreground mb-3">3. User Accounts</h2>
                 <p className="text-muted-foreground leading-relaxed mb-3">
-                  To use certain features of Enaj, you must create an account. You agree to:
+                  To use certain features of enaJ, you must create an account. You agree to:
                 </p>
                 <ul className="list-disc pl-6 text-muted-foreground space-y-1">
                   <li>Provide accurate and complete information</li>
@@ -77,14 +77,14 @@ export default function TermsPage() {
               <section className="mb-8">
                 <h2 className="text-xl font-semibold text-foreground mb-3">5. Intellectual Property</h2>
                 <p className="text-muted-foreground leading-relaxed">
-                  All content, features, and functionality of Enaj are owned by us and are protected by copyright, trademark, and other intellectual property laws. You may not use our trademarks without prior written consent.
+                  All content, features, and functionality of enaJ are owned by us and are protected by copyright, trademark, and other intellectual property laws. You may not use our trademarks without prior written consent.
                 </p>
               </section>
 
               <section className="mb-8">
                 <h2 className="text-xl font-semibold text-foreground mb-3">6. Limitation of Liability</h2>
                 <p className="text-muted-foreground leading-relaxed">
-                  Enaj is provided &quot;as is&quot; without warranties of any kind. We shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the service. Our total liability shall not exceed the amount you paid us in the past 12 months.
+                  enaJ is provided &quot;as is&quot; without warranties of any kind. We shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the service. Our total liability shall not exceed the amount you paid us in the past 12 months.
                 </p>
               </section>
 

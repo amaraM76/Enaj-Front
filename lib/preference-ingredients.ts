@@ -32,7 +32,7 @@ export const PREFERENCE_INGREDIENT_MAP: Record<string, string[]> = {
   "Microplastics": ["microplastic", "polyethylene", "polypropylene", "nylon", "polyester", "acrylic", "PET", "plastic micro", "plastic particle", "polymethyl methacrylate", "PMMA", "polytetrafluoroethylene", "plastic bottle", "plastic cap", "plastic wrap", "plastic film", "plastic bag", "plastic lining", "plastic straw", "plastic shrink wrap", "plastic tube", "plastic pump", "plastic sprayer", "plastic wand", "plastic jar", "plastic lid", "plastic trigger", "plastic inner bag"],
   "Bleached Fabrics": ["chlorine bleach", "sodium hypochlorite", "bleached", "chlorine", "optical brightener"],
   "Eco-Friendly Packaging": ["plastic"],
-  "Enaj Non-Toxic Baseline": [
+  "enaJ Non-Toxic Baseline": [
     // Synthetic chemicals & preservatives
     "fragrance", "parfum", "parabens", "methylparaben", "propylparaben", "butylparaben",
     "formaldehyde", "DMDM hydantoin", "diazolidinyl urea", "imidazolidinyl urea",

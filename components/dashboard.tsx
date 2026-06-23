@@ -55,7 +55,7 @@ export function Dashboard() {
         <div className="flex items-center gap-3">
           <EnajLogo size="sm" />
           <div>
-            <span className="text-lg font-bold text-foreground">enaj</span>
+            <span className="text-lg font-bold text-foreground">enaJ</span>
             <p className="text-xs text-muted-foreground hidden sm:block">
               Welcome back, {profile.firstName || 'there'}
             </p>

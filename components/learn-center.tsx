@@ -109,7 +109,7 @@ export function LearnCenter() {
             size="sm"
             onClick={() => setFilter('all')}
           >
-            All Enaj Topics
+            All enaJ Topics
           </Button>
           <Button
             variant={filter === 'conditions' ? 'default' : 'outline'}
@@ -235,7 +235,7 @@ export function LearnCenter() {
             <div>
               <p className="text-sm font-medium text-foreground">A Quick Reminder</p>
               <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
-                Enaj is here to help you stay informed, but we are not your doctor. The information we provide is educational — designed to help you make choices that feel right for you. If you ever have health concerns or questions, your healthcare provider is the best resource.
+                enaJ is here to help you stay informed, but we are not your doctor. The information we provide is educational — designed to help you make choices that feel right for you. If you ever have health concerns or questions, your healthcare provider is the best resource.
               </p>
             </div>
           </div>

@@ -216,8 +216,8 @@ export function Education() {
               <div className="mb-8">
                 <h2 className="text-base font-semibold text-foreground mb-4">
                   {myVisibleAilments.length > 0
-                    ? 'All Other Enaj Health Conditions'
-                    : 'All Enaj Health Conditions'}
+                    ? 'All Other enaJ Health Conditions'
+                    : 'All enaJ Health Conditions'}
                 </h2>
                 <div className="grid gap-4 sm:grid-cols-2">
                   {otherVisibleAilments.map((item) => renderAilmentCard(item))}
@@ -249,8 +249,8 @@ export function Education() {
               <div className="mb-8">
                 <h2 className="text-base font-semibold text-foreground mb-4">
                   {myVisiblePreferences.length > 0
-                    ? 'All Other Enaj Preferences'
-                    : 'All Enaj Preferences'}
+                    ? 'All Other enaJ Preferences'
+                    : 'All enaJ Preferences'}
                 </h2>
                 <div className="grid gap-4 sm:grid-cols-2">
                   {otherVisiblePreferences.map((item) => renderPreferenceCard(item))}
@@ -273,7 +273,7 @@ export function Education() {
             <div>
               <p className="text-sm font-medium text-foreground">A Quick Reminder</p>
               <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
-                Enaj is here to help you stay informed, but we are not your doctor. The information
+                enaJ is here to help you stay informed, but we are not your doctor. The information
                 we provide is educational — designed to help you make choices that feel right for
                 you. If you ever have health concerns or questions, your healthcare provider is the
                 best resource.

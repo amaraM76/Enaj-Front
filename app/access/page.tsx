@@ -49,7 +49,7 @@ export default function AccessPage() {
             </div>
             <div>
               <CardTitle className="text-2xl font-bold text-foreground">
-                Welcome to Enaj
+                Welcome to enaJ
               </CardTitle>
               <CardDescription className="mt-2">
                 Enter your credentials to access the platform
@@ -129,7 +129,7 @@ export default function AccessPage() {
       {/* Footer */}
       <footer className="relative z-10 py-4 text-center">
         <p className="text-xs text-muted-foreground">
-          &copy; {new Date().getFullYear()} Enaj. All rights reserved.
+          &copy; {new Date().getFullYear()} enaJ. All rights reserved.
         </p>
       </footer>
     </div>

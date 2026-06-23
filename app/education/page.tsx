@@ -33,7 +33,7 @@ export default function EducationPage() {
           </Link>
           <div className="flex items-center gap-3">
             <EnajLogo size="sm" />
-            <span className="text-lg font-bold text-foreground">enaj</span>
+            <span className="text-lg font-bold text-foreground">enaJ</span>
           </div>
         </header>
 

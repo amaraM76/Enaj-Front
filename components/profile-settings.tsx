@@ -62,8 +62,8 @@ export function ProfileSettings() {
 
   const baselinePref = preferenceCategories
     .flatMap((c) => c.preferences)
-    .find((p) => p.id === 'enaj-baseline' || p.name === 'Enaj Non-Toxic Baseline')
-  const baselineId = baselinePref?.id ?? 'enaj-baseline'
+    .find((p) => p.id === 'enaJ-baseline' || p.name === 'enaJ Non-Toxic Baseline')
+  const baselineId = baselinePref?.id ?? 'enaJ-baseline'
 
   const BASELINE_COVERED_PREFS = new Set([
     'Parabens', 'Phthalates', 'Synthetic Fragrance', 'Oxybenzone', 'BPA & BPS',
@@ -391,7 +391,7 @@ export function ProfileSettings() {
           <Leaf className="h-5 w-5 text-accent-foreground" />
           Active Preferences ({profile.selectedPreferences.length})
         </h2>
-        {/* Enaj Non-Toxic Baseline */}
+        {/* enaJ Non-Toxic Baseline */}
         <div className={`mb-4 rounded-xl border-2 p-4 transition-colors ${
           profile.selectedPreferences.includes(baselineId)
             ? 'border-primary/40 bg-primary/5'
@@ -404,7 +404,7 @@ export function ProfileSettings() {
               </div>
               <div>
                 <div className="flex items-center gap-2 mb-0.5">
-                  <p className="text-sm font-semibold text-foreground">Enaj Non-Toxic Baseline</p>
+                  <p className="text-sm font-semibold text-foreground">enaJ Non-Toxic Baseline</p>
                   <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
                     Recommended
                   </span>
@@ -471,10 +471,10 @@ export function ProfileSettings() {
             <EnajLogo size="md" />
             <div>
               <h3 className="font-semibold text-foreground">
-                Enaj Browser Extension
+                enaJ Browser Extension
               </h3>
               <p className="mt-0.5 text-sm text-muted-foreground">
-                Your guardian angel while you shop online. Press one button on any product page and Enaj scans it for you. Works on Sephora, Target, Walmart, and any other shopping site.
+                Your guardian angel while you shop online. Press one button on any product page and enaJ scans it for you. Works on Sephora, Target, Walmart, and any other shopping site.
               </p>
             </div>
           </div>
