@@ -87,6 +87,7 @@ export interface UserProfile {
   shoppingStores?: string | string[]
   selectedAilments?: any[]
   selectedPreferences?: string[]
+  journalEntries?: string[]
   savedProducts?: any[]
 }
 
@@ -121,6 +122,10 @@ export interface SaveUserPreferencesBody {
 }
 
 export interface SaveUserPreferencesResponse {
+  saved: boolean
+}
+
+export interface SaveUserJournalResponse {
   saved: boolean
 }
 
@@ -237,6 +242,18 @@ export const api = {
     return request<SaveUserPreferencesResponse>('/api/preferences', {
       method: 'POST',
       body: { userId, preferences },
+    })
+  },
+
+  // -- Journal ---------------------------------------------------------------
+
+  saveUserJournal(
+    userId: string,
+    journalSlugs: string[]
+  ): Promise<SaveUserJournalResponse> {
+    return request<SaveUserJournalResponse>('/api/user-journal', {
+      method: 'POST',
+      body: { userId, journalSlugs },
     })
   },
 

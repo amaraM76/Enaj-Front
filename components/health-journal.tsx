@@ -39,6 +39,7 @@ import {
   ChevronRight,
 } from 'lucide-react'
 import { journalCategories, getAllJournalConditions, type JournalCondition } from '@/lib/journal-data'
+import { useEnaj } from '@/lib/enaj-context'
 
 // Map icon names to components
 const JOURNAL_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -52,8 +53,10 @@ const JOURNAL_ICONS: Record<string, React.ComponentType<{ className?: string }>>
 }
 
 export function HealthJournal() {
-  // For now, we'll use local state. In a real app, this would sync with the backend
-  const [selectedConditions, setSelectedConditions] = useState<Set<string>>(new Set())
+  // Journal entries are sourced from (and persisted via) the shared profile context
+  const { profile, addJournalEntry, removeJournalEntry } = useEnaj()
+  const selectedConditions = new Set(profile?.journalEntries ?? [])
+
   const [addDialogOpen, setAddDialogOpen] = useState(false)
   const [pendingConditions, setPendingConditions] = useState<string[]>([])
   const [learnDialogOpen, setLearnDialogOpen] = useState(false)
@@ -64,15 +67,6 @@ export function HealthJournal() {
   const allConditions = getAllJournalConditions()
   const activeConditions = allConditions.filter((c) => selectedConditions.has(c.id))
 
-  const toggleCondition = (id: string) => {
-    setSelectedConditions((prev) => {
-      const next = new Set(prev)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
-      return next
-    })
-  }
-
   const openLearnDialog = (condition: JournalCondition) => {
     setSelectedLearnCondition(condition)
     setLearnDialogOpen(true)
@@ -80,7 +74,7 @@ export function HealthJournal() {
 
   const confirmRemove = () => {
     if (pendingRemove) {
-      toggleCondition(pendingRemove.id)
+      removeJournalEntry(pendingRemove.id)
       setPendingRemove(null)
     }
   }
@@ -223,7 +217,7 @@ export function HealthJournal() {
                   <Button
                     onClick={() => {
                       if (!selectedConditions.has(selectedLearnCondition.id)) {
-                        toggleCondition(selectedLearnCondition.id)
+                        addJournalEntry(selectedLearnCondition.id)
                       }
                       setLearnDialogOpen(false)
                     }}
@@ -309,7 +303,7 @@ export function HealthJournal() {
                 onClick={() => {
                   for (const id of pendingConditions) {
                     if (!selectedConditions.has(id)) {
-                      toggleCondition(id)
+                      addJournalEntry(id)
                     }
                   }
                   setPendingConditions([])
@@ -495,7 +489,11 @@ export function HealthJournal() {
                                 </Button>
                                 <Button
                                   size="sm"
-                                  onClick={() => toggleCondition(condition.id)}
+                                  onClick={() =>
+                                    isAdded
+                                      ? removeJournalEntry(condition.id)
+                                      : addJournalEntry(condition.id)
+                                  }
                                   className={`flex-1 text-xs gap-1 ${
                                     isAdded
                                       ? 'bg-emerald-600 hover:bg-emerald-700 text-white'

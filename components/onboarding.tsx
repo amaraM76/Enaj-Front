@@ -218,6 +218,7 @@ export function Onboarding() {
       }
   
       await api.saveUserPreferences(dbUserId, prefsArray)
+      await api.saveUserJournal(dbUserId, Array.from(selectedJournalIds))
       await fetchUserProfile(dbUserId)
   
       const allAilments = ailmentCategories.flatMap((c) => c.ailments)
@@ -238,6 +239,7 @@ export function Onboarding() {
         shoppingStores,
         selectedAilments,
         selectedPreferences: Array.from(selectedPreferenceIds),
+        journalEntries: Array.from(selectedJournalIds),
         savedProducts: [],
       })
   
