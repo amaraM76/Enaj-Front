@@ -217,7 +217,7 @@ export function Onboarding() {
       }
   
       await api.saveUserPreferences(dbUserId, prefsArray)
-      await api.saveUserJournal(dbUserId, Array.from(selectedJournalIds))
+      // await api.saveUserJournal(dbUserId, Array.from(selectedJournalIds))
       await fetchUserProfile(dbUserId)
   
       const allAilments = ailmentCategories.flatMap((c) => c.ailments)

@@ -44,8 +44,8 @@ interface EnajContextType {
   removeIngredientFromAilment: (ailmentId: string, ingredientId: string) => void
   addIngredientToAilment: (ailmentId: string, ingredient: FlaggedIngredient) => void
   togglePreference: (preferenceId: string) => void
-  addJournalEntry: (conditionId: string) => void
-  removeJournalEntry: (conditionId: string) => void
+  // addJournalEntry: (conditionId: string) => void
+  // removeJournalEntry: (conditionId: string) => void
   saveProduct: (product: Product) => void
   unsaveProduct: (productId: string) => void
   isProductSaved: (productId: string) => boolean
@@ -320,34 +320,34 @@ export function EnajProvider({ children }: { children: ReactNode }) {
     })
   }, [clerkUserId])
 
-  const addJournalEntry = useCallback((conditionId: string) => {
-    setProfileState((prev) => {
-      if (!prev) return prev
-      if (prev.journalEntries.includes(conditionId)) return prev
-      const updated = {
-        ...prev,
-        journalEntries: [...prev.journalEntries, conditionId],
-      }
-      if (clerkUserId) {
-        api.saveUserJournal(clerkUserId, updated.journalEntries).catch(() => {})
-      }
-      return updated
-    })
-  }, [clerkUserId])
+  // const addJournalEntry = useCallback((conditionId: string) => {
+  //   setProfileState((prev) => {
+  //     if (!prev) return prev
+  //     if (prev.journalEntries.includes(conditionId)) return prev
+  //     const updated = {
+  //       ...prev,
+  //       journalEntries: [...prev.journalEntries, conditionId],
+  //     }
+  //     if (clerkUserId) {
+  //       api.saveUserJournal(clerkUserId, updated.journalEntries).catch(() => {})
+  //     }
+  //     return updated
+  //   })
+  // }, [clerkUserId])
 
-  const removeJournalEntry = useCallback((conditionId: string) => {
-    setProfileState((prev) => {
-      if (!prev) return prev
-      const updated = {
-        ...prev,
-        journalEntries: prev.journalEntries.filter((id) => id !== conditionId),
-      }
-      if (clerkUserId) {
-        api.saveUserJournal(clerkUserId, updated.journalEntries).catch(() => {})
-      }
-      return updated
-    })
-  }, [clerkUserId])
+  // const removeJournalEntry = useCallback((conditionId: string) => {
+  //   setProfileState((prev) => {
+  //     if (!prev) return prev
+  //     const updated = {
+  //       ...prev,
+  //       journalEntries: prev.journalEntries.filter((id) => id !== conditionId),
+  //     }
+  //     if (clerkUserId) {
+  //       api.saveUserJournal(clerkUserId, updated.journalEntries).catch(() => {})
+  //     }
+  //     return updated
+  //   })
+  // }, [clerkUserId])
 
   const saveProduct = useCallback((product: Product & { slug?: string }) => {
     const productSlug = product.slug || product.id
@@ -427,8 +427,8 @@ export function EnajProvider({ children }: { children: ReactNode }) {
         saveProfileWithClerk,
         addAilment,
         removeAilment,
-        addJournalEntry,
-        removeJournalEntry,
+        // addJournalEntry,
+        // removeJournalEntry,
         removeIngredientFromAilment,
         addIngredientToAilment,
         togglePreference,

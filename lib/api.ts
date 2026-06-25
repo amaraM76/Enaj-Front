@@ -125,9 +125,9 @@ export interface SaveUserPreferencesResponse {
   saved: boolean
 }
 
-export interface SaveUserJournalResponse {
-  saved: boolean
-}
+// export interface SaveUserJournalResponse {
+//   saved: boolean
+// }
 
 export interface GetProductsResponse {
   products: Product[]
@@ -245,17 +245,17 @@ export const api = {
     })
   },
 
-    // -- Journal ---------------------------------------------------------------
+    // // -- Journal ---------------------------------------------------------------
 
-    saveUserJournal(
-      userId: string,
-      journalSlugs: string[]
-    ): Promise<SaveUserJournalResponse> {
-      return request<SaveUserJournalResponse>('/api/user-journal', {
-        method: 'POST',
-        body: { userId, journalSlugs },
-      })
-    },
+    // saveUserJournal(
+    //   userId: string,
+    //   journalSlugs: string[]
+    // ): Promise<SaveUserJournalResponse> {
+    //   return request<SaveUserJournalResponse>('/api/user-journal', {
+    //     method: 'POST',
+    //     body: { userId, journalSlugs },
+    //   })
+    // },
   // -- Products --------------------------------------------------------------
 
   getProducts(
