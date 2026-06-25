@@ -97,7 +97,7 @@ export function LandingPage() {
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl text-pretty">
             No more studying labels or analyzing ingredients.{' '}
             <span className="whitespace-nowrap">We do the work for you.</span>{' '}
-            enaJ scans products on any shopping site in one click, or you can search directly on our platform. We instantly analyze every ingredient, flag conflicts with your health, and suggest safer alternatives. Zero research. Zero effort.
+            EnaJ scans products on any shopping site in one click, or you can search directly on our platform. We instantly analyze every ingredient, flag conflicts with your health, and suggest safer alternatives. Zero research. Zero effort.
           </p>
           <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row">
             <Button

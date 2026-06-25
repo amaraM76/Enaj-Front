@@ -217,6 +217,7 @@ export function Onboarding() {
       }
   
       await api.saveUserPreferences(dbUserId, prefsArray)
+      await api.saveUserJournal(dbUserId, Array.from(selectedJournalIds))
       await fetchUserProfile(dbUserId)
   
       const allAilments = ailmentCategories.flatMap((c) => c.ailments)
@@ -237,6 +238,7 @@ export function Onboarding() {
         shoppingStores,
         selectedAilments,
         selectedPreferences: Array.from(selectedPreferenceIds),
+        journalEntries: Array.from(selectedJournalIds),
         savedProducts: [],
       })
   
@@ -350,7 +352,7 @@ export function Onboarding() {
       </div>
 
       {/* Content */}
-      <main className="relative z-10 flex flex-1 flex-col items-center px-6 py-8">
+      <main className="relative z-10 flex flex-1 flex-col items-center px-6 py-8 xl:pl-80">
         {/* Selection Sidebar - Only shows on ailments, preferences, and journal steps */}
         {(step === 'ailments' || step === 'preferences' || step === 'journal') && (
           <div className="fixed left-6 top-32 z-20 hidden w-72 xl:block">
@@ -695,7 +697,7 @@ export function Onboarding() {
                 <div>
                   <h2 className="text-2xl font-bold text-foreground">Health Conditions</h2>
                   <p className="text-sm text-muted-foreground">
-                    Select any conditions you have. enaJ will monitor conflicting ingredients.
+                    Select any conditions you have. EnaJ will monitor conflicting ingredients.
                   </p>
                 </div>
               </div>
@@ -1050,7 +1052,7 @@ export function Onboarding() {
               <div className="mb-6 rounded-xl border border-amber-500/20 bg-amber-500/5 p-4">
                 <p className="text-sm text-foreground leading-relaxed">
                   Unlike your permanent health conditions, these are temporary issues you might be dealing with right now. 
-                  enaJ will monitor relevant ingredients while you recover. You can update your journal anytime from your dashboard.
+                  EnaJ will monitor relevant ingredients while you recover. You can update your journal anytime from your dashboard.
                 </p>
               </div>
 
@@ -1346,7 +1348,7 @@ export function Onboarding() {
               </div>
 
               <p className="mt-4 text-xs text-muted-foreground">
-                Available for Chrome, Firefox, Safari, and Edge
+                Available for Chrome
               </p>
             </div>
           )}
