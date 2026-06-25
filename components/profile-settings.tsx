@@ -91,7 +91,6 @@ export function ProfileSettings() {
     const updatedFields = {
       firstName,
       lastName,
-      email,
       location: formattedLocation,
       age: age ? Number(age) : undefined,
       gender,
@@ -169,11 +168,18 @@ export function ProfileSettings() {
                 id="settings-email"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="bg-background border-border text-foreground pl-10"
+                disabled
+                className="bg-muted border-border text-muted-foreground pl-10 cursor-not-allowed"
               />
             </div>
+            <p className="mt-1.5 text-xs text-muted-foreground">
+              To change your email, contact us at{' '}
+              <a href="mailto:enajhealth@gmail.com" className="text-primary hover:underline">
+                enajhealth@gmail.com
+              </a>
+            </p>
           </div>
+
           {/* State */}
           <div>
             <Label htmlFor="settings-state" className="text-foreground">State</Label>
