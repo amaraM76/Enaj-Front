@@ -173,8 +173,8 @@ export function ProfileSettings() {
             </div>
             <p className="mt-1.5 text-xs text-muted-foreground">
               To change your email, contact us at{' '}
-              <a href="mailto:enajhealth@gmail.com" className="text-primary hover:underline">
-                enajhealth@gmail.com
+              <a href="mailto:hello@enajhealth.com" className="text-primary hover:underline">
+                hello@enajhealth.com
               </a>
             </p>
           </div>
