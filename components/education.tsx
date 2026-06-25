@@ -15,8 +15,11 @@ import {
 import Link from 'next/link'
 import { useEnaj } from '@/lib/enaj-context'
 import { useSearchParams } from 'next/navigation'
+import { Sparkles } from 'lucide-react'
+import { journalCategories } from '@/lib/journal-data'
 
-type FilterCategory = 'conditions' | 'preferences'
+
+type FilterCategory = 'conditions' | 'preferences' | 'journal'
 
 export function Education() {
   const { ailmentCategories, preferenceCategories, profile } = useEnaj()
@@ -41,6 +44,20 @@ export function Education() {
   const myPreferences = ready
     ? new Set(profile?.selectedPreferences ?? [])
     : new Set<string>()
+  const myJournalIds = ready
+    ? new Set(profile?.journalEntries ?? [])
+    : new Set<string>()
+
+  const journalList = journalCategories.flatMap((c) =>
+    c.conditions.map((cond) => ({ ...cond, categoryLabel: c.label }))
+  )
+
+  const myVisibleJournal = journalList.filter(
+    (item) => myJournalIds.has(item.id) && matchesQuery(item)
+  )
+  const otherVisibleJournal = journalList.filter(
+    (item) => !myJournalIds.has(item.id) && matchesQuery(item)
+  )
 
   const ailmentList = ailmentCategories.flatMap((c) =>
     c.ailments.map((a) => ({ ...a, category: c.name }))
@@ -83,9 +100,11 @@ export function Education() {
   )
 
   const noResults =
-    selectedCategory === 'conditions'
-      ? myVisibleAilments.length === 0 && otherVisibleAilments.length === 0
-      : myVisiblePreferences.length === 0 && otherVisiblePreferences.length === 0
+  selectedCategory === 'conditions'
+    ? myVisibleAilments.length === 0 && otherVisibleAilments.length === 0
+    : selectedCategory === 'preferences'
+    ? myVisiblePreferences.length === 0 && otherVisiblePreferences.length === 0
+    : false
 
   const renderAilmentCard = (item: (typeof ailmentList)[0]) => (
     <Link key={item.id} href={`/education/${item.id}?from=conditions`}>
@@ -141,6 +160,29 @@ export function Education() {
       </Card>
     </Link>
   )
+  const renderJournalCard = (item: (typeof journalList)[0]) => (
+    <Card key={item.id} className="border-border bg-card/80 backdrop-blur-sm h-full">
+      <CardContent className="p-4">
+        <div className="flex items-start justify-between">
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-600">
+                <Sparkles className="h-3 w-3" />
+                {item.categoryLabel}
+              </span>
+            </div>
+            <h3 className="font-semibold text-card-foreground">{item.name}</h3>
+            <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
+              {item.description}
+            </p>
+            <p className="mt-2 text-xs text-muted-foreground">
+              {item.whatWeMonitor.length} ingredients monitored
+            </p>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
 
   return (
     <div className="pb-8">
@@ -191,6 +233,15 @@ export function Education() {
           >
             <Leaf className="h-3.5 w-3.5" />
             Preferences
+          </Button>
+          <Button
+            variant={selectedCategory === 'journal' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setSelectedCategory('journal')}
+            className="gap-1.5"
+          >
+            <Sparkles className="h-3.5 w-3.5" />
+            Journal
           </Button>
         </div>
 
@@ -255,6 +306,45 @@ export function Education() {
                 <div className="grid gap-4 sm:grid-cols-2">
                   {otherVisiblePreferences.map((item) => renderPreferenceCard(item))}
                 </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── JOURNAL TAB ── */}
+        {selectedCategory === 'journal' && (
+          <div>
+            {myVisibleJournal.length > 0 && (
+              <div className="mb-8">
+                <h2 className="text-base font-semibold text-foreground mb-4">
+                  Your Active Journal Entries
+                </h2>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {myVisibleJournal.map((item) => renderJournalCard(item))}
+                </div>
+              </div>
+            )}
+
+            {myVisibleJournal.length > 0 && otherVisibleJournal.length > 0 && (
+              <div className="h-px bg-border my-6" />
+            )}
+
+            {otherVisibleJournal.length > 0 && (
+              <div className="mb-8">
+                <h2 className="text-base font-semibold text-foreground mb-4">
+                  {myVisibleJournal.length > 0
+                    ? 'All Other Journal Conditions'
+                    : 'All Journal Conditions'}
+                </h2>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {otherVisibleJournal.map((item) => renderJournalCard(item))}
+                </div>
+              </div>
+            )}
+
+            {myVisibleJournal.length === 0 && otherVisibleJournal.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">No journal conditions found matching your search.</p>
               </div>
             )}
           </div>
