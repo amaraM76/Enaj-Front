@@ -352,7 +352,9 @@ export function Onboarding() {
       </div>
 
       {/* Content */}
-      <main className="relative z-10 flex flex-1 flex-col items-center px-6 py-8 xl:pl-80">
+      <main className={`relative z-10 flex flex-1 flex-col items-center px-6 py-8 ${
+        (step === 'ailments' || step === 'preferences' || step === 'journal') ? 'xl:pl-80' : ''
+      }`}>
         {/* Selection Sidebar - Only shows on ailments, preferences, and journal steps */}
         {(step === 'ailments' || step === 'preferences' || step === 'journal') && (
           <div className="fixed left-6 top-32 z-20 hidden w-72 xl:block">
