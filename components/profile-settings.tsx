@@ -33,9 +33,9 @@ import { Loader2 } from 'lucide-react'
 export function ProfileSettings() {
   const { profile, setProfile, addAilment, togglePreference, setCurrentStep, ailmentCategories, preferenceCategories, clerkUserId } =
     useEnaj()
-  const [firstName, setFirstName] = useState(profile?.firstName || '')
-  const [lastName, setLastName] = useState(profile?.lastName || '')
-  const [email, setEmail] = useState(profile?.email || '')
+  const [firstName] = useState(profile?.firstName || '')
+  const [lastName] = useState(profile?.lastName || '')
+  const [email] = useState(profile?.email || '')
   const [location, setLocation] = useState(profile?.location || '')
   const [age, setAge] = useState(profile?.age || '')
   const [gender, setGender] = useState(profile?.gender || '')
@@ -89,8 +89,6 @@ export function ProfileSettings() {
       selectedCity && selectedState ? `${selectedCity}, ${selectedState}` : location
   
     const updatedFields = {
-      firstName,
-      lastName,
       location: formattedLocation,
       age: age ? Number(age) : undefined,
       gender,
@@ -143,23 +141,24 @@ export function ProfileSettings() {
         </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <Label htmlFor="settings-first-name" className="text-foreground">First Name</Label>
+            <Label className="text-foreground">First Name</Label>
             <Input
-              id="settings-first-name"
               value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              className="mt-1.5 bg-background border-border text-foreground"
+              disabled
+              className="mt-1.5 bg-muted border-border text-muted-foreground cursor-not-allowed"
             />
           </div>
           <div>
-            <Label htmlFor="settings-last-name" className="text-foreground">Last Name</Label>
+            <Label className="text-foreground">Last Name</Label>
             <Input
-              id="settings-last-name"
               value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              className="mt-1.5 bg-background border-border text-foreground"
+              disabled
+              className="mt-1.5 bg-muted border-border text-muted-foreground cursor-not-allowed"
             />
           </div>
+          <p className="text-xs text-muted-foreground sm:col-span-2 -mt-2">
+            Your name is pulled from your Google account and cannot be changed here.
+          </p>
           <div>
             <Label htmlFor="settings-email" className="text-foreground">Email</Label>
             <div className="relative mt-1.5">
