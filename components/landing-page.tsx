@@ -174,7 +174,7 @@ export function LandingPage() {
               <h3 className="mb-2 text-lg font-semibold text-card-foreground">Understand What You're Buying</h3>
               <p className="text-sm leading-relaxed text-muted-foreground">
                 When a product does not meet your needs, enaJ will alert you and educate you on why.
-                <><br />COMING SOON: enaJ will suggest products that are better suited for your ailments and preferences. Every recommended product will be shoppable and saveable.</>              </p>
+                <><br /> <em> COMING SOON: enaJ will suggest products that are better suited for your ailments and preferences. Every recommended product will be shoppable and saveable. </em> </>              </p>
             </div>
           </div>
         </div>
