@@ -242,7 +242,7 @@ export function AilmentMonitor() {
           </div>
           <div className="flex items-center gap-2 rounded-lg bg-amber-500/10 px-4 py-2">
             <Eye className="h-4 w-4 text-amber-600" />
-            <span className="text-sm font-medium text-amber-600">{totalMonitored} ingredients monitored</span>
+            <span className="text-sm font-medium text-amber-600">{totalMonitored} items monitored</span>
           </div>
           <div className="flex items-center gap-2 rounded-lg bg-emerald-500/10 px-4 py-2">
             <Leaf className="h-4 w-4 text-emerald-600" />
