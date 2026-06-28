@@ -186,7 +186,7 @@ export function LandingPage() {
           <div className="mb-16 text-center">
             <h2 className="text-3xl font-bold text-foreground md:text-4xl text-balance">How enaJ Works</h2>
             <p className="mx-auto mt-4 max-w-2xl text-muted-foreground text-pretty">
-              Three simple steps to safer, smarter shopping.
+              Three simple steps to smarter, personalized shopping.
             </p>
           </div>
 
