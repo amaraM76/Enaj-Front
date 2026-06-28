@@ -288,14 +288,14 @@ export function LandingPage() {
             Ready to Take Control?
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-muted-foreground text-pretty">
-            Create your free profile and start shopping with confidence. Your health, your rules.
+            Start your free trial now. Create your profile and start shopping with confidence. Your health, your rules.
           </p>
           <Button
             size="lg"
             onClick={() => setCurrentStep('onboarding')}
             className="mt-8 bg-primary text-primary-foreground hover:bg-primary/90 px-10 py-6 text-lg gap-2"
           >
-            Get Started Free
+            Start Free Trial
             <ArrowRight className="h-5 w-5" />
           </Button>
         </div>
