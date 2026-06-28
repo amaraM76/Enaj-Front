@@ -1054,7 +1054,7 @@ export function Onboarding() {
               <div className="mb-6 rounded-xl border border-amber-500/20 bg-amber-500/5 p-4">
                 <p className="text-sm text-foreground leading-relaxed">
                   Unlike your permanent health conditions, these are temporary issues you might be dealing with right now. 
-                  EnaJ will monitor relevant ingredients while you recover. You can update your journal anytime from your dashboard.
+                  enaJ will monitor relevant ingredients while you recover. You can update your journal anytime from your dashboard.
                 </p>
               </div>
 
