@@ -363,7 +363,7 @@ export function AilmentMonitor() {
                           <div>
                             <p className="font-semibold text-card-foreground">{sa.ailment.name}</p>
                             <p className="text-xs text-muted-foreground">
-                              {sa.activeIngredients.length} ingredients monitored
+                              {sa.activeIngredients.length} items monitored
                             </p>
                           </div>
                         </div>
