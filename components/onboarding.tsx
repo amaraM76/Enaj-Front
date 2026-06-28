@@ -699,7 +699,7 @@ export function Onboarding() {
                 <div>
                   <h2 className="text-2xl font-bold text-foreground">Health Conditions</h2>
                   <p className="text-sm text-muted-foreground">
-                    Select any conditions you have. EnaJ will monitor conflicting ingredients.
+                    Select any conditions you have. enaJ will monitor conflicting ingredients.
                   </p>
                 </div>
               </div>
@@ -859,7 +859,7 @@ export function Onboarding() {
                             </span>
                           </div>
                           <p className="text-sm text-muted-foreground leading-relaxed">
-                            Not sure exactly what to avoid? Select this and enaJ will automatically monitor for the most commonly flagged toxic ingredients — synthetic chemicals, harmful food additives, endocrine disruptors, and more — across everything you scan.
+                            Not sure exactly what to avoid? Select this and enaJ will automatically monitor for the most commonly flagged toxic ingredients — synthetic chemicals, harmful food additives, endocrine disruptors, and more — across everything you shop.
                             <br /> This feature can be used for yourself, children, or any pets you are shopping for!
                           </p>
                         </div>
