@@ -141,7 +141,7 @@ export function LandingPage() {
               </div>
               <h3 className="mb-2 text-lg font-semibold text-card-foreground">Personalized Health Profile</h3>
               <p className="text-sm leading-relaxed text-muted-foreground">
-                Tell enaJ about your ailments, allergies, and dietary preferences. We will build a custom ingredient watchlist just for you.
+                Tell enaJ about your ailments, allergies, and dietary preferences. We will build a custom ingredient watchlist just for you. From there, our browser extension will have your back while you shop online.
               </p>
             </div>
 
