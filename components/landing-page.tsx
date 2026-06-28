@@ -343,12 +343,12 @@ export function LandingPage() {
               <h4 className="text-sm font-semibold text-foreground mb-3">Support</h4>
               <ul className="space-y-2">
                 <li>
-                  <a href="mailto:enajhealth@gmail.com" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  <a href="mailto:hello@enajhealth.com" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                     Contact Us
                   </a>
                 </li>
                 <li>
-                  <a href="mailto:enajhealth@gmail.com?subject=Bug%20Report" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  <a href="mailto:hello@enajhealth.com?subject=Bug%20Report" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                     Report a Bug
                   </a>
                 </li>
@@ -367,10 +367,10 @@ export function LandingPage() {
                 Questions or feedback? We would love to hear from you.
               </p>
               <a 
-                href="mailto:enajhealth@gmail.com" 
+                href="mailto:hello@enajhealth.com" 
                 className="text-sm text-primary hover:text-primary/80 transition-colors font-medium"
               >
-                enajhealth@gmail.com
+                hello@enajhealth.com
               </a>
             </div>
           </div>

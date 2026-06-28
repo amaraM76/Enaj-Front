@@ -61,4 +61,4 @@ Private beta access:
 
 ## Contact
 
-enajhealth@gmail.com
+hello@enajhealth.com
