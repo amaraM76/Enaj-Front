@@ -26,6 +26,9 @@ export function LandingPage() {
           <a href="#how-it-works" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
             How It Works
           </a>
+          <a href="#our-story" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+            Our Story
+          </a>
           <a href="#about" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
             About
           </a>
@@ -219,6 +222,67 @@ export function LandingPage() {
                 <p className="text-sm leading-relaxed text-muted-foreground">{item.desc}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+       {/* Our Story / Team Section */}
+      <section id="our-story" className="relative z-10 px-6 py-20 lg:py-28">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-16 text-center">
+            <h2 className="text-3xl font-bold text-foreground md:text-4xl text-balance">
+              The People Behind Enaj
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-muted-foreground text-pretty">
+              A small team on a personal mission to make shopping safer for everyone.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+            {/* Founders card */}
+            <div className="overflow-hidden rounded-2xl border border-border bg-card transition-shadow hover:shadow-lg">
+              <div className="relative aspect-[4/3] w-full overflow-hidden">
+                <img
+                  src="/images/team-founders.jpeg"
+                  alt="Nicole and May, the founders of Enaj"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <div className="p-8">
+                <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                  Our Founders
+                </span>
+                <h3 className="mt-4 text-xl font-semibold text-card-foreground">Nicole &amp; May</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  Placeholder text — replace with your own words. Nicole and May came up with the
+                  idea for Enaj and built it from the ground up. Share your background, what
+                  brought you together, and the vision you have for empowering shoppers everywhere.
+                </p>
+              </div>
+            </div>
+
+            {/* Inspiration card */}
+            <div className="overflow-hidden rounded-2xl border border-border bg-card transition-shadow hover:shadow-lg">
+              <div className="relative aspect-[4/3] w-full overflow-hidden">
+                <img
+                  src="/images/team-inspiration.jpeg"
+                  alt="Jane, Nicole's mother and the inspiration behind Enaj"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <div className="p-8">
+                <span className="inline-flex items-center rounded-full bg-secondary/30 px-3 py-1 text-xs font-semibold text-accent-foreground">
+                  Our Why
+                </span>
+                <h3 className="mt-4 text-xl font-semibold text-card-foreground">Jane</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  Placeholder text — replace with your own words. Jane, Nicole&apos;s mom, lives
+                  with Parkinson&apos;s disease and is the reason Enaj exists. Share her story and
+                  how her experience navigating ingredients and health needs inspired you to create
+                  a smarter, safer way to shop.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
