@@ -2,7 +2,7 @@
 
 import { useEnaj } from '@/lib/enaj-context'
 import { EnajLogo } from '@/components/enaj-logo'
-import { CloudBackground } from '@/components/cloud-background'
+import { CloudBackground, SunRayCloud } from '@/components/cloud-background'
 import { Button } from '@/components/ui/button'
 import { Heart, ArrowRight, Check, Sparkles, MousePointer2, LogIn } from 'lucide-react'
 
@@ -59,6 +59,20 @@ export function LandingPage() {
             background: 'linear-gradient(160deg, rgba(10,186,181,0.15) 0%, rgba(168,213,186,0.2) 40%, rgba(10,186,181,0.12) 70%, rgba(176,230,216,0.18) 100%)',
           }}
           aria-hidden="true"
+        />
+
+        {/* Stationary sun-ray clouds shining onto the hero from both sides */}
+        <SunRayCloud
+          side="left"
+          width={240}
+          className="hidden lg:block"
+          style={{ top: '18%', left: '-2%' }}
+        />
+        <SunRayCloud
+          side="right"
+          width={240}
+          className="hidden lg:block"
+          style={{ top: '18%', right: '-2%' }}
         />
 
         <div className="relative z-10 flex flex-col items-center">
