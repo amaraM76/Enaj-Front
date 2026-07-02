@@ -2,7 +2,7 @@
 
 import { useEnaj } from '@/lib/enaj-context'
 import { EnajLogo } from '@/components/enaj-logo'
-import { CloudBackground, SunRayCloud } from '@/components/cloud-background'
+import { CloudBackground, SunRayCloud, SectionClouds } from '@/components/cloud-background'
 import { Button } from '@/components/ui/button'
 import { Heart, ArrowRight, Check, Sparkles, MousePointer2, LogIn } from 'lucide-react'
 
@@ -240,8 +240,9 @@ export function LandingPage() {
       </section>
 
       {/* Ailments Preview */}
-      <section id="about" className="relative z-10 px-6 py-20 lg:py-28" style={{ background: 'rgba(240,249,246,0.45)' }}>
-        <div className="mx-auto max-w-5xl">
+      <section id="about" className="relative z-10 overflow-hidden px-6 py-20 lg:py-28" style={{ background: 'rgba(240,249,246,0.45)' }}>
+        <SectionClouds />
+        <div className="relative z-10 mx-auto max-w-5xl">
           <div className="mb-12 text-center">
             <h2 className="text-3xl font-bold text-foreground md:text-4xl text-balance">
               Built for Real Health Needs
@@ -345,6 +346,7 @@ export function LandingPage() {
           }}
           aria-hidden="true"
         />
+        <SectionClouds />
         <div className="relative z-10 mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-bold text-foreground md:text-4xl text-balance">
             Ready to Take Control?
