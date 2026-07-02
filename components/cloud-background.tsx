@@ -100,6 +100,22 @@ export function SunRayCloud({
   )
 }
 
+/** A scoped cluster of drifting clouds for a single section. Sits above the
+ *  section's translucent background but below its z-10 content. */
+export function SectionClouds() {
+  return (
+    <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
+      <Cloud className="animate-cloud-2" style={{ top: '8%', left: '-3%' }} width={200} />
+      <Cloud className="animate-cloud-4" style={{ top: '4%', right: '-2%' }} width={230} />
+      <Cloud className="animate-cloud-1" style={{ top: '42%', left: '6%' }} width={160} />
+      <Cloud className="animate-cloud-6" style={{ top: '50%', right: '4%' }} width={190} />
+      <Cloud className="animate-cloud-3" style={{ top: '72%', left: '28%' }} width={150} />
+      <Cloud className="animate-cloud-5" style={{ top: '80%', right: '24%' }} width={170} />
+      <Cloud className="animate-cloud-7" style={{ top: '30%', left: '44%' }} width={130} />
+    </div>
+  )
+}
+
 export function CloudBackground() {
   return (
     <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">

@@ -4,7 +4,7 @@ import { useEnaj } from '@/lib/enaj-context'
 import { EnajLogo } from '@/components/enaj-logo'
 import { Button } from '@/components/ui/button'
 import { Heart, ArrowRight, Check, Sparkles, MousePointer2, LogIn } from 'lucide-react'
-import { CloudBackground, Cloud, SunRayCloud } from '@/components/cloud-background'
+import { CloudBackground, Cloud, SunRayCloud, SectionClouds } from '@/components/cloud-background'
 import { FlyingLogoWithBag } from '@/components/flying-logo-with-bag'
 
 export function LandingPage() {
@@ -141,6 +141,7 @@ export function LandingPage() {
 
       {/* Features Section */}
       <section id="features" className="relative z-10 px-6 py-20 lg:py-28" style={{ background: 'rgba(240,249,246,0.45)' }}>
+      <SectionClouds />
         <div className="mx-auto max-w-6xl">
           <div className="mb-16 text-center">
             <h2 className="text-3xl font-bold text-foreground md:text-4xl text-balance">
@@ -199,6 +200,7 @@ export function LandingPage() {
 
       {/* How It Works */}
       <section id="how-it-works" className="relative z-10 px-6 py-20 lg:py-28">
+      <SectionClouds />
         <div className="mx-auto max-w-5xl">
           <div className="mb-16 text-center">
             <h2 className="text-3xl font-bold text-foreground md:text-4xl text-balance">How enaJ Works</h2>
@@ -242,6 +244,7 @@ export function LandingPage() {
 
       {/* Ailments Preview */}
       <section id="about" className="relative z-10 px-6 py-20 lg:py-28" style={{ background: 'rgba(240,249,246,0.45)' }}>
+        <SectionClouds />
         <div className="mx-auto max-w-5xl">
           <div className="mb-12 text-center">
             <h2 className="text-3xl font-bold text-foreground md:text-4xl text-balance">
@@ -350,6 +353,7 @@ export function LandingPage() {
           }}
           aria-hidden="true"
         />
+        <SectionClouds />
         {/* Flying Logo with Gold Bag */}
         <div className="pointer-events-none absolute left-[8%] top-1/2 -translate-y-1/2 z-[1] hidden md:block" aria-hidden="true">
           <FlyingLogoWithBag />
