@@ -14,12 +14,12 @@ export function LandingPage() {
     <div className="relative min-h-screen" style={{ background: 'linear-gradient(170deg, #e0f7f6 0%, #c2ede8 20%, #b0e6d8 45%, #a8d5ba 70%, #c2ede8 100%)' }}>
       <CloudBackground />
       {/* Navigation */}
-      <nav className="relative z-10 flex items-center justify-between px-6 py-4 lg:px-12" style={{ background: 'rgba(255,255,255,0.45)', backdropFilter: 'blur(12px)' }}>
-        <div className="flex items-center gap-2">
+      <nav className="relative z-10 flex items-center px-6 py-4 lg:px-12" style={{ background: 'rgba(255,255,255,0.45)', backdropFilter: 'blur(12px)' }}>
+        <div className="flex flex-1 items-center gap-2">
           <EnajLogo size="md" />
           <span className="text-xl font-bold text-foreground tracking-tight">enaJ</span>
         </div>
-        <div className="hidden items-center gap-8 md:flex absolute left-1/2 -translate-x-1/2">
+        <div className="hidden items-center gap-8 md:flex">
           <a href="#features" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
             Features
           </a>
@@ -30,7 +30,7 @@ export function LandingPage() {
             About
           </a>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-1 items-center justify-end gap-3">
           <Button
             variant="outline"
             onClick={() => setCurrentStep('login')}
