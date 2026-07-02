@@ -225,6 +225,42 @@ export function LandingPage() {
         </div>
       </section>
 
+      {/* Ailments Preview */}
+      <section id="about" className="relative z-10 px-6 py-20 lg:py-28" style={{ background: 'rgba(240,249,246,0.45)' }}>
+        <div className="mx-auto max-w-5xl">
+          <div className="mb-12 text-center">
+            <h2 className="text-3xl font-bold text-foreground md:text-4xl text-balance">
+              Built for Real Health Needs
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-muted-foreground text-pretty">
+              Enaj supports a wide range of health conditions and dietary preferences.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-3">
+            {[
+              'Rosacea', 'Eczema', 'Perioral Dermatitis', 'Celiac Disease', 'IBS', "Parkinson's", 'Dementia',
+              "Alzheimer's", 'Epilepsy', 'Psoriasis', 'Acne', "Crohn's Disease", 'GERD',
+              'Dairy Allergy', 'Nut Allergy', 'Soy Allergy', 'Lupus', "Hashimoto's",
+              'Rheumatoid Arthritis', 'Asthma', 'Multiple Sclerosis', 'Chronic Migraines', 'ADHD', 'Fibromyalgia',
+              'Anemia', 'Menopause', 'Perimenopause', 'Gastrectomy Surgery',
+            ].map((condition) => (
+              <span
+                key={condition}
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm text-card-foreground"
+              >
+                <Check className="h-3.5 w-3.5 text-primary" />
+                {condition}
+              </span>
+            ))}
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm text-card-foreground">
+              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">+</span>
+              and more
+            </span>
+          </div>
+        </div>
+      </section>
+
       {/* Our Story / Team Section */}
       <section id="our-story" className="relative z-10 border-t border-border px-6 py-20 lg:py-28">
         <div className="mx-auto max-w-6xl">
@@ -282,42 +318,6 @@ export function LandingPage() {
                 </p>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Ailments Preview */}
-      <section id="about" className="relative z-10 px-6 py-20 lg:py-28" style={{ background: 'rgba(240,249,246,0.45)' }}>
-        <div className="mx-auto max-w-5xl">
-          <div className="mb-12 text-center">
-            <h2 className="text-3xl font-bold text-foreground md:text-4xl text-balance">
-              Built for Real Health Needs
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-muted-foreground text-pretty">
-              Enaj supports a wide range of health conditions and dietary preferences.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-3">
-            {[
-              'Rosacea', 'Eczema', 'Perioral Dermatitis', 'Celiac Disease', 'IBS', "Parkinson's", 'Dementia',
-              "Alzheimer's", 'Epilepsy', 'Psoriasis', 'Acne', "Crohn's Disease", 'GERD',
-              'Dairy Allergy', 'Nut Allergy', 'Soy Allergy', 'Lupus', "Hashimoto's",
-              'Rheumatoid Arthritis', 'Asthma', 'Multiple Sclerosis', 'Chronic Migraines', 'ADHD', 'Fibromyalgia',
-              'Anemia', 'Menopause', 'Perimenopause', 'Gastrectomy Surgery',
-            ].map((condition) => (
-              <span
-                key={condition}
-                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm text-card-foreground"
-              >
-                <Check className="h-3.5 w-3.5 text-primary" />
-                {condition}
-              </span>
-            ))}
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm text-card-foreground">
-              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">+</span>
-              and more
-            </span>
           </div>
         </div>
       </section>
