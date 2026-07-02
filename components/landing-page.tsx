@@ -25,6 +25,9 @@ export function LandingPage() {
           <a href="#how-it-works" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
             How It Works
           </a>
+          <a href="#our-story" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+            Our Story
+          </a>
           <a href="#about" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
             About
           </a>
