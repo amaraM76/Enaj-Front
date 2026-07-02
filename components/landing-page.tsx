@@ -226,7 +226,7 @@ export function LandingPage() {
       </section>
 
       {/* Our Story / Team Section */}
-      <section id="our-story" className="relative z-10 px-6 py-20 lg:py-28">
+      <section id="our-story" className="relative z-10 border-t border-border px-6 py-20 lg:py-28">
         <div className="mx-auto max-w-6xl">
           <div className="mb-16 text-center">
             <h2 className="text-3xl font-bold text-foreground md:text-4xl text-balance">
