@@ -67,16 +67,16 @@ export function SunRayCloud({
           className="pointer-events-none absolute"
           style={{
             width: rayReach,
-            height: rayReach * 1.4,
+            height: rayReach * 1.6,
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
             background:
               'repeating-conic-gradient(from 0deg, rgba(255,244,204,0.55) 0deg 3deg, rgba(255,244,204,0) 3deg 14deg)',
             WebkitMaskImage:
-              'radial-gradient(ellipse 46% 62% at 50% 32%, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.35) 48%, rgba(0,0,0,0) 82%)',
+              'radial-gradient(ellipse 46% 66% at 50% 70%, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 42%, rgba(0,0,0,0) 78%)',
             maskImage:
-              'radial-gradient(ellipse 46% 62% at 50% 32%, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.35) 48%, rgba(0,0,0,0) 82%)',
+              'radial-gradient(ellipse 46% 66% at 50% 70%, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 42%, rgba(0,0,0,0) 78%)',
             filter: 'blur(1px)',
           }}
         />
@@ -101,21 +101,32 @@ export function SunRayCloud({
 }
 
 /** A scoped cluster of drifting clouds for a single section. Sits above the
- *  section's translucent background but below its z-10 content. */
-export function SectionClouds() {
+ *  section's translucent background but below its z-10 content. All clouds are
+ *  kept fully inside the section bounds so they never appear cut off.
+ *  Pass density="light" for smaller sections like the CTA. */
+export function SectionClouds({ density = 'full' }: { density?: 'full' | 'light' }) {
+  if (density === 'light') {
+    return (
+      <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
+        <Cloud className="animate-edge-left-1" style={{ top: '12%', left: '4%' }} width={120} />
+        <Cloud className="animate-edge-right-1" style={{ top: '16%', right: '5%' }} width={140} />
+        <Cloud className="animate-edge-center-2" style={{ top: '78%', left: '44%' }} width={110} />
+      </div>
+    )
+  }
   return (
     <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
-      {/* Top band - spread across the whitespace above the heading */}
-      <Cloud className="animate-edge-left-1" style={{ top: '0%', left: '3%' }} width={150} />
-      <Cloud className="animate-edge-center-1" style={{ top: '-3%', left: '42%' }} width={130} />
-      <Cloud className="animate-edge-right-1" style={{ top: '2%', right: '5%' }} width={170} />
-      {/* Mid - gutters only, so text stays clear */}
-      <Cloud className="animate-edge-left-2" style={{ top: '44%', left: '-4%' }} width={150} />
-      <Cloud className="animate-edge-right-2" style={{ top: '50%', right: '-4%' }} width={170} />
-      {/* Bottom band - spread across the whitespace below the content */}
-      <Cloud className="animate-edge-left-1" style={{ top: '90%', left: '10%' }} width={150} />
-      <Cloud className="animate-edge-center-2" style={{ top: '94%', left: '46%' }} width={120} />
-      <Cloud className="animate-edge-right-1" style={{ top: '88%', right: '8%' }} width={160} />
+      {/* Top band - kept inside the section so nothing is clipped */}
+      <Cloud className="animate-edge-left-1" style={{ top: '6%', left: '3%' }} width={150} />
+      <Cloud className="animate-edge-center-1" style={{ top: '4%', left: '42%' }} width={130} />
+      <Cloud className="animate-edge-right-1" style={{ top: '8%', right: '4%' }} width={160} />
+      {/* Mid - hugging the gutters so text stays clear */}
+      <Cloud className="animate-edge-left-2" style={{ top: '46%', left: '1%' }} width={140} />
+      <Cloud className="animate-edge-right-2" style={{ top: '52%', right: '1%' }} width={150} />
+      {/* Bottom band */}
+      <Cloud className="animate-edge-left-1" style={{ top: '84%', left: '9%' }} width={150} />
+      <Cloud className="animate-edge-center-2" style={{ top: '86%', left: '46%' }} width={120} />
+      <Cloud className="animate-edge-right-1" style={{ top: '82%', right: '7%' }} width={160} />
     </div>
   )
 }

@@ -346,7 +346,7 @@ export function LandingPage() {
           }}
           aria-hidden="true"
         />
-        <SectionClouds />
+        <SectionClouds density="light" />
         <div className="relative z-10 mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-bold text-foreground md:text-4xl text-balance">
             Ready to Take Control?
