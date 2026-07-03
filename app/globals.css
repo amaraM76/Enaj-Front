@@ -201,29 +201,39 @@
 .animate-cloud-6 { animation: cloud-drift-6 60s ease-in-out infinite; }
 .animate-cloud-7 { animation: cloud-drift-7 75s ease-in-out infinite; }
 
-/* Edge drift - visible movement, but bounded near the margins so clouds
-   never travel across the centered text. Left clouds drift inward/right,
-   right clouds drift inward/left, each with a little vertical bob. */
+/* Cloud drift - visible but small-amplitude movement so clouds stay in
+   their lane and never slide across the centered text. Each variant has a
+   slightly different path and a little vertical bob. */
 @keyframes cloud-edge-left-1 {
   0%, 100% { transform: translateX(0) translateY(0); }
-  50% { transform: translateX(9vw) translateY(-14px); }
+  50% { transform: translateX(4vw) translateY(-12px); }
 }
 @keyframes cloud-edge-left-2 {
-  0%, 100% { transform: translateX(2vw) translateY(6px); }
-  50% { transform: translateX(11vw) translateY(-8px); }
+  0%, 100% { transform: translateX(1vw) translateY(6px); }
+  50% { transform: translateX(5vw) translateY(-8px); }
 }
 @keyframes cloud-edge-right-1 {
   0%, 100% { transform: translateX(0) translateY(0); }
-  50% { transform: translateX(-9vw) translateY(12px); }
+  50% { transform: translateX(-4vw) translateY(10px); }
 }
 @keyframes cloud-edge-right-2 {
-  0%, 100% { transform: translateX(-2vw) translateY(-6px); }
-  50% { transform: translateX(-11vw) translateY(10px); }
+  0%, 100% { transform: translateX(-1vw) translateY(-6px); }
+  50% { transform: translateX(-5vw) translateY(8px); }
+}
+@keyframes cloud-edge-center-1 {
+  0%, 100% { transform: translateX(-3vw) translateY(0); }
+  50% { transform: translateX(3vw) translateY(-10px); }
+}
+@keyframes cloud-edge-center-2 {
+  0%, 100% { transform: translateX(3vw) translateY(5px); }
+  50% { transform: translateX(-3vw) translateY(-7px); }
 }
 .animate-edge-left-1 { animation: cloud-edge-left-1 34s ease-in-out infinite; }
 .animate-edge-left-2 { animation: cloud-edge-left-2 42s ease-in-out infinite; }
 .animate-edge-right-1 { animation: cloud-edge-right-1 38s ease-in-out infinite; }
 .animate-edge-right-2 { animation: cloud-edge-right-2 46s ease-in-out infinite; }
+.animate-edge-center-1 { animation: cloud-edge-center-1 40s ease-in-out infinite; }
+.animate-edge-center-2 { animation: cloud-edge-center-2 48s ease-in-out infinite; }
 
 .cl-footerAction {
   display: none !important;
