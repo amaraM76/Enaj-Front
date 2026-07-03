@@ -384,6 +384,10 @@ export function LandingPage() {
           <FlyingLogoWithBag />
         </div>
         
+        {/* Flying Logo with Gold Bag */}
+        <div className="pointer-events-none absolute right-[8%] top-1/2 -translate-y-1/2 z-[1] hidden md:block" aria-hidden="true">
+          <FlyingLogoWithBag />
+        </div>
         <div className="relative z-10 mx-auto max-w-3xl text-center"></div>
 
         <div className="relative z-10 mx-auto max-w-3xl text-center">
@@ -401,82 +405,75 @@ export function LandingPage() {
             Start Free Trial
             <ArrowRight className="h-5 w-5" />
           </Button>
-          {/* Referral program — the winged shield "announcing" the offer */}
-          <div className="relative z-10 mx-auto mt-16 max-w-2xl">
-            <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:gap-6">
-              {/* Winged shield speaker */}
-              <div className="shrink-0">
-                {/* Flying Logo with Gold Bag */}
-                <div className="pointer-events-none absolute right-[8%] top-1/2 -translate-y-1/2 z-[1] hidden md:block" aria-hidden="true">
+          {/* Referral program */}
+            <div className="relative z-10 mx-auto mt-16 max-w-2xl">
+              <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:gap-0">
+                
+                {/* Left flying logo */}
+                <div className="shrink-0 relative">
                   <FlyingLogoWithBag />
+                  {/* Sound lines pointing right — desktop only */}
+                  <svg
+                    className="absolute -right-6 top-1/2 hidden -translate-y-1/2 text-primary/70 sm:block"
+                    width="22"
+                    height="46"
+                    viewBox="0 0 22 46"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path d="M2 13 Q12 12 17 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                    <path d="M2 23 H19" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                    <path d="M2 33 Q12 34 17 40" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                  </svg>
+                  {/* Sound lines pointing down — mobile only */}
+                  <svg
+                    className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-primary/70 sm:hidden"
+                    width="46"
+                    height="22"
+                    viewBox="0 0 46 22"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path d="M13 2 Q12 12 6 17" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                    <path d="M23 2 V19" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                    <path d="M33 2 Q34 12 40 17" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                  </svg>
                 </div>
-              </div>
-              {/* Sound lines pointing right toward the bubble (desktop) */}
-              <svg
-                className="absolute -right-4 top-1/2 hidden -translate-y-1/2 text-primary/70 sm:block"
-                width="22"
-                height="46"
-                viewBox="0 0 22 46"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path d="M2 13 Q12 12 17 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M2 23 H19" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M2 33 Q12 34 17 40" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-              </svg>
-              {/* Sound lines pointing down toward the bubble (mobile) */}
-              <svg
-                className="absolute -bottom-4 left-1/2 -translate-x-1/2 text-primary/70 sm:hidden"
-                width="46"
-                height="22"
-                viewBox="0 0 46 22"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path d="M13 2 Q12 12 6 17" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M23 2 V19" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M33 2 Q34 12 40 17" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-              </svg>
-            </div>
-            {/* Speech bubble */}
-            <div className="relative flex-1 rounded-2xl border border-primary/20 bg-card p-6 text-left shadow-lg">
-              {/* Tail — points up toward the shield on mobile */}
-              <div className="absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 border-l border-t border-primary/20 bg-card sm:hidden" />
-              {/* Tail — points left toward the shield on larger screens */}
-              <div className="absolute -left-2 top-8 hidden h-4 w-4 rotate-45 border-b border-l border-primary/20 bg-card sm:block" />
-              <div className="flex items-center gap-2">
-                <Gift className="h-5 w-5 text-primary" />
-                <h3 className="text-lg font-semibold text-foreground">Refer friends, get enaJ free!</h3>
-              </div>
-              <p className="mt-1 text-sm text-muted-foreground">
-                You earn your free month after your friend starts a paid subscription.
-              </p>
-              <ul className="mt-4 space-y-3">
-                <li className="flex items-center gap-3">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
-                    1
-                  </span>
-                  <span className="text-sm text-muted-foreground">
-                    <span className="font-semibold text-foreground">Refer 1 friend</span> → 1 month free
-                  </span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
-                    3
-                  </span>
-                  <span className="text-sm text-muted-foreground">
-                    <span className="font-semibold text-foreground">Refer 3 friends</span> → 3 months free
-                  </span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
-                    12
-                  </span>
-                  <span className="text-sm text-muted-foreground">
-                    <span className="font-semibold text-foreground">Refer 12 friends</span> → 1 year free
-                  </span>
-                </li>
-              </ul>
+
+                {/* Speech bubble */}
+                <div className="relative flex-1 rounded-2xl border border-primary/20 bg-card p-6 text-left shadow-lg sm:ml-8">
+                  {/* Tail pointing up on mobile */}
+                  <div className="absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 border-l border-t border-primary/20 bg-card sm:hidden" />
+                  {/* Tail pointing left on desktop */}
+                  <div className="absolute -left-2 top-8 hidden h-4 w-4 rotate-45 border-b border-l border-primary/20 bg-card sm:block" />
+                  <div className="flex items-center gap-2">
+                    <Gift className="h-5 w-5 text-primary" />
+                    <h3 className="text-lg font-semibold text-foreground">Refer friends, get enaJ free!</h3>
+                  </div>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    You earn your free month after your friend starts a paid subscription.
+                  </p>
+                  <ul className="mt-4 space-y-3">
+                    <li className="flex items-center gap-3">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">1</span>
+                      <span className="text-sm text-muted-foreground">
+                        <span className="font-semibold text-foreground">Refer 1 friend</span> → 1 month free
+                      </span>
+                    </li>
+                    <li className="flex items-center gap-3">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">3</span>
+                      <span className="text-sm text-muted-foreground">
+                        <span className="font-semibold text-foreground">Refer 3 friends</span> → 3 months free
+                      </span>
+                    </li>
+                    <li className="flex items-center gap-3">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">12</span>
+                      <span className="text-sm text-muted-foreground">
+                        <span className="font-semibold text-foreground">Refer 12 friends</span> → 1 year free
+                      </span>
+                    </li>
+                  </ul>
+                </div>
             </div>
           </div>
         </div>
