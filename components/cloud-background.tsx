@@ -122,7 +122,7 @@ export function SectionClouds({ density = 'full' }: { density?: 'full' | 'light'
       <Cloud className="animate-edge-right-1" style={{ top: '8%', right: '4%' }} width={160} />
       {/* Mid - hugging the gutters so text stays clear */}
       <Cloud className="animate-edge-left-2" style={{ top: '46%', left: '1%' }} width={140} />
-      <Cloud className="animate-edge-right-2" style={{ top: '52%', right: '1%' }} width={150} />
+      <Cloud className="animate-edge-right-2" style={{ top: '30%', right: '1%' }} width={150} />
       {/* Bottom band */}
       <Cloud className="animate-edge-left-1" style={{ top: '84%', left: '9%' }} width={150} />
       <Cloud className="animate-edge-center-2" style={{ top: '86%', left: '46%' }} width={120} />
