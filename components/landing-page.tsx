@@ -466,7 +466,7 @@ export function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 border-t border-border px-6 py-12" style={{ background: 'rgba(240,249,246,0.5)' }}>
+      <footer className="relative z-10 border-t border-border px-6 py-12" style={{ background: 'linear-gradient(170deg, #b0e6d8 0%, #a8d5ba 50%, #c2ede8 100%)' }}>
         <div className="mx-auto max-w-6xl">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
             {/* Brand */}
