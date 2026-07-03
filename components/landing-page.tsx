@@ -4,7 +4,7 @@ import { useEnaj } from '@/lib/enaj-context'
 import { EnajLogo } from '@/components/enaj-logo'
 import { Button } from '@/components/ui/button'
 import { Heart, ArrowRight, Check, Sparkles, MousePointer2, LogIn } from 'lucide-react'
-import { CloudBackground, Cloud, SunRayCloud, SectionClouds } from '@/components/cloud-background'
+import { CloudBackground, SunRayCloud, SectionClouds } from '@/components/cloud-background'
 import { FlyingLogoWithBag } from '@/components/flying-logo-with-bag'
 
 export function LandingPage() {
@@ -353,7 +353,7 @@ export function LandingPage() {
           }}
           aria-hidden="true"
         />
-        <SectionClouds />
+        <SectionClouds density='light' />
         {/* Flying Logo with Gold Bag */}
         <div className="pointer-events-none absolute left-[8%] top-1/2 -translate-y-1/2 z-[1] hidden md:block" aria-hidden="true">
           <FlyingLogoWithBag />
