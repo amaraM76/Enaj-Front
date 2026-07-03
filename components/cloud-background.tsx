@@ -67,16 +67,16 @@ export function SunRayCloud({
           className="pointer-events-none absolute"
           style={{
             width: rayReach,
-            height: rayReach,
+            height: rayReach * 1.4,
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
             background:
               'repeating-conic-gradient(from 0deg, rgba(255,244,204,0.55) 0deg 3deg, rgba(255,244,204,0) 3deg 14deg)',
             WebkitMaskImage:
-              'radial-gradient(circle at center, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.35) 45%, rgba(0,0,0,0) 72%)',
+              'radial-gradient(ellipse 46% 62% at 50% 32%, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.35) 48%, rgba(0,0,0,0) 82%)',
             maskImage:
-              'radial-gradient(circle at center, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.35) 45%, rgba(0,0,0,0) 72%)',
+              'radial-gradient(ellipse 46% 62% at 50% 32%, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.35) 48%, rgba(0,0,0,0) 82%)',
             filter: 'blur(1px)',
           }}
         />
@@ -105,14 +105,17 @@ export function SunRayCloud({
 export function SectionClouds() {
   return (
     <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
-       {/* Left edge */}
-       <Cloud className="animate-edge-left-1" style={{ top: '6%', left: '-4%' }} width={180} />
-      <Cloud className="animate-edge-left-2" style={{ top: '42%', left: '-3%' }} width={150} />
-      <Cloud className="animate-edge-left-1" style={{ top: '76%', left: '-4%' }} width={160} />
-      {/* Right edge */}
-      <Cloud className="animate-edge-right-1" style={{ top: '8%', right: '-4%' }} width={200} />
-      <Cloud className="animate-edge-right-2" style={{ top: '48%', right: '-3%' }} width={170} />
-      <Cloud className="animate-edge-right-1" style={{ top: '80%', right: '-4%' }} width={180} />
+      {/* Top band - spread across the whitespace above the heading */}
+      <Cloud className="animate-edge-left-1" style={{ top: '0%', left: '3%' }} width={150} />
+      <Cloud className="animate-edge-center-1" style={{ top: '-3%', left: '42%' }} width={130} />
+      <Cloud className="animate-edge-right-1" style={{ top: '2%', right: '5%' }} width={170} />
+      {/* Mid - gutters only, so text stays clear */}
+      <Cloud className="animate-edge-left-2" style={{ top: '44%', left: '-4%' }} width={150} />
+      <Cloud className="animate-edge-right-2" style={{ top: '50%', right: '-4%' }} width={170} />
+      {/* Bottom band - spread across the whitespace below the content */}
+      <Cloud className="animate-edge-left-1" style={{ top: '90%', left: '10%' }} width={150} />
+      <Cloud className="animate-edge-center-2" style={{ top: '94%', left: '46%' }} width={120} />
+      <Cloud className="animate-edge-right-1" style={{ top: '88%', right: '8%' }} width={160} />
     </div>
   )
 }
@@ -120,32 +123,31 @@ export function SectionClouds() {
 export function CloudBackground() {
   return (
     <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
-      {/* Cloud 1 - large, upper-left */}
-      <Cloud
-        className="animate-cloud-1"
-        style={{ top: '4%', left: '-4%' }}
-        width={280}
-      />
-      {/* Left edge - staggered top to bottom */}
-      <Cloud className="animate-edge-left-1" style={{ top: '3%', left: '-4%' }} width={260} />
-            <Cloud className="animate-edge-left-2" style={{ top: '14%', left: '-3%' }} width={180} />
-            <Cloud className="animate-edge-left-1" style={{ top: '25%', left: '-4%' }} width={200} />
-            <Cloud className="animate-edge-left-2" style={{ top: '37%', left: '-3%' }} width={160} />
-            <Cloud className="animate-edge-left-1" style={{ top: '48%', left: '-4%' }} width={210} />
-            <Cloud className="animate-edge-left-2" style={{ top: '60%', left: '-3%' }} width={180} />
-            <Cloud className="animate-edge-left-1" style={{ top: '71%', left: '-4%' }} width={190} />
-            <Cloud className="animate-edge-left-2" style={{ top: '83%', left: '-3%' }} width={200} />
-            <Cloud className="animate-edge-left-1" style={{ top: '93%', left: '-4%' }} width={150} />
-            {/* Right edge - staggered top to bottom */}
-            <Cloud className="animate-edge-right-1" style={{ top: '8%', right: '-4%' }} width={230} />
-            <Cloud className="animate-edge-right-2" style={{ top: '19%', right: '-3%' }} width={170} />
-            <Cloud className="animate-edge-right-1" style={{ top: '31%', right: '-4%' }} width={240} />
-            <Cloud className="animate-edge-right-2" style={{ top: '42%', right: '-3%' }} width={150} />
-            <Cloud className="animate-edge-right-1" style={{ top: '54%', right: '-4%' }} width={200} />
-            <Cloud className="animate-edge-right-2" style={{ top: '66%', right: '-3%' }} width={180} />
-            <Cloud className="animate-edge-right-1" style={{ top: '77%', right: '-4%' }} width={220} />
-            <Cloud className="animate-edge-right-2" style={{ top: '88%', right: '-3%' }} width={160} />
-            <Cloud className="animate-edge-right-1" style={{ top: '97%', right: '-4%' }} width={140} />
+      {/* Organic scatter: mix of left, center and right at varied heights/sizes.
+          Center clouds sit in top/bottom whitespace bands to avoid the text. */}
+      {/* Top band */}
+      <Cloud className="animate-edge-left-1" style={{ top: '2%', left: '-3%' }} width={240} />
+      <Cloud className="animate-edge-center-1" style={{ top: '-1%', left: '34%' }} width={170} />
+      <Cloud className="animate-edge-right-1" style={{ top: '4%', right: '-3%' }} width={220} />
+      <Cloud className="animate-edge-center-2" style={{ top: '6%', left: '18%' }} width={130} />
+      <Cloud className="animate-edge-right-2" style={{ top: '9%', right: '20%' }} width={140} />
+      {/* Upper-mid - gutters only */}
+      <Cloud className="animate-edge-left-2" style={{ top: '18%', left: '-4%' }} width={190} />
+      <Cloud className="animate-edge-right-1" style={{ top: '22%', right: '-4%' }} width={230} />
+      <Cloud className="animate-edge-left-1" style={{ top: '30%', left: '-3%' }} width={160} />
+      {/* Mid - gutters only */}
+      <Cloud className="animate-edge-right-2" style={{ top: '38%', right: '-3%' }} width={200} />
+      <Cloud className="animate-edge-left-2" style={{ top: '46%', left: '-4%' }} width={210} />
+      <Cloud className="animate-edge-right-1" style={{ top: '54%', right: '-4%' }} width={170} />
+      {/* Lower-mid - gutters only */}
+      <Cloud className="animate-edge-left-1" style={{ top: '63%', left: '-3%' }} width={200} />
+      <Cloud className="animate-edge-right-2" style={{ top: '70%', right: '-4%' }} width={220} />
+      <Cloud className="animate-edge-left-2" style={{ top: '78%', left: '-4%' }} width={160} />
+      {/* Bottom band */}
+      <Cloud className="animate-edge-center-1" style={{ top: '90%', left: '40%' }} width={160} />
+      <Cloud className="animate-edge-left-1" style={{ top: '87%', left: '6%' }} width={190} />
+      <Cloud className="animate-edge-right-1" style={{ top: '92%', right: '4%' }} width={210} />
+      <Cloud className="animate-edge-center-2" style={{ top: '95%', left: '22%' }} width={130} />
     </div>
   )
 }
