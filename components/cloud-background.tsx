@@ -108,9 +108,14 @@ export function SectionClouds({ density = 'full' }: { density?: 'full' | 'light'
   if (density === 'light') {
     return (
       <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
-        <Cloud className="animate-edge-left-1" style={{ top: '12%', left: '4%' }} width={120} />
-        <Cloud className="animate-edge-right-1" style={{ top: '16%', right: '5%' }} width={140} />
-        <Cloud className="animate-edge-center-2" style={{ top: '78%', left: '44%' }} width={110} />
+        {/* Top band */}
+        <Cloud className="animate-edge-left-1" style={{ top: '8%', left: '5%' }} width={120} />
+        <Cloud className="animate-edge-center-1" style={{ top: '5%', left: '40%' }} width={110} />
+        <Cloud className="animate-edge-right-1" style={{ top: '10%', right: '6%' }} width={140} />
+        {/* Bottom band */}
+        <Cloud className="animate-edge-left-2" style={{ top: '80%', left: '8%' }} width={130} />
+        <Cloud className="animate-edge-center-2" style={{ top: '82%', left: '46%' }} width={110} />
+        <Cloud className="animate-edge-right-2" style={{ top: '78%', right: '7%' }} width={130} />
       </div>
     )
   }

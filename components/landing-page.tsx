@@ -4,7 +4,7 @@ import { useEnaj } from '@/lib/enaj-context'
 import { EnajLogo } from '@/components/enaj-logo'
 import { CloudBackground, SunRayCloud, SectionClouds } from '@/components/cloud-background'
 import { Button } from '@/components/ui/button'
-import { Heart, ArrowRight, Check, Sparkles, MousePointer2, LogIn } from 'lucide-react'
+import { Heart, ArrowRight, Check, Sparkles, MousePointer2, LogIn, Gift } from 'lucide-react'
 
 export function LandingPage() {
   const { setCurrentStep } = useEnaj()
@@ -362,6 +362,56 @@ export function LandingPage() {
             Get Started Free
             <ArrowRight className="h-5 w-5" />
           </Button>
+        </div>
+
+        {/* Referral program — the winged shield "announcing" the offer */}
+        <div className="relative z-10 mx-auto mt-16 max-w-2xl">
+          <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:gap-6">
+            {/* Winged shield speaker */}
+            <div className="shrink-0">
+              <EnajLogo size="xl" />
+            </div>
+            {/* Speech bubble */}
+            <div className="relative flex-1 rounded-2xl border border-primary/20 bg-card p-6 text-left shadow-lg">
+              {/* Tail — points up toward the shield on mobile */}
+              <div className="absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 border-l border-t border-primary/20 bg-card sm:hidden" />
+              {/* Tail — points left toward the shield on larger screens */}
+              <div className="absolute -left-2 top-8 hidden h-4 w-4 rotate-45 border-b border-l border-primary/20 bg-card sm:block" />
+              <div className="flex items-center gap-2">
+                <Gift className="h-5 w-5 text-primary" />
+                <h3 className="text-lg font-semibold text-foreground">Refer friends, get enaJ free!</h3>
+              </div>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Share enaJ with the people you care about and earn free time on us.
+              </p>
+              <ul className="mt-4 space-y-3">
+                <li className="flex items-center gap-3">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                    1
+                  </span>
+                  <span className="text-sm text-muted-foreground">
+                    <span className="font-semibold text-foreground">Refer 1 friend</span> → 1 month free
+                  </span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                    3
+                  </span>
+                  <span className="text-sm text-muted-foreground">
+                    <span className="font-semibold text-foreground">Refer 3 friends</span> → 3 months free
+                  </span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                    12
+                  </span>
+                  <span className="text-sm text-muted-foreground">
+                    <span className="font-semibold text-foreground">Refer 12 friends</span> → 1 year free
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </section>
 
