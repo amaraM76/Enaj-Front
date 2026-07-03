@@ -2,6 +2,7 @@
 
 import { useEnaj } from '@/lib/enaj-context'
 import { EnajLogo } from '@/components/enaj-logo'
+import { FlyingLogoWithBag } from '@/components/flying-logo-with-bag'
 import { CloudBackground, SunRayCloud, SectionClouds } from '@/components/cloud-background'
 import { Button } from '@/components/ui/button'
 import { Heart, ArrowRight, Check, Sparkles, MousePointer2, LogIn, Gift } from 'lucide-react'
@@ -369,7 +370,7 @@ export function LandingPage() {
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:gap-6">
             {/* Winged shield mascot "speaking" — comic sound lines show it's talking */}
             <div className="relative shrink-0">
-              <EnajLogo size="xl" />
+              <FlyingLogoWithBag />
               {/* Sound lines pointing right toward the bubble (desktop) */}
               <svg
                 className="absolute -right-4 top-1/2 hidden -translate-y-1/2 text-primary/70 sm:block"
