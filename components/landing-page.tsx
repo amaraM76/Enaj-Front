@@ -381,7 +381,21 @@ export function LandingPage() {
         <SectionClouds density='light' />
         {/* Flying Logo with Gold Bag */}
         <div className="pointer-events-none absolute left-[8%] top-1/2 -translate-y-1/2 z-[1] hidden md:block" aria-hidden="true">
-          <FlyingLogoWithBag />
+          <div className="relative">
+            <FlyingLogoWithBag />
+            <svg
+              className="absolute -right-6 top-1/2 -translate-y-1/2 text-primary/70"
+              width="22"
+              height="46"
+              viewBox="0 0 22 46"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path d="M2 13 Q12 12 17 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+              <path d="M2 23 H19" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+              <path d="M2 33 Q12 34 17 40" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+            </svg>
+          </div>
         </div>
         
         {/* Flying Logo with Gold Bag */}
@@ -409,36 +423,6 @@ export function LandingPage() {
             <div className="relative z-10 mx-auto mt-16 max-w-2xl">
               <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:gap-0">
                 
-                {/* Left flying logo */}
-                <div className="shrink-0 relative">
-                  <FlyingLogoWithBag />
-                  {/* Sound lines pointing right — desktop only */}
-                  <svg
-                    className="absolute -right-6 top-1/2 hidden -translate-y-1/2 text-primary/70 sm:block"
-                    width="22"
-                    height="46"
-                    viewBox="0 0 22 46"
-                    fill="none"
-                    aria-hidden="true"
-                  >
-                    <path d="M2 13 Q12 12 17 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                    <path d="M2 23 H19" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                    <path d="M2 33 Q12 34 17 40" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                  </svg>
-                  {/* Sound lines pointing down — mobile only */}
-                  <svg
-                    className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-primary/70 sm:hidden"
-                    width="46"
-                    height="22"
-                    viewBox="0 0 46 22"
-                    fill="none"
-                    aria-hidden="true"
-                  >
-                    <path d="M13 2 Q12 12 6 17" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                    <path d="M23 2 V19" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                    <path d="M33 2 Q34 12 40 17" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                  </svg>
-                </div>
 
                 {/* Speech bubble */}
                 <div className="relative flex-1 rounded-2xl border border-primary/20 bg-card p-6 text-left shadow-lg sm:ml-8">
