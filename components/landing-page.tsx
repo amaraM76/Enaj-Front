@@ -367,9 +367,35 @@ export function LandingPage() {
         {/* Referral program — the winged shield "announcing" the offer */}
         <div className="relative z-10 mx-auto mt-16 max-w-2xl">
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:gap-6">
-            {/* Winged shield speaker */}
-            <div className="shrink-0">
+            {/* Winged shield mascot "speaking" — comic sound lines show it's talking */}
+            <div className="relative shrink-0">
               <EnajLogo size="xl" />
+              {/* Sound lines pointing right toward the bubble (desktop) */}
+              <svg
+                className="absolute -right-4 top-1/2 hidden -translate-y-1/2 text-primary/70 sm:block"
+                width="22"
+                height="46"
+                viewBox="0 0 22 46"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path d="M2 13 Q12 12 17 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                <path d="M2 23 H19" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                <path d="M2 33 Q12 34 17 40" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+              </svg>
+              {/* Sound lines pointing down toward the bubble (mobile) */}
+              <svg
+                className="absolute -bottom-4 left-1/2 -translate-x-1/2 text-primary/70 sm:hidden"
+                width="46"
+                height="22"
+                viewBox="0 0 46 22"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path d="M13 2 Q12 12 6 17" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                <path d="M23 2 V19" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                <path d="M33 2 Q34 12 40 17" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+              </svg>
             </div>
             {/* Speech bubble */}
             <div className="relative flex-1 rounded-2xl border border-primary/20 bg-card p-6 text-left shadow-lg">
@@ -382,7 +408,7 @@ export function LandingPage() {
                 <h3 className="text-lg font-semibold text-foreground">Refer friends, get enaJ free!</h3>
               </div>
               <p className="mt-1 text-sm text-muted-foreground">
-                Share enaJ with the people you care about and earn free time on us.
+                You earn your free month after your friend starts a paid subscription.
               </p>
               <ul className="mt-4 space-y-3">
                 <li className="flex items-center gap-3">
