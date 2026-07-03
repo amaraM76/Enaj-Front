@@ -374,14 +374,14 @@ export function LandingPage() {
         <div
           className="pointer-events-none absolute inset-0"
           style={{
-            background: 'linear-gradient(135deg, rgba(168,213,186,0.2) 0%, rgba(10,186,181,0.18) 50%, rgba(176,230,216,0.15) 100%)',
+            background: 'rgba(240,249,246,0.45)',
           }}
           aria-hidden="true"
         />
         <SectionClouds density='light' />
         {/* Flying Logo with Gold Bag */}
         <div className="pointer-events-none absolute left-[8%] top-1/2 -translate-y-1/2 z-[1] hidden md:block" aria-hidden="true">
-          <div className="relative">
+          <div className="relative scale-150">
             <FlyingLogoWithBag />
             <svg
               className="absolute -right-6 top-1/2 -translate-y-1/2 text-primary/70"
@@ -400,7 +400,9 @@ export function LandingPage() {
         
         {/* Flying Logo with Gold Bag */}
         <div className="pointer-events-none absolute right-[8%] top-1/2 -translate-y-1/2 z-[1] hidden md:block" aria-hidden="true">
-          <FlyingLogoWithBag />
+          <div className="relative scale-150">
+            <FlyingLogoWithBag />
+          </div>
         </div>
         <div className="relative z-10 mx-auto max-w-3xl text-center"></div>
 
