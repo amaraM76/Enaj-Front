@@ -241,10 +241,10 @@ export function LandingPage() {
                 </div>
                 <h3 className="mb-2 text-lg font-semibold text-foreground">{item.title}</h3>
                 {item.step === '01' && (
-                  <p className="text-sm leading-relaxed text-muted-foreground">{item.desc}</p>
+                  <p className="text-sm leading-relaxed text-foreground">{item.desc}</p>
                 )}
                 {item.step === '02' && (
-                  <p className="text-sm leading-relaxed text-muted-foreground">
+                  <p className="text-sm leading-relaxed text-foreground">
                     Download the enaJ browser extension from the{' '}
                     <span className="font-medium text-foreground">Chrome Web Store</span>. While shopping on Amazon, Walmart, Target, Sephora, or Ulta, just press one button and enaJ scans the product page for you.{' '}
                     <em>More stores coming soon.</em>
@@ -254,12 +254,12 @@ export function LandingPage() {
                   </p>
                 )}
                 {item.step === '03' && (
-                  <p className="text-sm leading-relaxed text-muted-foreground">
+                  <p className="text-sm leading-relaxed text-foreground">
                     Browse our <span className="font-medium text-foreground">enaJ Marketplace</span> to discover products and instantly see how each one compares to your health profile — all in one place.
                   </p>
                 )}
                 {item.step === '04' && (
-                  <p className="text-sm leading-relaxed text-muted-foreground">{item.desc}</p>
+                  <p className="text-sm leading-relaxed text-foreground">{item.desc}</p>
                 )}
               </div>
             ))}
@@ -306,7 +306,7 @@ export function LandingPage() {
         <div className="mx-auto max-w-6xl">
           <div className="mb-16 text-center">
             <h2 className="text-3xl font-bold text-foreground md:text-4xl text-balance">
-              The People Behind Enaj
+              The People Behind enaJ
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-muted-foreground text-pretty">
               A small team on a personal mission to make shopping safer for everyone.
@@ -330,7 +330,7 @@ export function LandingPage() {
                 <h3 className="mt-4 text-xl font-semibold text-card-foreground">Nicole &amp; May</h3>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                   Placeholder text — replace with your own words. Nicole and May came up with the
-                  idea for Enaj and built it from the ground up. Share your background, what
+                  idea for enaJ and built it from the ground up. Share your background, what
                   brought you together, and the vision you have for empowering shoppers everywhere.
                 </p>
               </div>
@@ -352,7 +352,7 @@ export function LandingPage() {
                 <h3 className="mt-4 text-xl font-semibold text-card-foreground">Jane</h3>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                   Placeholder text — replace with your own words. Jane, Nicole&apos;s mom, lives
-                  with Parkinson&apos;s disease and is the reason Enaj exists. Share her story and
+                  with Parkinson&apos;s disease and is the reason enaJ exists. Share her story and
                   how her experience navigating ingredients and health needs inspired you to create
                   a smarter, safer way to shop.
                 </p>
