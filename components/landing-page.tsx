@@ -241,10 +241,10 @@ export function LandingPage() {
                 </div>
                 <h3 className="mb-2 text-lg font-semibold text-foreground">{item.title}</h3>
                 {item.step === '01' && (
-                  <p className="text-sm leading-relaxed text-foreground">{item.desc}</p>
+                  <p className="text-sm leading-relaxed text-muted-foreground">{item.desc}</p>
                 )}
                 {item.step === '02' && (
-                  <p className="text-sm leading-relaxed text-foreground">
+                  <p className="text-sm leading-relaxed text-muted-foreground">
                     Download the enaJ browser extension from the{' '}
                     <span className="font-medium text-foreground">Chrome Web Store</span>. While shopping on Amazon, Walmart, Target, Sephora, or Ulta, just press one button and enaJ scans the product page for you.{' '}
                     <em>More stores coming soon.</em>
@@ -254,12 +254,12 @@ export function LandingPage() {
                   </p>
                 )}
                 {item.step === '03' && (
-                  <p className="text-sm leading-relaxed text-foreground">
+                  <p className="text-sm leading-relaxed text-muted-foreground">
                     Browse our <span className="font-medium text-foreground">enaJ Marketplace</span> to discover products and instantly see how each one compares to your health profile — all in one place.
                   </p>
                 )}
                 {item.step === '04' && (
-                  <p className="text-sm leading-relaxed text-foreground">{item.desc}</p>
+                  <p className="text-sm leading-relaxed text-muted-foreground">{item.desc}</p>
                 )}
               </div>
             ))}
