@@ -214,20 +214,29 @@
 .animate-cloud-6 { animation: cloud-drift-6 60s ease-in-out infinite; }
 .animate-cloud-7 { animation: cloud-drift-7 75s ease-in-out infinite; }
 
-/* Gentle edge drift - small amplitude so clouds bob near the margins
-   and never travel across the centered text. */
-   @keyframes cloud-edge-a {
+/* Edge drift - visible movement, but bounded near the margins so clouds
+   never travel across the centered text. Left clouds drift inward/right,
+   right clouds drift inward/left, each with a little vertical bob. */
+   @keyframes cloud-edge-left-1 {
     0%, 100% { transform: translateX(0) translateY(0); }
-    50% { transform: translateX(5vw) translateY(-10px); }
+    50% { transform: translateX(9vw) translateY(-14px); }
   }
-  @keyframes cloud-edge-b {
+  @keyframes cloud-edge-left-2 {
+    0%, 100% { transform: translateX(2vw) translateY(6px); }
+    50% { transform: translateX(11vw) translateY(-8px); }
+  }
+  @keyframes cloud-edge-right-1 {
     0%, 100% { transform: translateX(0) translateY(0); }
-    50% { transform: translateX(-5vw) translateY(8px); }
+    50% { transform: translateX(-9vw) translateY(12px); }
   }
-  .animate-edge-left-1 { animation: cloud-edge-a 70s ease-in-out infinite; }
-  .animate-edge-left-2 { animation: cloud-edge-a 90s ease-in-out infinite; }
-  .animate-edge-right-1 { animation: cloud-edge-b 80s ease-in-out infinite; }
-  .animate-edge-right-2 { animation: cloud-edge-b 100s ease-in-out infinite; }
+  @keyframes cloud-edge-right-2 {
+    0%, 100% { transform: translateX(-2vw) translateY(-6px); }
+    50% { transform: translateX(-11vw) translateY(10px); }
+  }
+  .animate-edge-left-1 { animation: cloud-edge-left-1 34s ease-in-out infinite; }
+  .animate-edge-left-2 { animation: cloud-edge-left-2 42s ease-in-out infinite; }
+  .animate-edge-right-1 { animation: cloud-edge-right-1 38s ease-in-out infinite; }
+  .animate-edge-right-2 { animation: cloud-edge-right-2 46s ease-in-out infinite; }
 
 .cl-footerAction {
   display: none !important;
