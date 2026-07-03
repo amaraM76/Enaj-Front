@@ -2,7 +2,7 @@
 
 import { useId } from 'react'
 
-function Cloud({ className, style, width = 200 }: {
+export function Cloud({ className, style, width = 200 }: {
   className?: string
   style?: React.CSSProperties
   width?: number

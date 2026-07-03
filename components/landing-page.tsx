@@ -4,7 +4,7 @@ import { useEnaj } from '@/lib/enaj-context'
 import { EnajLogo } from '@/components/enaj-logo'
 import { Button } from '@/components/ui/button'
 import { Heart, ArrowRight, Check, Sparkles, MousePointer2, LogIn } from 'lucide-react'
-import { CloudBackground, SunRayCloud, SectionClouds } from '@/components/cloud-background'
+import { CloudBackground, Cloud, SunRayCloud, SectionClouds } from '@/components/cloud-background'
 import { FlyingLogoWithBag } from '@/components/flying-logo-with-bag'
 
 export function LandingPage() {
