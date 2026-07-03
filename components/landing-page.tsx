@@ -205,11 +205,11 @@ export function LandingPage() {
           <div className="mb-16 text-center">
             <h2 className="text-3xl font-bold text-foreground md:text-4xl text-balance">How enaJ Works</h2>
             <p className="mx-auto mt-4 max-w-2xl text-muted-foreground text-pretty">
-              Three simple steps to smarter, personalized shopping.
+              Four simple steps to smarter, personalized shopping.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
             {[
               {
                 step: '01',
@@ -219,10 +219,15 @@ export function LandingPage() {
               {
                 step: '02',
                 title: 'Install the Extension',
-                desc: 'Download the enaJ browser extension. While shopping on any website, just press one button and enaJ scans the product page for you.',
+                desc: '',
               },
               {
                 step: '03',
+                title: 'Browse the Marketplace',
+                desc: '',
+              },
+              {
+                step: '04',
                 title: 'Shop Smarter',
                 desc: 'See exactly which ingredients conflict with your health and why. Get personalized, shoppable product alternatives you can trust.',
               },
@@ -235,7 +240,27 @@ export function LandingPage() {
                   <span className="text-xl font-bold">{item.step}</span>
                 </div>
                 <h3 className="mb-2 text-lg font-semibold text-foreground">{item.title}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">{item.desc}</p>
+                {item.step === '01' && (
+                  <p className="text-sm leading-relaxed text-muted-foreground">{item.desc}</p>
+                )}
+                {item.step === '02' && (
+                  <p className="text-sm leading-relaxed text-muted-foreground">
+                    Download the enaJ browser extension from the{' '}
+                    <span className="font-medium text-foreground">Chrome Web Store</span>. While shopping on Amazon, Walmart, Target, Sephora, or Ulta, just press one button and enaJ scans the product page for you.{' '}
+                    <em>More stores coming soon.</em>
+                    <br /><br />
+                    Currently available on <span className="font-medium text-foreground">Chrome</span> only.{' '}
+                    <em>Safari coming soon.</em>
+                  </p>
+                )}
+                {item.step === '03' && (
+                  <p className="text-sm leading-relaxed text-muted-foreground">
+                    Browse our <span className="font-medium text-foreground">enaJ Marketplace</span> to discover products and instantly see how each one compares to your health profile — all in one place.
+                  </p>
+                )}
+                {item.step === '04' && (
+                  <p className="text-sm leading-relaxed text-muted-foreground">{item.desc}</p>
+                )}
               </div>
             ))}
           </div>
