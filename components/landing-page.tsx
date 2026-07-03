@@ -296,7 +296,7 @@ export function LandingPage() {
                 {condition}
               </span>
             ))}
-            <p className="mt-6 text-center text-muted-foreground">and many more.</p>
+            <p className="mt-6 text-center text-foreground w-full">and many more.</p>
           </div>
         </div>
       </section>
