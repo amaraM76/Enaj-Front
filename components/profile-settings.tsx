@@ -60,13 +60,6 @@ export function ProfileSettings() {
   const [cities, setCities] = useState<string[]>([])
   const [citiesLoading, setCitiesLoading] = useState(false)
 
-  const { signOut } = useClerk()
-  const { logout } = useEnaj()
-
-  const handleLogout = async () => {
-    await signOut({ redirectUrl: '/' })
-    logout()
-  }
 
 
   if (!profile) return null
@@ -508,27 +501,7 @@ export function ProfileSettings() {
               <Chrome className="h-4 w-4" />
               Add to Chrome
             </Button>
-            <Button variant="outline" className="border-border text-foreground hover:bg-accent gap-2">
-              <Download className="h-4 w-4" />
-              Other Browsers
-            </Button>
           </div>
-        </div>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="rounded-xl border border-border bg-card p-6">
-        <h2 className="mb-4 text-lg font-semibold text-card-foreground">
-          Quick Actions
-        </h2>
-        <div className="flex flex-col gap-2">
-          <button
-            onClick={handleLogout}
-            className="flex items-center justify-between rounded-lg px-4 py-3 text-left transition-colors hover:bg-accent"
-          >
-            <span className="text-sm text-foreground">Log Out</span>
-            <ChevronRight className="h-4 w-4 text-muted-foreground" />
-          </button>
         </div>
       </div>
     </div>
