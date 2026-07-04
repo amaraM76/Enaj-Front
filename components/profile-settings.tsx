@@ -6,6 +6,8 @@ import { api } from '@/lib/api'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useClerk } from '@clerk/nextjs'
+import { LogOut } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -57,6 +59,15 @@ export function ProfileSettings() {
   const [cityDropdownOpen, setCityDropdownOpen] = useState(false)
   const [cities, setCities] = useState<string[]>([])
   const [citiesLoading, setCitiesLoading] = useState(false)
+
+  const { signOut } = useClerk()
+  const { logout } = useEnaj()
+
+  const handleLogout = async () => {
+    await signOut()
+    logout()
+  }
+
 
   if (!profile) return null
 
@@ -512,7 +523,7 @@ export function ProfileSettings() {
         </h2>
         <div className="flex flex-col gap-2">
           <button
-            onClick={() => setCurrentStep('landing')}
+            onClick={handleLogout}
             className="flex items-center justify-between rounded-lg px-4 py-3 text-left transition-colors hover:bg-accent"
           >
             <span className="text-sm text-foreground">Log Out</span>
