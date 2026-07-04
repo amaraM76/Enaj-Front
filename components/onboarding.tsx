@@ -199,7 +199,7 @@ export function Onboarding() {
     try {
       await saveProfileWithClerk(userId, {
         location: location || `${selectedCity}, ${selectedState}`,
-        age: age ? Number(age) : undefined,
+        age: age || undefined,
         gender: gender || undefined,
         shoppingStores: shoppingStores || undefined,
         firstName: firstName || undefined,
@@ -276,7 +276,7 @@ export function Onboarding() {
     try {
       await saveProfileWithClerk(userId, {
         location: formattedLocation,
-        age: age ? Number(age) : undefined,
+        age: age || undefined,
         gender: gender || undefined,
         shoppingStores: shoppingStores || undefined,
         firstName: firstName || undefined,
@@ -1205,6 +1205,14 @@ export function Onboarding() {
                 <div className="rounded-xl border border-border bg-card p-5">
                   <p className="text-sm text-muted-foreground mb-3">Personal Information</p>
                   <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <p className="text-xs text-muted-foreground">First Name</p>
+                      <p className="text-sm font-medium text-card-foreground">{firstName || 'Not provided'}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Last Name</p>
+                      <p className="text-sm font-medium text-card-foreground">{lastName || 'Not provided'}</p>
+                    </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Location</p>
                       <p className="text-sm font-medium text-card-foreground">{location || 'Not provided'}</p>

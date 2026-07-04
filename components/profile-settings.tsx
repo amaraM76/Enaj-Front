@@ -33,8 +33,8 @@ import { Loader2 } from 'lucide-react'
 export function ProfileSettings() {
   const { profile, setProfile, addAilment, togglePreference, setCurrentStep, ailmentCategories, preferenceCategories, clerkUserId } =
     useEnaj()
-  const [firstName] = useState(profile?.firstName || '')
-  const [lastName] = useState(profile?.lastName || '')
+  const [firstName, setFirstName] = useState(profile?.firstName || '')
+  const [lastName, setLastName] = useState(profile?.lastName || '')
   const [email] = useState(profile?.email || '')
   const [location, setLocation] = useState(profile?.location || '')
   const [age, setAge] = useState(profile?.age || '')
@@ -89,6 +89,8 @@ export function ProfileSettings() {
       selectedCity && selectedState ? `${selectedCity}, ${selectedState}` : location
   
     const updatedFields = {
+      firstName,
+      lastName,
       location: formattedLocation,
       age: age ? Number(age) : undefined,
       gender,
@@ -144,21 +146,18 @@ export function ProfileSettings() {
             <Label className="text-foreground">First Name</Label>
             <Input
               value={firstName}
-              disabled
-              className="mt-1.5 bg-muted border-border text-muted-foreground cursor-not-allowed"
+              onChange={(e) => setFirstName(e.target.value)}
+              className="mt-1.5 bg-background border-border text-foreground"
             />
           </div>
           <div>
             <Label className="text-foreground">Last Name</Label>
             <Input
               value={lastName}
-              disabled
-              className="mt-1.5 bg-muted border-border text-muted-foreground cursor-not-allowed"
+              onChange={(e) => setLastName(e.target.value)}
+              className="mt-1.5 bg-background border-border text-foreground"
             />
           </div>
-          <p className="text-xs text-muted-foreground sm:col-span-2 -mt-2">
-            Your name is pulled from your Google account and cannot be changed here.
-          </p>
           <div>
             <Label htmlFor="settings-email" className="text-foreground">Email</Label>
             <div className="relative mt-1.5">
@@ -254,13 +253,23 @@ export function ProfileSettings() {
           </div>
           <div>
             <Label htmlFor="settings-age" className="text-foreground">Age</Label>
-            <Input
+            <select
               id="settings-age"
-              type="number"
               value={age}
               onChange={(e) => setAge(e.target.value)}
-              className="mt-1.5 bg-background border-border text-foreground"
-            />
+              className="mt-1.5 h-9 w-full rounded-md border border-border bg-background px-3 py-1 text-sm text-foreground"
+            >
+              <option value="">Select age range</option>
+              <option value="under-18">Under 18</option>
+              <option value="18-24">18 – 24</option>
+              <option value="25-34">25 – 34</option>
+              <option value="35-44">35 – 44</option>
+              <option value="45-54">45 – 54</option>
+              <option value="55-64">55 – 64</option>
+              <option value="65-74">65 - 74</option>
+              <option value="75+">75+</option>
+
+            </select>
           </div>
           <div>
             <Label htmlFor="settings-gender" className="text-foreground">Gender</Label>
