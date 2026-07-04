@@ -1408,7 +1408,7 @@ export function Onboarding() {
       {/* Footer Navigation */}
       {step !== 'welcome' && (
         <footer className="relative z-10 border-t border-border px-6 py-4" style={{ background: 'rgba(255,255,255,0.5)', backdropFilter: 'blur(12px)' }}>
-          <div className="relative mx-auto flex max-w-2xl items-center justify-between">
+          <div className="relative mx-auto flex w-full max-w-4xl items-center justify-between px-8">
             <Button variant="ghost" onClick={goBack} className="gap-2 text-muted-foreground hover:text-foreground">
               <ArrowLeft className="h-4 w-4" />
               Back
