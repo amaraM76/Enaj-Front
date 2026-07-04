@@ -69,6 +69,8 @@ export function Onboarding() {
   const { user: clerkUser } = useUser() 
   const [step, setStep] = useState<OnboardingStep>('welcome')
   const [location, setLocation] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [age, setAge] = useState('')
   const [gender, setGender] = useState('')
   const [shoppingStores, setShoppingStores] = useState('')
@@ -175,6 +177,8 @@ export function Onboarding() {
 
   const isProfileValid = () => {
     return (
+      firstName.trim() !== '' &&
+      lastName.trim() !== '' &&
       selectedState !== '' &&
       selectedCity !== '' &&
       age.trim() !== '' &&
@@ -198,6 +202,9 @@ export function Onboarding() {
         age: age ? Number(age) : undefined,
         gender: gender || undefined,
         shoppingStores: shoppingStores || undefined,
+        firstName: firstName || undefined,
+        lastName: lastName || undefined,
+        
       })
 
       await api.saveUserAilments(
@@ -229,8 +236,8 @@ export function Onboarding() {
         }))
   
       setProfile({
-        firstName: clerkUser?.firstName || '',
-        lastName: clerkUser?.lastName || '',
+        firstName: firstName,
+        lastName: lastName,
         email: clerkUser?.primaryEmailAddress?.emailAddress || '',
         location: location || `${selectedCity}, ${selectedState}`,
         age,
@@ -272,6 +279,8 @@ export function Onboarding() {
         age: age ? Number(age) : undefined,
         gender: gender || undefined,
         shoppingStores: shoppingStores || undefined,
+        firstName: firstName || undefined,
+        lastName: lastName || undefined,
       })
     
       goNext()
@@ -558,6 +567,31 @@ export function Onboarding() {
                 </div>
               </div>
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                
+                  <div>
+                  <Label htmlFor="firstName" className="text-foreground">
+                    First Name <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="firstName"
+                    placeholder="Your first name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    className="mt-1.5 bg-card border-border text-foreground placeholder:text-muted-foreground"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="lastName" className="text-foreground">
+                    Last Name <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="lastName"
+                    placeholder="Your last name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    className="mt-1.5 bg-card border-border text-foreground placeholder:text-muted-foreground"
+                  />
+                </div>
 
                 {/* State */}
                 <div>
@@ -641,16 +675,22 @@ export function Onboarding() {
                   <Label htmlFor="age" className="text-foreground">
                     Age <span className="text-destructive">*</span>
                   </Label>
-                  <Input
+                  <select
                     id="age"
-                    type="number"
-                    placeholder="Your age"
                     value={age}
                     onChange={(e) => setAge(e.target.value)}
-                    className="mt-1.5 bg-card border-border text-foreground placeholder:text-muted-foreground"
-                    min="1"
-                    max="120"
-                  />
+                    className="mt-1.5 h-9 w-full min-w-0 rounded-md border border-input bg-card px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none md:text-sm text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+                  >
+                    <option value="">Select age range</option>
+                    <option value="under-18">Under 18</option>
+                    <option value="18-24">18 – 24</option>
+                    <option value="25-34">25 – 34</option>
+                    <option value="35-44">35 – 44</option>
+                    <option value="45-54">45 – 54</option>
+                    <option value="55-64">55 – 64</option>
+                    <option value="65-74">75+</option>
+                  </select>
+
                 </div>
 
                 {/* Gender */}
