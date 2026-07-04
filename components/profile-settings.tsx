@@ -64,7 +64,7 @@ export function ProfileSettings() {
   const { logout } = useEnaj()
 
   const handleLogout = async () => {
-    await signOut()
+    await signOut({ redirectUrl: '/' })
     logout()
   }
 
