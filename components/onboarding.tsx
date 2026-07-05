@@ -25,7 +25,7 @@ import {
   Check,
   Heart,
   Leaf,
-
+  Shield,
   User,
   Sparkles,
   Download,
@@ -902,7 +902,7 @@ export function Onboarding() {
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex items-start gap-3">
                         <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10">
-                          <Sparkles className="h-5 w-5 text-primary" />
+                          <Shield className="h-5 w-5 text-primary" />
                         </div>
                         <div>
                           <div className="flex items-center gap-2 mb-1">
