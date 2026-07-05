@@ -410,12 +410,26 @@ export function Onboarding() {
                       <span className="text-sm font-medium text-card-foreground">Preferences</span>
                       <span className="ml-auto text-xs text-muted-foreground">{selectedPreferenceIds.size}</span>
                     </div>
+
+                    {/* Baseline card if selected */}
+                    {selectedPreferenceIds.has(baselineId) && (
+                      <div className="mb-3 rounded-lg bg-primary/10 p-2">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-primary/20 px-2.5 py-1 text-xs text-primary font-medium">
+                          <Sparkles className="h-3 w-3" />
+                          enaJ Non-Toxic Baseline
+                        </span>
+                        <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">
+                          Monitoring {BASELINE_COVERED_PREFS.size} commonly flagged toxic ingredients
+                        </p>
+                      </div>
+                    )}
+
                     {selectedPreferenceIds.size === 0 ? (
                       <p className="text-xs text-muted-foreground italic">No preferences selected yet</p>
                     ) : (
                       <div className="flex flex-col gap-2">
                         {preferenceCategories.flatMap((c) => c.preferences)
-                          .filter((p) => selectedPreferenceIds.has(p.id))
+                          .filter((p) => selectedPreferenceIds.has(p.id) && p.id !== baselineId)
                           .map((pref) => {
                             const linkedAilments = getAilmentsForPreference(pref.id, selectedAilmentIds, ailmentCategories)
                             return (
@@ -441,7 +455,6 @@ export function Onboarding() {
                     )}
                   </div>
                 )}
-
                 {/* Journal Section - Only show on journal step */}
                 {step === 'journal' && (
                   <div className="p-4">
@@ -968,16 +981,17 @@ export function Onboarding() {
                             return (
                               <div key={pref.id} className="relative">
                                 <div className="flex items-center gap-1">
-                                  <button
-                                    onClick={() => togglePreference(pref.id)}
-                                    className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm transition-colors ${
-                                      selected
-                                        ? 'bg-primary text-primary-foreground'
-                                        : baselineCovered
-                                        ? 'border border-primary/40 bg-primary/10 text-primary'
-                                        : 'border border-border bg-card text-card-foreground hover:bg-accent hover:text-accent-foreground'
-                                    } ${isLinked && selected ? 'ring-2 ring-primary/30' : ''}`}
-                                  >
+                                <button
+                                  onClick={() => { if (!baselineCovered) togglePreference(pref.id) }}
+                                  disabled={baselineCovered}
+                                  className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm transition-colors ${
+                                    selected
+                                      ? 'bg-primary text-primary-foreground'
+                                      : baselineCovered
+                                      ? 'border border-primary/40 bg-primary/10 text-primary opacity-70 cursor-not-allowed'
+                                      : 'border border-border bg-card text-card-foreground hover:bg-accent hover:text-accent-foreground'
+                                  } ${isLinked && selected ? 'ring-2 ring-primary/30' : ''}`}
+                                >
                                     {selected && <Check className="h-3.5 w-3.5" />}
                                     {baselineCovered && !selected && <Sparkles className="h-3 w-3 opacity-60" />}
                                     {pref.name}
