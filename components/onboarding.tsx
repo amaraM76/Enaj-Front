@@ -416,7 +416,7 @@ export function Onboarding() {
                     {selectedPreferenceIds.has(baselineId) && (
                       <div className="mb-3 rounded-lg bg-primary/10 p-2">
                         <span className="inline-flex items-center gap-1 rounded-full bg-primary/20 px-2.5 py-1 text-xs text-primary font-medium">
-                          <ShieldCheck className="h-3 w-3" />
+                          <Shield className="h-3 w-3" />
                           enaJ Non-Toxic Baseline
                         </span>
                         <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">
@@ -903,7 +903,7 @@ export function Onboarding() {
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex items-start gap-3">
                         <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10">
-                          <ShieldCheck className="h-5 w-5 text-primary" />
+                          <Shield className="h-5 w-5 text-primary" />
                         </div>
                         <div>
                           <div className="flex items-center gap-2 mb-1">
@@ -1205,7 +1205,7 @@ export function Onboarding() {
             <div>
               <div className="mb-8 flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
-                  <Sparkles className="h-5 w-5 text-primary" />
+                  <EnajLogo size="md" />
                 </div>
                 <div>
                   <h2 className="text-2xl font-bold text-foreground">Review Your Profile</h2>
@@ -1289,7 +1289,7 @@ export function Onboarding() {
                     <div className="flex flex-wrap gap-2">
                       {selectedPreferenceIds.has(baselineId) && (
                         <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 px-3 py-1.5 text-sm text-primary font-medium">
-                          <ShieldCheck className="h-3 w-3" />
+                          <Shield className="h-3 w-3" />
                           enaJ Non-Toxic Baseline
                         </span>
                       )}

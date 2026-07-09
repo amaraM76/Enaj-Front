@@ -34,7 +34,7 @@ import {
   Undo2,
   Info,
   Sparkles,
-  ShieldCheck,
+  Shield,
 } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { getPreferenceEducation } from '@/lib/preference-education'
@@ -55,7 +55,7 @@ function BaselineMonitorCard({ categories }: { categories: { label: string; item
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3">
           <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10">
-            <ShieldCheck className="h-4 w-4 text-primary" />
+            <Shield className="h-4 w-4 text-primary" />
           </div>
           <div>
             <div className="flex items-center gap-2 mb-0.5">
@@ -487,39 +487,42 @@ export function AilmentMonitor() {
                     <div key={category.id}>
                       <p className="mb-2 text-sm font-semibold text-muted-foreground">{category.label}</p>
                       <div className="flex flex-wrap gap-2">
-                        {category.preferences.map((pref) => {
-                          const currentPrefs = pendingPrefs ?? new Set(profile.selectedPreferences)
-                          const isSelected = currentPrefs.has(pref.id)
-                          const isBaselineId = pref.id === baselineId
-                          const isCoveredByBaseline = currentPrefs.has(baselineId) && BASELINE_COVERED_PREFS.has(pref.name) && !isBaselineId
-                          const isAlreadyActive = isBaselineId && currentPrefs.has(baselineId)
-                          return (
-                            <button
-                              key={pref.id}
-                              disabled={isCoveredByBaseline || isAlreadyActive}
-                              onClick={() => {
-                                if (isCoveredByBaseline || isAlreadyActive) return
-                                setPendingPrefs((prev) => {
-                                  const next = new Set(prev ?? profile.selectedPreferences)
-                                  if (next.has(pref.id)) next.delete(pref.id)
-                                  else next.add(pref.id)
-                                  return next
-                                })
-                              }}
-                              className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm transition-colors ${
-                                isSelected || isAlreadyActive
-                                  ? 'bg-primary/10 text-primary cursor-default'
-                                  : isCoveredByBaseline
-                                  ? 'border border-primary/30 bg-primary/10 text-primary/60 cursor-not-allowed opacity-60'
-                                  : 'border border-border bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground'
-                              }`}
-                            >
-                              {(isSelected || isAlreadyActive) && <Check className="h-3 w-3" />}
-                              {isCoveredByBaseline && !isSelected && <Sparkles className="h-3 w-3" />}
-                              {pref.name}
-                            </button>
-                          )
-                        })}
+                      {category.preferences.map((pref) => {
+                        const currentPrefs = pendingPrefs ?? new Set(profile.selectedPreferences)
+                        const alreadySelected = profile.selectedPreferences.includes(pref.id)  // ← direct profile check
+                        const isPending = pendingPrefs?.has(pref.id) && !alreadySelected       // ← only newly added
+                        const isBaselineId = pref.id === baselineId
+                        const isCoveredByBaseline = currentPrefs.has(baselineId) && BASELINE_COVERED_PREFS.has(pref.name) && !isBaselineId
+
+                        return (
+                          <button
+                            key={pref.id}
+                            disabled={alreadySelected || isCoveredByBaseline}
+                            onClick={() => {
+                              if (alreadySelected || isCoveredByBaseline) return
+                              setPendingPrefs((prev) => {
+                                const next = new Set(prev ?? profile.selectedPreferences)
+                                if (next.has(pref.id)) next.delete(pref.id)
+                                else next.add(pref.id)
+                                return next
+                              })
+                            }}
+                            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm transition-colors ${
+                              alreadySelected
+                                ? 'bg-primary/10 text-primary cursor-default'
+                                : isPending
+                                ? 'bg-primary text-primary-foreground'
+                                : isCoveredByBaseline
+                                ? 'border border-primary/30 bg-primary/10 text-primary/60 cursor-not-allowed opacity-60'
+                                : 'border border-border bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                            }`}
+                          >
+                            {(alreadySelected || isPending) && <Check className="h-3 w-3" />}
+                            {isCoveredByBaseline && !alreadySelected && <Sparkles className="h-3 w-3" />}
+                            {pref.name}
+                          </button>
+                        )
+                      })}
                       </div>
                     </div>
                   ))}
@@ -528,13 +531,11 @@ export function AilmentMonitor() {
                   <Button
                     onClick={() => {
                       if (pendingPrefs) {
-                        // Apply all changes at once
                         const current = new Set(profile.selectedPreferences)
-                        // Add new ones
                         for (const id of pendingPrefs) {
                           if (!current.has(id)) togglePreference(id)
                         }
-                        // Remove unchecked ones
+                        // Remove unchecked ones that were previously selected
                         for (const id of current) {
                           if (!pendingPrefs.has(id)) togglePreference(id)
                         }
