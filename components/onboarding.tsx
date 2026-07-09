@@ -1291,7 +1291,11 @@ export function Onboarding() {
                         </span>
                       )}
                       {preferenceCategories.flatMap((c) => c.preferences)
-                        .filter((p) => selectedPreferenceIds.has(p.id))
+                        .filter((p) => 
+                          selectedPreferenceIds.has(p.id) && 
+                          p.name !== 'Enaj Non-Toxic Baseline' &&
+                          p.name !== 'enaJ Non-Toxic Baseline'
+                        )
                         .map((p) => (
                           <span
                             key={p.id}
