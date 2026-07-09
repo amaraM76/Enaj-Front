@@ -22,7 +22,7 @@ import {
   Sparkles,
 } from 'lucide-react'
 import Link from 'next/link'
-// import { HealthJournal } from '@/components/health-journal'
+import { HealthJournal } from '@/components/health-journal'
 
 type DashboardTab = 'monitor' | 'journal' | 'scanner' | 'saved' | 'settings'
 
@@ -57,7 +57,7 @@ export function Dashboard() {
           <div>
             <span className="text-lg font-bold text-foreground">enaJ</span>
             <p className="text-xs text-muted-foreground hidden sm:block">
-              Welcome back, {profile.firstName || 'there'}
+              Welcome, {profile.firstName || 'there'}
             </p>
           </div>
         </div>
@@ -165,7 +165,7 @@ export function Dashboard() {
       <main className="relative z-10 flex-1 px-4 py-6 lg:px-8 lg:py-8">
         <div className="mx-auto max-w-5xl">
           {activeTab === 'monitor' && <AilmentMonitor />}
-          {/* {activeTab === 'journal' && <HealthJournal />} */}
+          {activeTab === 'journal' && <HealthJournal />}
           {activeTab === 'scanner' && <ProductScanner />}
           {activeTab === 'saved' && <SavedItems />}
           {activeTab === 'settings' && <ProfileSettings />}

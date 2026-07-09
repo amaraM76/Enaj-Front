@@ -4,6 +4,8 @@ import { createContext, useContext, useState, useRef, useCallback, useEffect, ty
 import { useAuth, useUser } from '@clerk/nextjs'
 import type { Ailment, AilmentCategory, FlaggedIngredient, PreferenceCategory, Product } from './enaj-data'
 import { api } from './api'
+import type { JournalCategory } from './journal-data'
+
 
 export interface UserProfile {
   id?: string
@@ -32,6 +34,7 @@ interface EnajContextType {
   setCurrentStep: (step: 'landing' | 'login' | 'onboarding' | 'dashboard') => void
   clerkUserId: string | null
   isClerkLoaded: boolean
+  journalCategories: JournalCategory[]
   ailmentCategories: AilmentCategory[]
   preferenceCategories: PreferenceCategory[]
   loading: boolean
@@ -44,8 +47,8 @@ interface EnajContextType {
   removeIngredientFromAilment: (ailmentId: string, ingredientId: string) => void
   addIngredientToAilment: (ailmentId: string, ingredient: FlaggedIngredient) => void
   togglePreference: (preferenceId: string) => void
-  // addJournalEntry: (conditionId: string) => void
-  // removeJournalEntry: (conditionId: string) => void
+  addJournalEntry: (conditionId: string) => void
+  removeJournalEntry: (conditionId: string) => void
   saveProduct: (product: Product) => void
   unsaveProduct: (productId: string) => void
   isProductSaved: (productId: string) => boolean
@@ -68,6 +71,7 @@ export function EnajProvider({ children }: { children: ReactNode }) {
   const currentStepRef = useRef(currentStep)
   useEffect(() => { currentStepRef.current = currentStep }, [currentStep])
   const [ailmentCategories, setAilmentCategories] = useState<AilmentCategory[]>([])
+  const [journalCategories, setJournalCategories] = useState<JournalCategory[]>([])
   const [preferenceCategories, setPreferenceCategories] = useState<PreferenceCategory[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -136,13 +140,16 @@ export function EnajProvider({ children }: { children: ReactNode }) {
     let cancelled = false
     async function init() {
       try {
-        const [ailRes, prefRes] = await Promise.all([
+        const [ailRes, prefRes, journalRes] = await Promise.all([
           api.getAilments(),
           api.getPreferences(),
+          api.getJournalConditions(),
         ])
         if (!cancelled) {
           setAilmentCategories(ailRes.categories)
           setPreferenceCategories(prefRes.categories)
+          setJournalCategories(journalRes.categories)
+
         }
       } catch {
         // API unavailable — app still works with empty arrays
@@ -320,34 +327,33 @@ export function EnajProvider({ children }: { children: ReactNode }) {
     })
   }, [clerkUserId])
 
-  // const addJournalEntry = useCallback((conditionId: string) => {
-  //   setProfileState((prev) => {
-  //     if (!prev) return prev
-  //     if (prev.journalEntries.includes(conditionId)) return prev
-  //     const updated = {
-  //       ...prev,
-  //       journalEntries: [...prev.journalEntries, conditionId],
-  //     }
-  //     if (clerkUserId) {
-  //       api.saveUserJournal(clerkUserId, updated.journalEntries).catch(() => {})
-  //     }
-  //     return updated
-  //   })
-  // }, [clerkUserId])
-
-  // const removeJournalEntry = useCallback((conditionId: string) => {
-  //   setProfileState((prev) => {
-  //     if (!prev) return prev
-  //     const updated = {
-  //       ...prev,
-  //       journalEntries: prev.journalEntries.filter((id) => id !== conditionId),
-  //     }
-  //     if (clerkUserId) {
-  //       api.saveUserJournal(clerkUserId, updated.journalEntries).catch(() => {})
-  //     }
-  //     return updated
-  //   })
-  // }, [clerkUserId])
+  const addJournalEntry = useCallback((conditionId: string) => {
+    setProfileState((prev) => {
+      if (!prev) return prev
+      if (prev.journalEntries.includes(conditionId)) return prev
+      const updated = {
+        ...prev,
+        journalEntries: [...prev.journalEntries, conditionId],
+      }
+      if (clerkUserId) {
+        api.saveUserJournal(clerkUserId, updated.journalEntries).catch(() => {})
+      }
+      return updated
+    })
+  }, [clerkUserId])
+  const removeJournalEntry = useCallback((conditionId: string) => {
+    setProfileState((prev) => {
+      if (!prev) return prev
+      const updated = {
+        ...prev,
+        journalEntries: prev.journalEntries.filter((id) => id !== conditionId),
+      }
+      if (clerkUserId) {
+        api.saveUserJournal(clerkUserId, updated.journalEntries).catch(() => {})
+      }
+      return updated
+    })
+  }, [clerkUserId])
 
   const saveProduct = useCallback((product: Product & { slug?: string }) => {
     const productSlug = product.slug || product.id
@@ -427,8 +433,9 @@ export function EnajProvider({ children }: { children: ReactNode }) {
         saveProfileWithClerk,
         addAilment,
         removeAilment,
-        // addJournalEntry,
-        // removeJournalEntry,
+        journalCategories,
+        addJournalEntry,
+        removeJournalEntry,
         removeIngredientFromAilment,
         addIngredientToAilment,
         togglePreference,

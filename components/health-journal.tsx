@@ -38,7 +38,7 @@ import {
   Pill,
   ChevronRight,
 } from 'lucide-react'
-import { journalCategories, getAllJournalConditions, type JournalCondition } from '@/lib/journal-data'
+import type { JournalCondition } from '@/lib/journal-data'
 import { useEnaj } from '@/lib/enaj-context'
 
 
@@ -54,8 +54,7 @@ const JOURNAL_ICONS: Record<string, React.ComponentType<{ className?: string }>>
 }
 
 export function HealthJournal() {
-  // For now, we'll use local state. In a real app, this would sync with the backend
-  const { profile, addJournalEntry, removeJournalEntry } = useEnaj()
+  const { profile, journalCategories, addJournalEntry, removeJournalEntry } = useEnaj()
   const selectedConditions = new Set(profile?.journalEntries ?? [])
   const [addDialogOpen, setAddDialogOpen] = useState(false)
   const [pendingConditions, setPendingConditions] = useState<string[]>([])
@@ -64,7 +63,7 @@ export function HealthJournal() {
   const [pendingRemove, setPendingRemove] = useState<{ id: string; name: string } | null>(null)
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null)
 
-  const allConditions = getAllJournalConditions()
+  const allConditions = journalCategories.flatMap((c) => c.conditions)
   const activeConditions = allConditions.filter((c) => selectedConditions.has(c.id))
 
 

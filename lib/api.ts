@@ -4,6 +4,7 @@ import type {
   Product,
   ScanResult,
 } from '@/lib/enaj-data'
+import type { JournalCategory } from '@/lib/journal-data'
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ||
@@ -125,9 +126,12 @@ export interface SaveUserPreferencesResponse {
   saved: boolean
 }
 
-// export interface SaveUserJournalResponse {
-//   saved: boolean
-// }
+export interface GetJournalResponse {
+  categories: JournalCategory[]
+}
+export interface SaveUserJournalResponse {
+  saved: boolean
+}
 
 export interface GetProductsResponse {
   products: Product[]
@@ -245,18 +249,20 @@ export const api = {
     })
   },
 
-    // // -- Journal ---------------------------------------------------------------
-
-    // saveUserJournal(
-    //   userId: string,
-    //   journalSlugs: string[]
-    // ): Promise<SaveUserJournalResponse> {
-    //   return request<SaveUserJournalResponse>('/api/user-journal', {
-    //     method: 'POST',
-    //     body: { userId, journalSlugs },
-    //   })
-    // },
-  // -- Products --------------------------------------------------------------
+  // -- Journal -----------------------------------------------------------
+  getJournalConditions(): Promise<GetJournalResponse> {
+    return request<GetJournalResponse>('/api/journal')
+  },
+  saveUserJournal(
+    userId: string,
+    journalSlugs: string[],
+    customEntry?: string
+  ): Promise<SaveUserJournalResponse> {
+    return request<SaveUserJournalResponse>('/api/user-journal', {
+      method: 'POST',
+      body: { userId, journalSlugs, ...(customEntry ? { customEntry } : {}) },
+    })
+  },
 
   getProducts(
     category: string,
