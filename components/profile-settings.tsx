@@ -28,7 +28,6 @@ import {
   ChevronRight,
   Chrome,
   Sparkles,
-  ShieldCheck,
 } from 'lucide-react'
 import { US_STATES } from '@/lib/us-cities'
 import { Loader2 } from 'lucide-react'
