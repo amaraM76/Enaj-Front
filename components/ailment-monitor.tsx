@@ -34,6 +34,7 @@ import {
   Undo2,
   Info,
   Sparkles,
+  ShieldCheck,
 } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { getPreferenceEducation } from '@/lib/preference-education'
@@ -54,7 +55,7 @@ function BaselineMonitorCard({ categories }: { categories: { label: string; item
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3">
           <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10">
-            <Sparkles className="h-4 w-4 text-primary" />
+            <ShieldCheck className="h-4 w-4 text-primary" />
           </div>
           <div>
             <div className="flex items-center gap-2 mb-0.5">
@@ -247,9 +248,9 @@ export function AilmentMonitor() {
             <Heart className="h-4 w-4 text-primary" />
             <span className="text-sm font-medium text-primary">{profile.selectedAilments.length} conditions</span>
           </div>
-          <div className="flex items-center gap-2 rounded-lg bg-amber-500/10 px-4 py-2">
-            <Eye className="h-4 w-4 text-amber-600" />
-            <span className="text-sm font-medium text-amber-600">{totalMonitored} items monitored</span>
+          <div className="flex items-center gap-2 rounded-lg bg-primary/10 px-4 py-2">
+            <Eye className="h-4 w-4 text-primary" />
+            <span className="text-sm font-medium text-primary">{totalMonitored} items monitored</span>
           </div>
           <div className="flex items-center gap-2 rounded-lg bg-emerald-500/10 px-4 py-2">
             <Leaf className="h-4 w-4 text-emerald-600" />
@@ -490,7 +491,7 @@ export function AilmentMonitor() {
                           const isSelected = currentPrefs.has(pref.id)
                           const isBaselineId = pref.id === baselineId
                           const isCoveredByBaseline = currentPrefs.has(baselineId) && BASELINE_COVERED_PREFS.has(pref.name) && !isBaselineId
-                          const isAlreadyActive = isBaselineId && profile.selectedPreferences.includes(baselineId)
+                          const isAlreadyActive = isBaselineId && currentPrefs.has(baselineId)
                           return (
                             <button
                               key={pref.id}
