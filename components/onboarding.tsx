@@ -39,7 +39,7 @@ import {
   ShieldCheck,
 } from 'lucide-react'
 import { US_STATES } from '@/lib/us-cities'
-import { journalCategories, type JournalCondition } from '@/lib/journal-data'
+import type { JournalCondition } from '@/lib/journal-data'
 import { Thermometer, Activity, Eye, Zap, Wind, Pill } from 'lucide-react'
 
 type OnboardingStep = 'welcome' | 'profile' | 'ailments' | 'preferences' | 'journal' | 'review' | 'extension'
@@ -65,7 +65,7 @@ const PERIMENOPAUSE_ID = 'perimenopause'
 const STEPS: OnboardingStep[] = ['welcome', 'profile', 'ailments', 'preferences', 'journal', 'review', 'extension']
 
 export function Onboarding() {
-  const { setProfile, setCurrentStep, ailmentCategories, preferenceCategories, fetchUserProfile, saveProfileWithClerk, profile } = useEnaj()
+  const { setProfile, setCurrentStep, ailmentCategories, preferenceCategories, journalCategories, fetchUserProfile, saveProfileWithClerk, profile } = useEnaj()
   const { isSignedIn, userId } = useAuth()
   const { user: clerkUser } = useUser() 
   const [step, setStep] = useState<OnboardingStep>('welcome')
@@ -225,7 +225,7 @@ export function Onboarding() {
       }
   
       await api.saveUserPreferences(dbUserId, prefsArray)
-      // await api.saveUserJournal(dbUserId, Array.from(selectedJournalIds))
+      await api.saveUserJournal(dbUserId, Array.from(selectedJournalIds))
       await fetchUserProfile(dbUserId)
   
       const allAilments = ailmentCategories.flatMap((c) => c.ailments)
