@@ -322,10 +322,7 @@ export function Onboarding() {
 
   // Get set of linked preferences for display purposes
   const linkedPrefs = getLinkedPreferences(selectedAilmentIds, ailmentCategories)
-  const baselinePref = preferenceCategories
-    .flatMap((c) => c.preferences)
-    .find((p) => p.id === 'enaJ-baseline' || p.name === 'enaJ Non-Toxic Baseline')
-  const baselineId = baselinePref?.id ?? 'enaJ-baseline'
+  const baselineId = 'enaj-baseline'
 
   const BASELINE_COVERED_PREFS = new Set([
     'Parabens', 'Phthalates', 'Synthetic Fragrance', 'Oxybenzone', 'BPA & BPS',

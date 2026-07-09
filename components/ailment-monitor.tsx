@@ -130,11 +130,8 @@ export function AilmentMonitor() {
   } | null>(null)
 
   if (!profile) return null
-
-  const baselinePref = preferenceCategories
-    .flatMap((c) => c.preferences)
-    .find((p) => p.name === 'enaJ Non-Toxic Baseline')
-  const baselineId = baselinePref?.id ?? 'enaJ-baseline'
+  
+  const baselineId = 'enaj-baseline'
   const baselineActive = profile.selectedPreferences.includes(baselineId)
 
   const totalMonitored = profile.selectedAilments.reduce(
