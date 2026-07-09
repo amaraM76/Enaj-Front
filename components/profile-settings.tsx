@@ -431,7 +431,7 @@ export function ProfileSettings() {
               </div>
             </div>
             <button
-              onClick={() => togglePreference(baselineId)}
+              onClick={() => togglePreference('enaj-baseline')}
               role="switch"
               aria-checked={profile.selectedPreferences.includes(baselineId)}
               className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
