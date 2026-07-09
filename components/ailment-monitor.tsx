@@ -112,6 +112,7 @@ export function AilmentMonitor() {
   const [addPreferenceDialogOpen, setAddPreferenceDialogOpen] = useState(false)
   const [pendingAilments, setPendingAilments] = useState<string[]>([])
   const [pendingPrefChanges, setPendingPrefChanges] = useState(false)
+  const [pendingPrefs, setPendingPrefs] = useState<Set<string> | null>(null)
 
   const [pendingDelete, setPendingDelete] = useState<{
     ailmentId: string
@@ -461,10 +462,15 @@ export function AilmentMonitor() {
             </h2>
             <Dialog open={addPreferenceDialogOpen} onOpenChange={(open) => {
               setAddPreferenceDialogOpen(open)
-              if (!open) setPendingPrefChanges(false)
+              if (!open) {
+                setPendingPrefs(null)
+                setPendingPrefChanges(false)
+              }
             }}>
               <DialogTrigger asChild>
-                <Button size="sm" variant="outline" className="border-border text-foreground hover:bg-accent gap-1">
+                <Button size="sm" variant="outline" className="border-border text-foreground hover:bg-accent gap-1"
+                  onClick={() => setPendingPrefs(new Set(profile.selectedPreferences))}
+                >
                   <Plus className="h-4 w-4" />
                   Edit
                 </Button>
@@ -480,28 +486,34 @@ export function AilmentMonitor() {
                       <p className="mb-2 text-sm font-semibold text-muted-foreground">{category.label}</p>
                       <div className="flex flex-wrap gap-2">
                         {category.preferences.map((pref) => {
-                          const isSelected = profile.selectedPreferences.includes(pref.id)
+                          const currentPrefs = pendingPrefs ?? new Set(profile.selectedPreferences)
+                          const isSelected = currentPrefs.has(pref.id)
                           const isBaselineId = pref.id === baselineId
-                          const isCoveredByBaseline = profile.selectedPreferences.includes(baselineId) && BASELINE_COVERED_PREFS.has(pref.name) && !isBaselineId
+                          const isCoveredByBaseline = currentPrefs.has(baselineId) && BASELINE_COVERED_PREFS.has(pref.name) && !isBaselineId
+                          const isAlreadyActive = isBaselineId && profile.selectedPreferences.includes(baselineId)
                           return (
                             <button
                               key={pref.id}
-                              disabled={isCoveredByBaseline}
+                              disabled={isCoveredByBaseline || isAlreadyActive}
                               onClick={() => {
-                                if (isCoveredByBaseline) return
-                                togglePreference(pref.id)
-                                setPendingPrefChanges(true)
+                                if (isCoveredByBaseline || isAlreadyActive) return
+                                setPendingPrefs((prev) => {
+                                  const next = new Set(prev ?? profile.selectedPreferences)
+                                  if (next.has(pref.id)) next.delete(pref.id)
+                                  else next.add(pref.id)
+                                  return next
+                                })
                               }}
                               className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm transition-colors ${
-                                isSelected
-                                  ? 'bg-emerald-500/20 text-emerald-700'
+                                isSelected || isAlreadyActive
+                                  ? 'bg-primary/10 text-primary cursor-default'
                                   : isCoveredByBaseline
                                   ? 'border border-primary/30 bg-primary/10 text-primary/60 cursor-not-allowed opacity-60'
                                   : 'border border-border bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                               }`}
                             >
-                              {isSelected && <Check className="h-3 w-3" />}
-                              {isCoveredByBaseline && <Sparkles className="h-3 w-3" />}
+                              {(isSelected || isAlreadyActive) && <Check className="h-3 w-3" />}
+                              {isCoveredByBaseline && !isSelected && <Sparkles className="h-3 w-3" />}
                               {pref.name}
                             </button>
                           )
@@ -512,7 +524,22 @@ export function AilmentMonitor() {
                 </div>
                 <DialogFooter className="mt-4">
                   <Button
-                    onClick={() => setAddPreferenceDialogOpen(false)}
+                    onClick={() => {
+                      if (pendingPrefs) {
+                        // Apply all changes at once
+                        const current = new Set(profile.selectedPreferences)
+                        // Add new ones
+                        for (const id of pendingPrefs) {
+                          if (!current.has(id)) togglePreference(id)
+                        }
+                        // Remove unchecked ones
+                        for (const id of current) {
+                          if (!pendingPrefs.has(id)) togglePreference(id)
+                        }
+                      }
+                      setPendingPrefs(null)
+                      setAddPreferenceDialogOpen(false)
+                    }}
                     className="bg-primary text-primary-foreground hover:bg-primary/90"
                   >
                     Done
