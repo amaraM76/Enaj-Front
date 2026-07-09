@@ -40,7 +40,7 @@ import { getPreferenceEducation } from '@/lib/preference-education'
 
 const BASELINE_CATEGORIES = [
   { label: 'Synthetic Chemicals & Preservatives', items: ['Parabens', 'Formaldehyde', 'Phthalates', 'Triclosan', 'Sulfates (SLS/SLES)', 'Oxybenzone', 'PFAS'] },
-  { label: 'Food Additives', items: ['High Fructose Corn Syrup', 'Artificial Colors & Dyes', 'Artificial Sweeteners', 'MSG', 'Sodium Nitrite/Nitrate', 'Carrageenan', 'Trans Fats'] },
+  { label: 'Food Additives', items: ['High Fructose Corn Syrup', 'Artificial Colors & Dyes', 'Artificial Sweeteners', 'MSG', 'Sodium Nitrite/Nitrate', 'Carrageenan', 'Trans Fats', 'Gums & Fillers'] },
   { label: 'Seed Oils', items: ['Canola Oil', 'Soybean Oil', 'Corn Oil', 'Cottonseed Oil', 'Sunflower Oil'] },
   { label: 'Heavy Metals & Toxins', items: ['Lead', 'Mercury', 'Aluminum', 'BPA/BPS'] },
   { label: 'Microplastics', items: ['Polyethylene Beads', 'Polypropylene Beads', 'Microplastic Particles'] },

@@ -73,7 +73,7 @@ export function ProfileSettings() {
     'Parabens', 'Phthalates', 'Synthetic Fragrance', 'Oxybenzone', 'BPA & BPS',
     'Sulfates', 'Formaldehyde', 'Triclosan', 'Nitrates/Nitrites', 'Artificial Flavors',
     'Food Dyes', 'MSG', 'Artificial Sweeteners', 'High Fructose Corn Syrup',
-    'Trans Fats', 'Seed Oils', 'PFAS (Forever Chemicals)', 'Microplastics',
+    'Trans Fats', 'Seed Oils', 'PFAS (Forever Chemicals)', 'Microplastics', 'Gums & Fillers',
   ])
 
   useEffect(() => {
