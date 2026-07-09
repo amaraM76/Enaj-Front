@@ -36,6 +36,7 @@ import {
   X,
   HelpCircle,
   Loader2,
+  ShieldCheck,
 } from 'lucide-react'
 import { US_STATES } from '@/lib/us-cities'
 import { journalCategories, type JournalCondition } from '@/lib/journal-data'
@@ -415,7 +416,7 @@ export function Onboarding() {
                     {selectedPreferenceIds.has(baselineId) && (
                       <div className="mb-3 rounded-lg bg-primary/10 p-2">
                         <span className="inline-flex items-center gap-1 rounded-full bg-primary/20 px-2.5 py-1 text-xs text-primary font-medium">
-                          <Sparkles className="h-3 w-3" />
+                          <ShieldCheck className="h-3 w-3" />
                           enaJ Non-Toxic Baseline
                         </span>
                         <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">
@@ -902,7 +903,7 @@ export function Onboarding() {
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex items-start gap-3">
                         <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10">
-                          <Shield className="h-5 w-5 text-primary" />
+                          <ShieldCheck className="h-5 w-5 text-primary" />
                         </div>
                         <div>
                           <div className="flex items-center gap-2 mb-1">
@@ -1288,7 +1289,7 @@ export function Onboarding() {
                     <div className="flex flex-wrap gap-2">
                       {selectedPreferenceIds.has(baselineId) && (
                         <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 px-3 py-1.5 text-sm text-primary font-medium">
-                          <Sparkles className="h-3 w-3" />
+                          <ShieldCheck className="h-3 w-3" />
                           enaJ Non-Toxic Baseline
                         </span>
                       )}

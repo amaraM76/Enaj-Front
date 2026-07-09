@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useClerk } from '@clerk/nextjs'
-import { LogOut } from 'lucide-react'
+import { LogOut, ShieldCheck } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -28,6 +28,7 @@ import {
   ChevronRight,
   Chrome,
   Sparkles,
+  ShieldCheck,
 } from 'lucide-react'
 import { US_STATES } from '@/lib/us-cities'
 import { Loader2 } from 'lucide-react'
@@ -418,7 +419,7 @@ export function ProfileSettings() {
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-start gap-3">
               <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                <Sparkles className="h-4 w-4 text-primary" />
+                <ShieldCheck className="h-4 w-4 text-primary" />
               </div>
               <div>
                 <div className="flex items-center gap-2 mb-0.5">

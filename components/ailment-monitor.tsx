@@ -248,7 +248,7 @@ export function AilmentMonitor() {
             <Heart className="h-4 w-4 text-primary" />
             <span className="text-sm font-medium text-primary">{profile.selectedAilments.length} conditions</span>
           </div>
-          <div className="flex items-center gap-2 rounded-lg bg-primary/10 px-4 py-2">
+          <div className="flex items-center gap-2 rounded-lg bg-white px-4 py-2">
             <Eye className="h-4 w-4 text-primary" />
             <span className="text-sm font-medium text-primary">{totalMonitored} items monitored</span>
           </div>
@@ -463,14 +463,15 @@ export function AilmentMonitor() {
             </h2>
             <Dialog open={addPreferenceDialogOpen} onOpenChange={(open) => {
               setAddPreferenceDialogOpen(open)
-              if (!open) {
+              if (open) {
+                setPendingPrefs(new Set(profile.selectedPreferences))
+              } else {
                 setPendingPrefs(null)
                 setPendingPrefChanges(false)
               }
             }}>
               <DialogTrigger asChild>
                 <Button size="sm" variant="outline" className="border-border text-foreground hover:bg-accent gap-1"
-                  onClick={() => setPendingPrefs(new Set(profile.selectedPreferences))}
                 >
                   <Plus className="h-4 w-4" />
                   Edit
