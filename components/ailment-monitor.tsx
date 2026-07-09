@@ -139,6 +139,12 @@ export function AilmentMonitor() {
     (sum, sa) => sum + sa.activeIngredients.length,
     0
   )
+  const BASELINE_COVERED_PREFS = new Set([
+    'Parabens', 'Phthalates', 'Synthetic Fragrance', 'Oxybenzone', 'BPA & BPS',
+    'Sulfates', 'Formaldehyde', 'Triclosan', 'Nitrates/Nitrites', 'Artificial Flavors',
+    'Food Dyes', 'MSG', 'Artificial Sweeteners', 'High Fructose Corn Syrup',
+    'Trans Fats', 'Seed Oils', 'PFAS (Forever Chemicals)', 'Microplastics', 'Gums & Fillers',
+  ])
 
   const handleIngredientDeleteClick = (ailmentId: string, ingredientId: string, ingredientName: string) => {
     setPendingDelete({ ailmentId, ingredientId, ingredientName })
@@ -475,20 +481,27 @@ export function AilmentMonitor() {
                       <div className="flex flex-wrap gap-2">
                         {category.preferences.map((pref) => {
                           const isSelected = profile.selectedPreferences.includes(pref.id)
+                          const isBaselineId = pref.id === baselineId
+                          const isCoveredByBaseline = profile.selectedPreferences.includes(baselineId) && BASELINE_COVERED_PREFS.has(pref.name) && !isBaselineId
                           return (
                             <button
                               key={pref.id}
+                              disabled={isCoveredByBaseline}
                               onClick={() => {
+                                if (isCoveredByBaseline) return
                                 togglePreference(pref.id)
                                 setPendingPrefChanges(true)
                               }}
                               className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm transition-colors ${
                                 isSelected
                                   ? 'bg-emerald-500/20 text-emerald-700'
+                                  : isCoveredByBaseline
+                                  ? 'border border-primary/30 bg-primary/10 text-primary/60 cursor-not-allowed opacity-60'
                                   : 'border border-border bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                               }`}
                             >
                               {isSelected && <Check className="h-3 w-3" />}
+                              {isCoveredByBaseline && <Sparkles className="h-3 w-3" />}
                               {pref.name}
                             </button>
                           )
@@ -510,12 +523,10 @@ export function AilmentMonitor() {
           </div>
 
           <div className="p-5 flex flex-col gap-4">
-            {/* Enaj Non-Toxic Baseline card */}
             {baselineActive && (
               <BaselineMonitorCard categories={BASELINE_CATEGORIES} />
             )}
 
-            {/* All other preferences */}
             {profile.selectedPreferences.filter((id) => id !== baselineId).length === 0 && !baselineActive ? (
               <div className="flex flex-col items-center py-6 text-center">
                 <Leaf className="mb-3 h-8 w-8 text-muted-foreground" />
@@ -562,3 +573,5 @@ export function AilmentMonitor() {
     </TooltipProvider>
   )
 }
+
+        
