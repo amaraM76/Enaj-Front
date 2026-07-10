@@ -116,12 +116,7 @@ export async function PUT(
     if (body.shoppingStores !== undefined) updateData.shoppingStores = body.shoppingStores
     
     if (body.age !== undefined) {
-      const parsedAge =
-        typeof body.age === 'number' ? body.age : parseInt(body.age, 10)
-    
-      if (!Number.isNaN(parsedAge)) {
-        updateData.age = parsedAge
-      }
+      updateData.age = String(body.age)
     }
     
     if (body.gender !== undefined) {
