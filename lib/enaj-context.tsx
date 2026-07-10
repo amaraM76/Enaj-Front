@@ -119,8 +119,6 @@ export function EnajProvider({ children }: { children: ReactNode }) {
       body: JSON.stringify({
         ...data,
         email: clerkUser?.primaryEmailAddress?.emailAddress,
-        firstName: clerkUser?.firstName,
-        lastName: clerkUser?.lastName,
       }),
     })
   
