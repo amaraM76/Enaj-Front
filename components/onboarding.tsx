@@ -1162,33 +1162,6 @@ export function Onboarding() {
                 })}
               </div>
 
-              {/* Selected summary */}
-              {selectedJournalIds.size > 0 && (
-                <div className="mt-6 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4">
-                  <p className="text-sm font-medium text-foreground mb-2">
-                    Currently tracking ({selectedJournalIds.size}):
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {journalCategories.flatMap((c) => c.conditions)
-                      .filter((c) => selectedJournalIds.has(c.id))
-                      .map((c) => (
-                        <span
-                          key={c.id}
-                          className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-3 py-1.5 text-sm text-amber-700"
-                        >
-                          {c.name}
-                          <button
-                            onClick={() => toggleJournalCondition(c.id)}
-                            className="ml-0.5 hover:text-amber-900"
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
-                        </span>
-                      ))}
-                  </div>
-                </div>
-              )}
-
               {/* Skip hint */}
               <div className="mt-6 rounded-xl border border-dashed border-border bg-muted/30 p-4">
                 <p className="text-sm text-muted-foreground leading-relaxed">

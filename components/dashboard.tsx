@@ -20,6 +20,7 @@ import {
   LogOut,
   BookOpen,
   Sparkles,
+  NotebookPen,
 } from 'lucide-react'
 import Link from 'next/link'
 import { HealthJournal } from '@/components/health-journal'
@@ -28,7 +29,7 @@ type DashboardTab = 'monitor' | 'journal' | 'scanner' | 'saved' | 'settings'
 
 const NAV_ITEMS: { id: DashboardTab; label: string; icon: React.ReactNode }[] = [
   { id: 'monitor', label: 'My Health', icon: <Heart className="h-5 w-5" /> },
-  { id: 'journal', label: 'Journal', icon: <Sparkles className="h-5 w-5" /> },
+  { id: 'journal', label: 'Journal', icon: <NotebookPen className="h-5 w-5" /> },
   { id: 'scanner', label: 'Shop', icon: <ShoppingCart className="h-5 w-5" /> },
   { id: 'saved', label: 'Saved Items', icon: <Bookmark className="h-5 w-5" /> },
   { id: 'settings', label: 'Settings', icon: <Settings className="h-5 w-5" /> },
