@@ -28,6 +28,7 @@ import {
   Shield,
   User,
   Sparkles,
+  NotebookPen,
   Download,
   Chrome,
   Monitor,
@@ -460,7 +461,7 @@ export function Onboarding() {
                 {step === 'journal' && (
                   <div className="p-4">
                     <div className="flex items-center gap-2 mb-3">
-                      <Sparkles className="h-4 w-4 text-amber-600" />
+                      <NotebookPen className="h-4 w-4 text-amber-600" />
                       <span className="text-sm font-medium text-card-foreground">Journal</span>
                       <span className="ml-auto text-xs text-muted-foreground">{selectedJournalIds.size}</span>
                     </div>
@@ -1095,7 +1096,7 @@ export function Onboarding() {
             <div>
               <div className="mb-4 flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10">
-                  <Sparkles className="h-5 w-5 text-amber-600" />
+                  <NotebookPen className="h-5 w-5 text-amber-600" />
                 </div>
                 <div>
                   <h2 className="text-2xl font-bold text-foreground">Weekly Health Journal</h2>
@@ -1307,7 +1308,7 @@ export function Onboarding() {
                             key={c.id}
                             className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-3 py-1.5 text-sm text-amber-700"
                           >
-                            <Sparkles className="h-3 w-3" />
+                            <NotebookPen className="h-3 w-3" />
                             {c.name}
                           </span>
                         ))}
