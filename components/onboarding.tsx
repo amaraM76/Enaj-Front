@@ -38,6 +38,8 @@ import {
   HelpCircle,
   Loader2,
   ShieldCheck,
+  Venus,
+  ScanEye,
 } from 'lucide-react'
 import { US_STATES } from '@/lib/us-cities'
 import { Thermometer, Activity, Eye, Zap, Wind, Pill } from 'lucide-react'
@@ -49,12 +51,27 @@ type OnboardingStep = 'welcome' | 'profile' | 'ailments' | 'preferences' | 'jour
 // Only these two preferences show the endocrine disruptor info icon
 const ENDOCRINE_INFO_PREFS = new Set(['no-pfas', 'no-triclosan'])
 
+
+const StomachIcon = ({ className }: { className?: string }) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M11 3v5c0 1.5.8 2.6 2.3 3.4C15.7 12.5 17 14.3 17 17a4 4 0 1 1-8 0c0-2.3 1-3.9 2.4-5.1C12.4 11 13 9.9 13 8V3" />
+  </svg>
+);
+
 // Map icon names to components for journal categories
 const JOURNAL_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   Thermometer,
-  Heart,
-  Activity,
-  Eye,
+  Venus,
+  StomachIcon,
+  ScanEye,
   Zap,
   Wind,
   Pill,
@@ -1333,9 +1350,13 @@ export function Onboarding() {
               <h1 className="text-3xl font-bold text-foreground md:text-4xl text-balance">
                 Get the enaJ Browser Extension
               </h1>
-              <p className="mt-4 max-w-lg text-muted-foreground text-pretty leading-relaxed">
-                Your profile is all set. Now install the enaJ browser extension to activate your guardian angel while you shop. It works on any website.
-              </p>
+                <p className="mt-4 max-w-lg text-muted-foreground text-pretty leading-relaxed">
+                  Your profile is ready! Install the enaJ browser extension to receive personalized ingredient insights while you shop on supported retailers.
+                  <br />
+                  <span className="mt-2 block text-sm italic">
+                    Currently supports Amazon, Sephora, Ulta, Walmart, and Target. More retailers coming soon.
+                  </span>
+                </p>
 
               {/* How the extension works */}
               <div className="mt-8 w-full max-w-lg">
@@ -1347,8 +1368,8 @@ export function Onboarding() {
                         1
                       </div>
                       <div>
-                        <p className="font-medium text-card-foreground">Browse any shopping site</p>
-                        <p className="text-sm text-muted-foreground">Sephora, Target, Walmart, and any other shopping site</p>
+                        <p className="font-medium text-card-foreground">Shop as you normally do</p>
+                        <p className="text-sm text-muted-foreground">Visit any supported retailer and open an item's page.</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
@@ -1358,7 +1379,7 @@ export function Onboarding() {
                       <div>
                         <p className="font-medium text-card-foreground">Press the enaJ button</p>
                         <p className="text-sm text-muted-foreground">
-                          The enaJ icon sits in the bottom corner of your screen. One tap and it scans the product page for you.
+                          Click the enaJ icon while viewing a product page to instantly analyze its ingredients.
                         </p>
                       </div>
                     </div>
@@ -1367,9 +1388,13 @@ export function Onboarding() {
                         3
                       </div>
                       <div>
-                        <p className="font-medium text-card-foreground">Get instant results</p>
+                        <p className="font-medium text-card-foreground">Get personalized results</p>
                         <p className="text-sm text-muted-foreground">
-                          See if the product is safe for you. If not, enaJ suggests better alternatives right there.
+                            Instantly see whether a product matches your health profile, learn why ingredients are flagged, and save products to your enaJ profile.
+                            <br />
+                              <span className="mt-1 block italic text-xs">
+                                Personalized product recommendations coming soon.
+                              </span>
                         </p>
                       </div>
                     </div>
@@ -1378,7 +1403,7 @@ export function Onboarding() {
               </div>
 
               {/* Download Buttons */}
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-8 flex flex-col items-center gap-3">
                 <Button
                   size="lg"
                   className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 px-6"
@@ -1386,19 +1411,11 @@ export function Onboarding() {
                   <Chrome className="h-5 w-5" />
                   Add to Chrome
                 </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-border text-foreground hover:bg-accent gap-2 px-6"
-                >
-                  <Monitor className="h-5 w-5" />
-                  Other Browsers
-                </Button>
-              </div>
 
-              <p className="mt-4 text-xs text-muted-foreground">
-                Available for Chrome
-              </p>
+                <p className="text-center text-xs text-muted-foreground italic">
+                  Other browser extensions coming soon.
+                </p>
+              </div>
             </div>
           )}
         </div>

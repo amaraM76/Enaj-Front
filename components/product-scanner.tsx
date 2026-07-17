@@ -34,7 +34,6 @@ import {
   ShoppingCart,
   Bookmark,
   BookmarkCheck,
-  ExternalLink,
   Loader2,
   Search,
   X,
@@ -596,20 +595,31 @@ export function ProductScanner() {
               </div>
             </div>
 
-            <div className="mt-4 flex gap-3">
-              <Button className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2" asChild>
-                <a href={scanResult.product.url} target="_blank" rel="noopener noreferrer">
-                  <ExternalLink className="h-4 w-4" />
-                  Shop This Product
-                </a>
-              </Button>
+            <div className="mt-4">
               {(() => {
                 const slug = getProductSlug(scanResult.product as Product & { slug?: string })
                 const saved = isProductSaved(slug)
+
                 return (
-                  <Button variant="outline" onClick={() => saved ? unsaveProduct(slug) : saveProduct(scanResult.product)} className={`border-border gap-2 ${saved ? 'bg-primary/10 text-primary border-primary/30' : 'text-foreground hover:bg-accent'}`}>
-                    {saved ? <BookmarkCheck className="h-4 w-4" /> : <Bookmark className="h-4 w-4" />}
-                    {saved ? 'Saved' : 'Save Product'}
+                  <Button
+                    onClick={() =>
+                      saved
+                        ? unsaveProduct(slug)
+                        : saveProduct(scanResult.product)
+                    }
+                    className={`gap-2 ${
+                      saved
+                        ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200"
+                        : "bg-primary text-primary-foreground hover:bg-primary/90"
+                    }`}
+                  >
+                    {saved ? (
+                      <BookmarkCheck className="h-4 w-4" />
+                    ) : (
+                      <Bookmark className="h-4 w-4" />
+                    )}
+
+                    {saved ? "Saved" : "Save Product"}
                   </Button>
                 )
               })()}
@@ -718,30 +728,70 @@ export function ProductScanner() {
           {scanResult.alternatives.length > 0 && !scanResult.isRecommended && (
             <div>
               <h2 className="mb-4 text-lg font-semibold text-foreground">Recommended Alternatives</h2>
+              <p className="mt-2 mb-4 text-sm italic text-muted-foreground">
+                Our enaJ angels are working hard to bring you an even bigger list of personalized recommendations soon.
+              </p>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {scanResult.alternatives.map((alt: Product & { slug?: string }) => {
                   const altSlug = getProductSlug(alt)
                   const saved = isProductSaved(altSlug)
+
                   return (
-                    <div key={alt.id} className="rounded-xl border border-border bg-card p-4 flex flex-col">
+                    <div
+                      key={alt.id}
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => performScan(alt)}
+                      onKeyDown={(event) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                          event.preventDefault()
+                          performScan(alt)
+                        }
+                      }}
+                      className="group flex cursor-pointer flex-col rounded-xl border border-border bg-card p-4 text-left transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg"
+                    >
                       <div className="mb-3 flex h-28 items-center justify-center rounded-lg bg-muted">
-                        <CheckCircle2 className="h-8 w-8 text-secondary" />
+                        <CheckCircle2 className="h-8 w-8 text-secondary transition-transform group-hover:scale-105" />
                       </div>
-                      <p className="text-xs font-medium text-primary">{alt.brand}</p>
-                      <h3 className="mt-1 text-sm font-semibold text-card-foreground leading-snug flex-1">{alt.name}</h3>
-                      <p className="mt-1 text-sm font-bold text-card-foreground">{alt.price}</p>
-                      <div className="mt-3 flex gap-2">
-                        <Button size="sm" className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 gap-1.5" asChild>
-                          <a href={alt.url} target="_blank" rel="noopener noreferrer">
-                            <ExternalLink className="h-3.5 w-3.5" />
-                            Shop Now
-                          </a>
-                        </Button>
-                        <Button size="sm" variant="outline" onClick={() => saved ? unsaveProduct(altSlug) : saveProduct(alt)} className={`border-border gap-1.5 ${saved ? 'bg-primary/10 text-primary border-primary/30' : 'text-foreground hover:bg-accent'}`}>
-                          {saved ? <BookmarkCheck className="h-3.5 w-3.5" /> : <Bookmark className="h-3.5 w-3.5" />}
-                          {saved ? 'Saved' : 'Save'}
-                        </Button>
-                      </div>
+
+                      <p className="text-xs font-medium text-primary">
+                        {alt.brand}
+                      </p>
+
+                      <h3 className="mt-1 flex-1 text-sm font-semibold leading-snug text-card-foreground">
+                        {alt.name}
+                      </h3>
+
+                      <p className="mt-1 text-sm font-bold text-card-foreground">
+                        {alt.price}
+                      </p>
+
+                      <Button
+                        type="button"
+                        size="sm"
+                        onClick={(event) => {
+                          event.stopPropagation()
+
+                          if (saved) {
+                            unsaveProduct(altSlug)
+                          } else {
+                            saveProduct(alt)
+                          }
+                        }}
+                        className={`mt-3 w-full gap-1.5 ${
+                          saved
+                            ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
+                            : 'bg-primary text-primary-foreground hover:bg-primary/90'
+                        }`}
+                      >
+                        {saved ? (
+                          <BookmarkCheck className="h-3.5 w-3.5" />
+                        ) : (
+                          <Bookmark className="h-3.5 w-3.5" />
+                        )}
+
+                        {saved ? 'Saved' : 'Save Product'}
+                      </Button>
                     </div>
                   )
                 })}

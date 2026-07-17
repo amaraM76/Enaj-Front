@@ -37,11 +37,14 @@ import {
   Brain,
   ScanEye,
   NotebookPen,
+  Eye,
+  Venus,
+  Pill,
 } from "lucide-react";
 import type { JournalCondition } from "@/lib/journal-data";
 import { useEnaj } from "@/lib/enaj-context";
 
-const IntestinesIcon = ({ className }: { className?: string }) => (
+const StomachIcon = ({ className }: { className?: string }) => (
   <svg
     className={className}
     viewBox="0 0 24 24"
@@ -51,40 +54,21 @@ const IntestinesIcon = ({ className }: { className?: string }) => (
     strokeLinecap="round"
     strokeLinejoin="round"
   >
-    <path d="M6 4 C6 4 4 4 4 6 C4 8 6 8 6 10 C6 12 4 12 4 14 C4 16 6 16 6 18 C6 20 4 20 4 20" />
-    <path d="M6 4 C6 4 10 4 10 7 C10 10 7 10 7 12 C7 14 10 14 10 16 C10 18 8 19 8 20" />
-    <path d="M10 7 C10 7 14 7 14 10 C14 13 11 13 11 15 C11 17 14 17 14 19 C14 20 12 20 12 20" />
-    <path d="M14 10 C14 10 18 10 18 13 C18 16 15 16 15 18 C15 20 17 20 17 20" />
+    <path d="M11 3v5c0 1.5.8 2.6 2.3 3.4C15.7 12.5 17 14.3 17 17a4 4 0 1 1-8 0c0-2.3 1-3.9 2.4-5.1C12.4 11 13 9.9 13 8V3" />
   </svg>
 );
 
-const BreastIcon = ({ className }: { className?: string }) => (
-  <svg
-    className={className}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M3 18 C3 18 4 10 8 8 C10 7 12 8 12 8 C12 8 14 7 16 8 C20 10 21 18 21 18" />
-    <path d="M12 8 C12 8 12 12 12 14" />
-  </svg>
-);
 
 const CATEGORY_ICONS: Record<
   string,
   React.ComponentType<{ className?: string }>
 > = {
-  digestive: IntestinesIcon,
-  "womens-health": BreastIcon,
+  digestive: StomachIcon,
+  "womens-health": Venus,
   "skin-eye": ScanEye,
-  neurological: Brain,
   pain: Zap,
-  respiratory: Wind,
-  allergies: AlertCircle,
-  recovery: Heart,
+  allergies: Wind,
+  recovery: Pill,
   general: Thermometer,
 };
 
@@ -451,7 +435,7 @@ export function HealthJournal() {
           </span>
         </div>
         <div className="flex items-center gap-2 rounded-lg bg-primary/10 px-4 py-2">
-          <ShieldCheck className="h-4 w-4 text-primary" />
+          <Eye className="h-4 w-4 text-primary" />
           <span className="text-sm font-medium text-primary">
             {totalMonitoredIngredients} ingredients monitored
           </span>

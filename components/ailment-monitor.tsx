@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useEnaj } from '@/lib/enaj-context'
 import { getLinkedPreferences } from '@/lib/enaj-data'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -46,6 +47,43 @@ const BASELINE_CATEGORIES = [
   { label: 'Heavy Metals & Toxins', items: ['Lead', 'Mercury', 'Aluminum', 'BPA/BPS'] },
   { label: 'Microplastics', items: ['Polyethylene Beads', 'Polypropylene Beads', 'Microplastic Particles'] },
 ]
+
+const preferenceSlugMap: Record<string, string> = {
+  "dairy": "dairy-free", 
+  "gluten": "gluten-free", 
+  "soy": "soy-free", 
+  "nuts": "nut-free", 
+  "synthetic fragrance": "no-fragrance", 
+  "parabens": "no-parabens", 
+  "sulfates": "no-sulfates", 
+  "silicones": "no-silicones", 
+  "vegan beauty": "vegan", 
+  "cruelty-free": "cruelty-free", 
+  "msg": "no-msg", 
+  "food dyes": "no-food-dyes", 
+  "artificial flavors": "no-artificial-flavors", 
+  "natural flavors": "no-natural-flavors", 
+  "artificial sugar": "no-artificial-sugar", 
+  "high fructose corn syrup": "no-high-fructose-corn-syrup", 
+  "trans fats": "no-trans-fats", 
+  "seed oils": "no-seed-oils", 
+  "palm oil": "no-palm-oil", 
+  "pfas (forever chemicals)": "no-pfas", 
+  "microplastics": "no-microplastics", 
+  "formaldehyde": "no-formaldehyde", 
+  "triclosan": "no-triclosan", 
+  "oxybenzone": "no-oxybenzone", 
+  "phthalates": "no-phthalates", 
+  "bpa & bps": "no-bpa-bps", 
+  "nitrates/nitrites": "no-nitrates", 
+  "carrageenan": "no-carrageenan", 
+  "citric acid": "no-citric-acid", 
+  "gums & fillers": "no-gums-fillers", 
+  "alcohol in skin products": "no-alcohol-skin", 
+  "bleached fabrics": "no-bleached-fabrics", 
+  "eco-friendly packaging": "no-eco-packaging",
+}
+
 
 function BaselineMonitorCard({ categories }: { categories: { label: string; items: string[] }[] }) {
   const [expanded, setExpanded] = useState(false)
@@ -454,89 +492,141 @@ export function AilmentMonitor() {
         {/* Your Preferences */}
         <div className="rounded-xl border border-border bg-card">
           <div className="flex items-center justify-between border-b border-border px-5 py-4">
-            <h2 className="text-lg font-semibold text-card-foreground flex items-center gap-2">
+            <h2 className="flex items-center gap-2 text-lg font-semibold text-card-foreground">
               <Leaf className="h-5 w-5 text-emerald-600" />
               Your Preferences
             </h2>
-            <Dialog open={addPreferenceDialogOpen} onOpenChange={(open) => {
-              setAddPreferenceDialogOpen(open)
-              if (open) {
-                setPendingPrefs(new Set(profile.selectedPreferences))
-              } else {
-                setPendingPrefs(null)
-                setPendingPrefChanges(false)
-              }
-            }}>
+
+            <Dialog
+              open={addPreferenceDialogOpen}
+              onOpenChange={(open) => {
+                setAddPreferenceDialogOpen(open)
+
+                if (open) {
+                  setPendingPrefs(new Set(profile.selectedPreferences))
+                } else {
+                  setPendingPrefs(null)
+                  setPendingPrefChanges(false)
+                }
+              }}
+            >
               <DialogTrigger asChild>
-                <Button size="sm" variant="outline" className="border-border text-foreground hover:bg-accent gap-1"
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="gap-1 border-border text-foreground hover:bg-accent"
                 >
                   <Plus className="h-4 w-4" />
                   Edit
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-h-[80vh] overflow-y-auto bg-card border-border">
+
+              <DialogContent className="max-h-[80vh] overflow-y-auto border-border bg-card">
                 <DialogHeader>
-                  <DialogTitle className="text-card-foreground">Edit Preferences</DialogTitle>
-                  <DialogDescription className="text-muted-foreground">Select which preferences to apply when scanning products.</DialogDescription>
+                  <DialogTitle className="text-card-foreground">
+                    Edit Preferences
+                  </DialogTitle>
+
+                  <DialogDescription className="text-muted-foreground">
+                    Select which preferences to apply when scanning products.
+                  </DialogDescription>
                 </DialogHeader>
+
                 <div className="flex flex-col gap-4 pt-2">
                   {preferenceCategories.map((category) => (
                     <div key={category.id}>
-                      <p className="mb-2 text-sm font-semibold text-muted-foreground">{category.label}</p>
-                      <div className="flex flex-wrap gap-2">
-                      {category.preferences.map((pref) => {
-                        const currentPrefs = pendingPrefs ?? new Set(profile.selectedPreferences)
-                        const alreadySelected = profile.selectedPreferences.includes(pref.id)  // ← direct profile check
-                        const isPending = pendingPrefs?.has(pref.id) && !alreadySelected       // ← only newly added
-                        const isBaselineId = pref.id === baselineId
-                        const isCoveredByBaseline = currentPrefs.has(baselineId) && BASELINE_COVERED_PREFS.has(pref.name) && !isBaselineId
+                      <p className="mb-2 text-sm font-semibold text-muted-foreground">
+                        {category.label}
+                      </p>
 
-                        return (
-                          <button
-                            key={pref.id}
-                            disabled={alreadySelected || isCoveredByBaseline}
-                            onClick={() => {
-                              if (alreadySelected || isCoveredByBaseline) return
-                              setPendingPrefs((prev) => {
-                                const next = new Set(prev ?? profile.selectedPreferences)
-                                if (next.has(pref.id)) next.delete(pref.id)
-                                else next.add(pref.id)
-                                return next
-                              })
-                            }}
-                            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm transition-colors ${
-                              alreadySelected
-                                ? 'bg-primary/10 text-primary cursor-default'
-                                : isPending
-                                ? 'bg-primary text-primary-foreground'
-                                : isCoveredByBaseline
-                                ? 'border border-primary/30 bg-primary/10 text-primary/60 cursor-not-allowed opacity-60'
-                                : 'border border-border bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground'
-                            }`}
-                          >
-                            {(alreadySelected || isPending) && <Check className="h-3 w-3" />}
-                            {isCoveredByBaseline && !alreadySelected && <Sparkles className="h-3 w-3" />}
-                            {pref.name}
-                          </button>
-                        )
-                      })}
+                      <div className="flex flex-wrap gap-2">
+                        {category.preferences.map((pref) => {
+                          const currentPrefs =
+                            pendingPrefs ?? new Set(profile.selectedPreferences)
+
+                          const alreadySelected =
+                            profile.selectedPreferences.includes(pref.id)
+
+                          const isPending =
+                            pendingPrefs?.has(pref.id) && !alreadySelected
+
+                          const isBaselineId = pref.id === baselineId
+
+                          const isCoveredByBaseline =
+                            currentPrefs.has(baselineId) &&
+                            BASELINE_COVERED_PREFS.has(pref.name) &&
+                            !isBaselineId
+
+                          return (
+                            <button
+                              key={pref.id}
+                              type="button"
+                              disabled={alreadySelected || isCoveredByBaseline}
+                              onClick={() => {
+                                if (alreadySelected || isCoveredByBaseline) return
+
+                                setPendingPrefs((previous) => {
+                                  const next = new Set(
+                                    previous ?? profile.selectedPreferences
+                                  )
+
+                                  if (next.has(pref.id)) {
+                                    next.delete(pref.id)
+                                  } else {
+                                    next.add(pref.id)
+                                  }
+
+                                  return next
+                                })
+                              }}
+                              className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm transition-colors ${
+                                alreadySelected
+                                  ? 'cursor-default bg-primary/10 text-primary'
+                                  : isPending
+                                    ? 'bg-primary text-primary-foreground'
+                                    : isCoveredByBaseline
+                                      ? 'cursor-not-allowed border border-primary/30 bg-primary/10 text-primary/60 opacity-60'
+                                      : 'border border-border bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                              }`}
+                            >
+                              {(alreadySelected || isPending) && (
+                                <Check className="h-3 w-3" />
+                              )}
+
+                              {isCoveredByBaseline && !alreadySelected && (
+                                <Sparkles className="h-3 w-3" />
+                              )}
+
+                              {pref.name}
+                            </button>
+                          )
+                        })}
                       </div>
                     </div>
                   ))}
                 </div>
+
                 <DialogFooter className="mt-4">
                   <Button
                     onClick={() => {
                       if (pendingPrefs) {
-                        const current = new Set(profile.selectedPreferences)
+                        const currentPreferences = new Set(
+                          profile.selectedPreferences
+                        )
+
                         for (const id of pendingPrefs) {
-                          if (!current.has(id)) togglePreference(id)
+                          if (!currentPreferences.has(id)) {
+                            togglePreference(id)
+                          }
                         }
-                        // Remove unchecked ones that were previously selected
-                        for (const id of current) {
-                          if (!pendingPrefs.has(id)) togglePreference(id)
+
+                        for (const id of currentPreferences) {
+                          if (!pendingPrefs.has(id)) {
+                            togglePreference(id)
+                          }
                         }
                       }
+
                       setPendingPrefs(null)
                       setAddPreferenceDialogOpen(false)
                     }}
@@ -549,44 +639,92 @@ export function AilmentMonitor() {
             </Dialog>
           </div>
 
-          <div className="p-5 flex flex-col gap-4">
+          <div className="flex flex-col gap-4 p-5">
             {baselineActive && (
               <BaselineMonitorCard categories={BASELINE_CATEGORIES} />
             )}
 
-            {profile.selectedPreferences.filter((id) => id !== baselineId).length === 0 && !baselineActive ? (
+            {profile.selectedPreferences.filter((id) => id !== baselineId)
+              .length === 0 && !baselineActive ? (
               <div className="flex flex-col items-center py-6 text-center">
                 <Leaf className="mb-3 h-8 w-8 text-muted-foreground" />
-                <p className="text-muted-foreground">No preferences set yet.</p>
+                <p className="text-muted-foreground">
+                  No preferences set yet.
+                </p>
               </div>
             ) : (
               <div className="flex flex-wrap gap-2">
                 {profile.selectedPreferences
-                  .filter((id) => id !== baselineId && !linkedPrefs.has(id))
+                  .filter(
+                    (id) => id !== baselineId && !linkedPrefs.has(id)
+                  )
                   .map((prefId) => {
-                    const pref = preferenceCategories.flatMap((c) => c.preferences).find((p) => p.id === prefId)
+                    const pref = preferenceCategories
+                      .flatMap((category) => category.preferences)
+                      .find((preference) => preference.id === prefId)
+
                     const prefName = pref?.name || prefId
                     const prefEducation = getPreferenceEducation(prefId)
+
+                    const prefSlug =
+                      preferenceSlugMap[
+                        prefName.toLowerCase() as keyof typeof preferenceSlugMap
+                      ] ||
+                      `no-${prefName
+                        .toLowerCase()
+                        .replace(/[^a-z0-9]+/g, '-')
+                        .replace(/^-+|-+$/g, '')}`
+
                     return (
                       <Tooltip key={prefId}>
                         <TooltipTrigger asChild>
                           <button
-                            onClick={() => setPendingPrefRemove({ prefId, prefName })}
+                            type="button"
+                            onClick={() =>
+                              setPendingPrefRemove({
+                                prefId,
+                                prefName,
+                              })
+                            }
                             className="group inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1.5 text-sm text-emerald-700 transition-colors hover:bg-destructive/10 hover:text-destructive"
                           >
                             <Leaf className="h-3 w-3" />
                             {prefName}
+
                             <X className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
-                            <Info className="h-3 w-3 opacity-50 group-hover:opacity-0" />
+
+                            <Info className="h-3 w-3 opacity-50 transition-opacity group-hover:opacity-0" />
                           </button>
                         </TooltipTrigger>
-                        <TooltipContent className="max-w-sm bg-popover text-popover-foreground border-border p-3" side="top">
+
+                        <TooltipContent
+                          side="top"
+                          className="max-w-sm border-border bg-popover p-3 text-popover-foreground"
+                        >
                           {prefEducation ? (
-                            <p className="text-xs leading-relaxed">{prefEducation.whatItIs.slice(0, 200)}{prefEducation.whatItIs.length > 200 ? '...' : ''}</p>
+                            <p className="text-xs leading-relaxed">
+                              {prefEducation.whatItIs}
+                            </p>
                           ) : (
-                            <p className="text-xs">Products containing {prefName.toLowerCase()} ingredients will be flagged.</p>
+                            <p className="text-xs leading-relaxed">
+                              Products containing{' '}
+                              {prefName.toLowerCase()} ingredients will be
+                              flagged.
+                            </p>
                           )}
-                          <p className="mt-2 text-xs text-muted-foreground italic">Click to remove from preferences</p>
+
+                          <Link
+                            href={`/education/${prefSlug}`}
+                            onClick={(event) => event.stopPropagation()}
+                            className="mt-3 block text-xs font-medium text-primary hover:underline"
+                          >
+                            Learn why →
+                          </Link>
+
+                          <p className="mt-2 text-xs italic text-muted-foreground">
+                            Click the preference to remove it from your
+                            profile.
+                          </p>
                         </TooltipContent>
                       </Tooltip>
                     )
@@ -595,7 +733,6 @@ export function AilmentMonitor() {
             )}
           </div>
         </div>
-
       </div>
     </TooltipProvider>
   )
