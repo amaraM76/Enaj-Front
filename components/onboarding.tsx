@@ -30,7 +30,6 @@ import {
   Sparkles,
   Download,
   Chrome,
-  Monitor,
   MessageSquarePlus,
   Info,
   X,
@@ -1301,33 +1300,10 @@ export function Onboarding() {
                     <Chrome className="h-5 w-5" />
                     Add to Chrome — Free
                   </Button>
-                  <Button
-                    variant="outline"
-                    className="mt-3 w-full gap-2 border-border text-foreground hover:bg-accent"
-                  >
-                    <Monitor className="h-4 w-4" />
-                    Other Browsers
-                  </Button>
 
-                  {/* Clear per-browser availability instead of one vague line */}
-                  <div className="mt-6">
-                    <p className="text-xs font-medium text-muted-foreground">Browser availability</p>
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                        <Check className="h-3 w-3" />
-                        Chrome
-                      </span>
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
-                        Edge · Soon
-                      </span>
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
-                        Firefox · Soon
-                      </span>
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
-                        Safari · Soon
-                      </span>
-                    </div>
-                  </div>
+                  <p className="mt-4 text-xs font-medium text-muted-foreground">
+                    More browsers coming soon.
+                  </p>
                 </div>
 
                 {/* How it works panel */}
@@ -1339,8 +1315,13 @@ export function Onboarding() {
                         1
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-card-foreground">Browse any shopping site</p>
-                        <p className="text-sm text-muted-foreground">Sephora, Target, Walmart, and more.</p>
+                        <p className="text-sm font-medium text-card-foreground">Shop like you normally do</p>
+                        <p className="text-sm text-muted-foreground">
+                          Open any product page on Amazon, Sephora, Ulta, Walmart, or Target.
+                          <span className="mt-1 block text-xs italic text-muted-foreground/80">
+                            More supported websites coming soon.
+                          </span>
+                        </p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
@@ -1348,9 +1329,9 @@ export function Onboarding() {
                         2
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-card-foreground">Press the Enaj button</p>
+                        <p className="text-sm font-medium text-card-foreground">Open the Enaj extension</p>
                         <p className="text-sm text-muted-foreground">
-                          One tap on the icon scans the product page for you.
+                          Click the Enaj icon while viewing a product page to instantly analyze its ingredients.
                         </p>
                       </div>
                     </div>
@@ -1361,7 +1342,10 @@ export function Onboarding() {
                       <div>
                         <p className="text-sm font-medium text-card-foreground">Get instant results</p>
                         <p className="text-sm text-muted-foreground">
-                          See if it&apos;s safe for you — or get better alternatives.
+                          See whether a product matches your health profile, learn why ingredients are flagged, and save products to your Enaj profile.
+                          <span className="mt-1 block text-xs italic text-muted-foreground/80">
+                            Personalized product recommendations coming soon.
+                          </span>
                         </p>
                       </div>
                     </div>
