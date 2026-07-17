@@ -1273,82 +1273,101 @@ export function Onboarding() {
 
           {/* Browser Extension Step */}
           {step === 'extension' && (
-            <div className="flex flex-col items-center text-center">
-              <div
-                className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl"
-                style={{ background: 'linear-gradient(135deg, rgba(10,186,181,0.15) 0%, rgba(168,213,186,0.25) 100%)' }}
-              >
-                <Download className="h-10 w-10 text-primary" />
+            <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center text-center">
+                <div
+                  className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl"
+                  style={{ background: 'linear-gradient(135deg, rgba(10,186,181,0.15) 0%, rgba(168,213,186,0.25) 100%)' }}
+                >
+                  <Download className="h-8 w-8 text-primary" />
+                </div>
+                <h1 className="text-3xl font-bold text-foreground md:text-4xl text-balance">
+                  Get the Enaj Browser Extension
+                </h1>
+                <p className="mt-3 max-w-lg text-muted-foreground text-pretty leading-relaxed">
+                  Your profile is all set. Install the extension to activate your guardian angel while you shop on any website.
+                </p>
               </div>
-              <h1 className="text-3xl font-bold text-foreground md:text-4xl text-balance">
-                Get the Enaj Browser Extension
-              </h1>
-              <p className="mt-4 max-w-lg text-muted-foreground text-pretty leading-relaxed">
-                Your profile is all set. Now install the Enaj browser extension to activate your guardian angel while you shop. It works on any website.
-              </p>
 
-              {/* How the extension works */}
-              <div className="mt-8 w-full max-w-lg">
-                <div className="rounded-xl border border-border bg-card p-6 text-left">
-                  <h3 className="font-semibold text-card-foreground mb-4">How it works:</h3>
-                  <div className="flex flex-col gap-4">
+              {/* Organized two-column card: Install on the left, How it works on the right */}
+              <div className="mt-8 grid w-full max-w-3xl gap-6 rounded-2xl border border-border bg-card p-6 md:grid-cols-2 md:p-8">
+                {/* Install panel */}
+                <div className="flex flex-col md:border-r md:border-border md:pr-8">
+                  <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Install</h3>
+                  <Button
+                    size="lg"
+                    className="mt-4 w-full gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
+                  >
+                    <Chrome className="h-5 w-5" />
+                    Add to Chrome — Free
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="mt-3 w-full gap-2 border-border text-foreground hover:bg-accent"
+                  >
+                    <Monitor className="h-4 w-4" />
+                    Other Browsers
+                  </Button>
+
+                  {/* Clear per-browser availability instead of one vague line */}
+                  <div className="mt-6">
+                    <p className="text-xs font-medium text-muted-foreground">Browser availability</p>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                        <Check className="h-3 w-3" />
+                        Chrome
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
+                        Edge · Soon
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
+                        Firefox · Soon
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
+                        Safari · Soon
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* How it works panel */}
+                <div className="flex flex-col">
+                  <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">How it works</h3>
+                  <div className="mt-4 flex flex-col gap-4 text-left">
                     <div className="flex items-start gap-3">
-                      <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                      <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
                         1
                       </div>
                       <div>
-                        <p className="font-medium text-card-foreground">Browse any shopping site</p>
-                        <p className="text-sm text-muted-foreground">Sephora, Target, Walmart, and any other shopping site</p>
+                        <p className="text-sm font-medium text-card-foreground">Browse any shopping site</p>
+                        <p className="text-sm text-muted-foreground">Sephora, Target, Walmart, and more.</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                      <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
                         2
                       </div>
                       <div>
-                        <p className="font-medium text-card-foreground">Press the Enaj button</p>
+                        <p className="text-sm font-medium text-card-foreground">Press the Enaj button</p>
                         <p className="text-sm text-muted-foreground">
-                          The Enaj icon sits in the bottom corner of your screen. One tap and it scans the product page for you.
+                          One tap on the icon scans the product page for you.
                         </p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                      <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
                         3
                       </div>
                       <div>
-                        <p className="font-medium text-card-foreground">Get instant results</p>
+                        <p className="text-sm font-medium text-card-foreground">Get instant results</p>
                         <p className="text-sm text-muted-foreground">
-                          See if the product is safe for you. If not, Enaj suggests better alternatives right there.
+                          See if it&apos;s safe for you — or get better alternatives.
                         </p>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-
-              {/* Download Buttons */}
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Button
-                  size="lg"
-                  className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 px-6"
-                >
-                  <Chrome className="h-5 w-5" />
-                  Add to Chrome
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-border text-foreground hover:bg-accent gap-2 px-6"
-                >
-                  <Monitor className="h-5 w-5" />
-                  Other Browsers
-                </Button>
-              </div>
-
-              <p className="mt-4 text-xs text-muted-foreground">
-                Available for Chrome, Firefox, Safari, and Edge
-              </p>
             </div>
           )}
         </div>
