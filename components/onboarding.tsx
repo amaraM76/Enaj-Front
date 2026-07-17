@@ -40,6 +40,8 @@ import {
   ShieldCheck,
   Venus,
   ScanEye,
+  Apple,
+  Stethoscope,
 } from 'lucide-react'
 import { US_STATES } from '@/lib/us-cities'
 import { Thermometer, Activity, Eye, Zap, Wind, Pill } from 'lucide-react'
@@ -52,29 +54,19 @@ type OnboardingStep = 'welcome' | 'profile' | 'ailments' | 'preferences' | 'jour
 const ENDOCRINE_INFO_PREFS = new Set(['no-pfas', 'no-triclosan'])
 
 
-const StomachIcon = ({ className }: { className?: string }) => (
-  <svg
-    className={className}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M11 3v5c0 1.5.8 2.6 2.3 3.4C15.7 12.5 17 14.3 17 17a4 4 0 1 1-8 0c0-2.3 1-3.9 2.4-5.1C12.4 11 13 9.9 13 8V3" />
-  </svg>
-);
 
 // Map icon names to components for journal categories
-const JOURNAL_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
-  Thermometer,
-  Venus,
-  StomachIcon,
-  ScanEye,
-  Zap,
-  Wind,
-  Pill,
+const CATEGORY_ICONS: Record<
+  string,
+  React.ComponentType<{ className?: string }>
+> = {
+  digestive: Apple,
+  'womens-health': Venus,
+  'skin-eye': ScanEye,
+  pain: Zap,
+  allergies: Wind,
+  recovery: Stethoscope,
+  general: Thermometer,
 }
 
 // Menopause / perimenopause mutual exclusion
@@ -1134,7 +1126,7 @@ export function Onboarding() {
               {/* Journal Categories */}
               <div className="flex flex-col gap-4">
                 {journalCategories.map((category) => {
-                  const IconComponent = JOURNAL_ICONS[category.icon] || Heart
+                  const IconComponent = CATEGORY_ICONS[category.id] || Thermometer
                   const selectedInCategory = category.conditions.filter((c) => selectedJournalIds.has(c.id)).length
                   return (
                     <div key={category.id} className="rounded-xl border border-border bg-card overflow-hidden">
@@ -1340,81 +1332,100 @@ export function Onboarding() {
 
           {/* Browser Extension Step */}
           {step === 'extension' && (
-            <div className="flex flex-col items-center text-center">
-              <div
-                className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl"
-                style={{ background: 'linear-gradient(135deg, rgba(10,186,181,0.15) 0%, rgba(168,213,186,0.25) 100%)' }}
-              >
-                <Download className="h-10 w-10 text-primary" />
-              </div>
-              <h1 className="text-3xl font-bold text-foreground md:text-4xl text-balance">
-                Get the enaJ Browser Extension
-              </h1>
-                <p className="mt-4 max-w-lg text-muted-foreground text-pretty leading-relaxed">
-                  Your profile is ready! Install the enaJ browser extension to receive personalized ingredient insights while you shop on supported retailers.
-                  <br />
-                  <span className="mt-2 block text-sm italic">
-                    Currently supports Amazon, Sephora, Ulta, Walmart, and Target. More retailers coming soon.
-                  </span>
+            <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center text-center">
+                <div
+                  className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl"
+                  style={{ background: 'linear-gradient(135deg, rgba(10,186,181,0.15) 0%, rgba(168,213,186,0.25) 100%)' }}
+                >
+                  <Download className="h-8 w-8 text-primary" />
+                </div>
+                <h1 className="text-3xl font-bold text-foreground md:text-4xl text-balance">
+                  Get the Enaj Browser Extension
+                </h1>
+                <p className="mt-3 max-w-lg text-muted-foreground text-pretty leading-relaxed">
+                  Your profile is all set. Install the extension to activate your guardian angel while you shop on any website.
                 </p>
+              </div>
 
-              {/* How the extension works */}
-              <div className="mt-8 w-full max-w-lg">
-                <div className="rounded-xl border border-border bg-card p-6 text-left">
-                  <h3 className="font-semibold text-card-foreground mb-4">How it works:</h3>
-                  <div className="flex flex-col gap-4">
+              {/* Organized two-column card: Install on the left, How it works on the right */}
+              <div className="mt-8 grid w-full max-w-3xl gap-6 rounded-2xl border border-border bg-card p-6 md:grid-cols-2 md:p-8">
+                {/* Install panel */}
+                <div className="flex flex-col md:border-r md:border-border md:pr-8">
+                  <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Install</h3>
+                  <Button
+                    size="lg"
+                    className="mt-4 w-full gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
+                  >
+                    <Chrome className="h-5 w-5" />
+                    Add to Chrome — Free
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="mt-3 w-full gap-2 border-border text-foreground hover:bg-accent"
+                  >
+                    <Monitor className="h-4 w-4" />
+                    Other Browsers
+                  </Button>
+
+                  {/* Clear per-browser availability instead of one vague line */}
+                  <div className="mt-6">
+                    <p className="text-xs font-medium text-muted-foreground">Browser availability</p>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                        <Check className="h-3 w-3" />
+                        Chrome
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
+                        Edge · Soon
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
+                        Firefox · Soon
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
+                        Safari · Soon
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* How it works panel */}
+                <div className="flex flex-col">
+                  <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">How it works</h3>
+                  <div className="mt-4 flex flex-col gap-4 text-left">
                     <div className="flex items-start gap-3">
-                      <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                      <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
                         1
                       </div>
                       <div>
-                        <p className="font-medium text-card-foreground">Shop as you normally do</p>
-                        <p className="text-sm text-muted-foreground">Visit any supported retailer and open an item's page.</p>
+                        <p className="text-sm font-medium text-card-foreground">Browse any shopping site</p>
+                        <p className="text-sm text-muted-foreground">Sephora, Target, Walmart, and more.</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                      <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
                         2
                       </div>
                       <div>
-                        <p className="font-medium text-card-foreground">Press the enaJ button</p>
+                        <p className="text-sm font-medium text-card-foreground">Press the Enaj button</p>
                         <p className="text-sm text-muted-foreground">
-                          Click the enaJ icon while viewing a product page to instantly analyze its ingredients.
+                          One tap on the icon scans the product page for you.
                         </p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                      <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
                         3
                       </div>
                       <div>
-                        <p className="font-medium text-card-foreground">Get personalized results</p>
+                        <p className="text-sm font-medium text-card-foreground">Get instant results</p>
                         <p className="text-sm text-muted-foreground">
-                            Instantly see whether a product matches your health profile, learn why ingredients are flagged, and save products to your enaJ profile.
-                            <br />
-                              <span className="mt-1 block italic text-xs">
-                                Personalized product recommendations coming soon.
-                              </span>
+                          See if it&apos;s safe for you — or get better alternatives.
                         </p>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-
-              {/* Download Buttons */}
-              <div className="mt-8 flex flex-col items-center gap-3">
-                <Button
-                  size="lg"
-                  className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 px-6"
-                >
-                  <Chrome className="h-5 w-5" />
-                  Add to Chrome
-                </Button>
-
-                <p className="text-center text-xs text-muted-foreground italic">
-                  Other browser extensions coming soon.
-                </p>
               </div>
             </div>
           )}
@@ -1464,7 +1475,7 @@ export function Onboarding() {
                 ) : (
                   <>
                     Go to Dashboard
-                    <Sparkles className="h-4 w-4" />
+                    <EnajLogo className="h-4 w-4" />
                   </>
                 )}
               </Button>

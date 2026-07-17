@@ -40,35 +40,25 @@ import {
   Eye,
   Venus,
   Pill,
+  Apple,
+  Stethoscope,
 } from "lucide-react";
 import type { JournalCondition } from "@/lib/journal-data";
 import { useEnaj } from "@/lib/enaj-context";
 
-const StomachIcon = ({ className }: { className?: string }) => (
-  <svg
-    className={className}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M11 3v5c0 1.5.8 2.6 2.3 3.4C15.7 12.5 17 14.3 17 17a4 4 0 1 1-8 0c0-2.3 1-3.9 2.4-5.1C12.4 11 13 9.9 13 8V3" />
-  </svg>
-);
+
 
 
 const CATEGORY_ICONS: Record<
   string,
   React.ComponentType<{ className?: string }>
 > = {
-  digestive: StomachIcon,
+  digestive: Apple,
   "womens-health": Venus,
   "skin-eye": ScanEye,
   pain: Zap,
   allergies: Wind,
-  recovery: Pill,
+  recovery: Stethoscope,
   general: Thermometer,
 };
 
@@ -430,6 +420,7 @@ export function HealthJournal() {
       {/* Quick Stats */}
       <div className="flex gap-4 flex-wrap">
         <div className="flex items-center gap-2 rounded-lg bg-amber-500/10 px-4 py-2">
+          <NotebookPen className="h-4 w-4 text-amber-700" />
           <span className="text-sm font-medium text-amber-700">
             {activeConditions.length} active
           </span>
