@@ -92,7 +92,6 @@ export function Dashboard() {
             </Button>
           </Link>
         </nav>
-
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"
