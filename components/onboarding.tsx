@@ -1300,14 +1300,14 @@ export function Onboarding() {
                     className="w-full gap-2 bg-primary text-primary-foreground hover:bg-primary/90 md:w-auto md:px-8"
                   >
                     <Chrome className="h-5 w-5" />
-                    Add to Chrome — Free
+                    Add to Chrome
                   </Button>
                 </div>
 
                 <ul className="mt-6 grid gap-3 border-t border-border pt-6 sm:grid-cols-3">
                   <li className="flex items-center gap-2.5 text-sm text-muted-foreground">
                     <Check className="h-4 w-4 flex-shrink-0 text-primary" />
-                    Free to install — no credit card required
+                    You&apos;re in control — Enaj only scans when you click the button
                   </li>
                   <li className="flex items-center gap-2.5 text-sm text-muted-foreground">
                     <Check className="h-4 w-4 flex-shrink-0 text-primary" />
@@ -1315,7 +1315,7 @@ export function Onboarding() {
                   </li>
                   <li className="flex items-center gap-2.5 text-sm text-muted-foreground">
                     <Check className="h-4 w-4 flex-shrink-0 text-primary" />
-                    Works instantly, right in your browser
+                    Works right in your browser while you shop
                   </li>
                 </ul>
               </div>
