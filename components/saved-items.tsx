@@ -5,13 +5,6 @@ import { useEnaj } from '@/lib/enaj-context'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
-import {
   Bookmark,
   ExternalLink,
   ShoppingCart,
@@ -27,12 +20,14 @@ type SavedProduct = Product & {
   savedSource?: string
 }
 
-export function SavedItems() {
+type SavedItemsProps = {
+  onOpenProduct: (product: SavedProduct) => void
+}
+
+export function SavedItems({ onOpenProduct }: SavedItemsProps) {
   const { profile, unsaveProduct, refreshSavedProducts } = useEnaj()
 
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const [selectedProduct, setSelectedProduct] =
-    useState<SavedProduct | null>(null)
 
   const handleRefresh = async () => {
     setIsRefreshing(true)
@@ -83,18 +78,10 @@ export function SavedItems() {
 
   const handleUnsave = (
     product: SavedProduct,
-    event?: React.MouseEvent
+    event: React.MouseEvent<HTMLButtonElement>
   ) => {
-    event?.stopPropagation()
-
+    event.stopPropagation()
     unsaveProduct(getProductSlug(product))
-
-    if (
-      selectedProduct &&
-      getProductSlug(selectedProduct) === getProductSlug(product)
-    ) {
-      setSelectedProduct(null)
-    }
   }
 
   if (!profile) return null
@@ -102,119 +89,7 @@ export function SavedItems() {
   const savedProducts = profile.savedProducts as SavedProduct[]
 
   return (
-    <>
-      <Dialog
-        open={Boolean(selectedProduct)}
-        onOpenChange={(open) => {
-          if (!open) {
-            setSelectedProduct(null)
-          }
-        }}
-      >
-        <DialogContent className="max-h-[85vh] max-w-2xl overflow-y-auto border-border bg-card">
-          {selectedProduct && (
-            <>
-              <DialogHeader>
-                <div className="flex items-start gap-4 pr-6">
-                  <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-lg bg-muted">
-                    <ShoppingCart className="h-6 w-6 text-muted-foreground" />
-                  </div>
-
-                  <div className="min-w-0 flex-1">
-                    <p className="text-xs font-medium text-primary">
-                      {selectedProduct.brand}
-                    </p>
-
-                    <DialogTitle className="mt-1 text-left text-xl leading-snug text-card-foreground">
-                      {selectedProduct.name}
-                    </DialogTitle>
-
-                    <DialogDescription className="mt-1 text-left">
-                      Saved product details
-                    </DialogDescription>
-                  </div>
-                </div>
-              </DialogHeader>
-
-              <div className="mt-4 flex flex-col gap-5">
-                <div className="flex flex-wrap items-center gap-2">
-                  {selectedProduct.price && (
-                    <p className="text-lg font-bold text-card-foreground">
-                      {selectedProduct.price}
-                    </p>
-                  )}
-
-                  {selectedProduct.category && (
-                    <Badge
-                      variant="secondary"
-                      className="bg-muted text-muted-foreground"
-                    >
-                      {selectedProduct.category}
-                    </Badge>
-                  )}
-                </div>
-
-                <div>
-                  <h3 className="mb-3 text-sm font-semibold text-foreground">
-                    Ingredients
-                  </h3>
-
-                  {selectedProduct.ingredients.length > 0 ? (
-                    <div className="flex flex-wrap gap-2">
-                      {selectedProduct.ingredients.map((ingredient) => (
-                        <span
-                          key={ingredient}
-                          className="rounded-full bg-accent px-3 py-1 text-xs text-accent-foreground"
-                        >
-                          {ingredient}
-                        </span>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-sm text-muted-foreground">
-                      No ingredient information is currently available.
-                    </p>
-                  )}
-                </div>
-
-                <div className="flex flex-col gap-2 sm:flex-row">
-                  {hasExternalShopLink(selectedProduct) && (
-                    <Button
-                      className="flex-1 gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
-                      asChild
-                    >
-                      <a
-                        href={selectedProduct.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                        View on Website
-                      </a>
-                    </Button>
-                  )}
-
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => handleUnsave(selectedProduct)}
-                    className={`gap-2 border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive ${
-                      hasExternalShopLink(selectedProduct)
-                        ? ''
-                        : 'w-full'
-                    }`}
-                  >
-                    <Bookmark className="h-4 w-4" />
-                    Unsave Product
-                  </Button>
-                </div>
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
-
-      <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6">
         <div>
           <div className="flex items-center justify-between gap-4">
             <h1 className="text-2xl font-bold text-foreground md:text-3xl">
@@ -266,14 +141,11 @@ export function SavedItems() {
                   key={getProductSlug(product)}
                   role="button"
                   tabIndex={0}
-                  onClick={() => setSelectedProduct(product)}
+                  onClick={() => onOpenProduct(product)}
                   onKeyDown={(event) => {
-                    if (
-                      event.key === 'Enter' ||
-                      event.key === ' '
-                    ) {
+                    if (event.key === 'Enter' || event.key === ' ') {
                       event.preventDefault()
-                      setSelectedProduct(product)
+                      onOpenProduct(product)
                     }
                   }}
                   className="group flex cursor-pointer flex-col overflow-hidden rounded-xl border border-border bg-card transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
@@ -356,9 +228,7 @@ export function SavedItems() {
                         type="button"
                         size="sm"
                         variant="outline"
-                        onClick={(event) =>
-                          handleUnsave(product, event)
-                        }
+                        onClick={(event) => handleUnsave(product, event)}
                         className={`gap-1.5 border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive ${
                           showShopLink ? '' : 'w-full'
                         }`}
@@ -374,6 +244,5 @@ export function SavedItems() {
           </div>
         )}
       </div>
-    </>
   )
 }

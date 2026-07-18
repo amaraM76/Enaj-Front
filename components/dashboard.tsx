@@ -8,6 +8,7 @@ import { AilmentMonitor } from '@/components/ailment-monitor'
 import { ProductScanner } from '@/components/product-scanner'
 import { SavedItems } from '@/components/saved-items'
 import { ProfileSettings } from '@/components/profile-settings'
+import type { Product } from '@/lib/enaj-data'
 import { Button } from '@/components/ui/button'
 import { EnajLogo } from '@/components/enaj-logo'
 import {
@@ -36,10 +37,16 @@ const NAV_ITEMS: { id: DashboardTab; label: string; icon: React.ReactNode }[] = 
 ]
 
 export function Dashboard() {
-  const { profile, setCurrentStep, logout } = useEnaj()
+  const { profile, logout } = useEnaj()
   const { signOut } = useClerk()
   const [activeTab, setActiveTab] = useState<DashboardTab>('monitor')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [selectedMarketplaceProduct, setSelectedMarketplaceProduct] =
+  useState<Product & { slug?: string } | null>(null)
+  const openSavedProduct = (product: Product & { slug?: string }) => {
+  setSelectedMarketplaceProduct(product)
+  setActiveTab('scanner')
+}
 
   const handleLogout = async () => {
     await signOut()
@@ -165,9 +172,20 @@ export function Dashboard() {
       <main className="relative z-10 flex-1 px-4 py-6 lg:px-8 lg:py-8">
         <div className="mx-auto max-w-5xl">
           {activeTab === 'monitor' && <AilmentMonitor />}
+
           {activeTab === 'journal' && <HealthJournal />}
-          {activeTab === 'scanner' && <ProductScanner />}
-          {activeTab === 'saved' && <SavedItems />}
+
+          {activeTab === 'scanner' && (
+            <ProductScanner
+              selectedProduct={selectedMarketplaceProduct ?? undefined}
+              onProductOpened={() => setSelectedMarketplaceProduct(null)}
+            />
+          )}
+
+          {activeTab === 'saved' && (
+            <SavedItems onOpenProduct={openSavedProduct} />
+          )}
+
           {activeTab === 'settings' && <ProfileSettings />}
         </div>
       </main>

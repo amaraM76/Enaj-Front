@@ -56,7 +56,7 @@ const CATEGORY_ICONS: Record<
   digestive: Apple,
   "womens-health": Venus,
   "skin-eye": ScanEye,
-  pain: Zap,
+  "pain-discomfort": Zap,
   allergies: Wind,
   recovery: Stethoscope,
   general: Thermometer,

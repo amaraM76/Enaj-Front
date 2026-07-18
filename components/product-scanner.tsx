@@ -72,7 +72,13 @@ interface ApiFlaggedIngredient {
   sources?: { title: string; url: string }[]
 }
 
-export function ProductScanner() {
+export function ProductScanner({
+  selectedProduct,
+  onProductOpened,
+}: {
+  selectedProduct?: Product & { slug?: string }
+  onProductOpened?: () => void
+}) {
   const { profile, clerkUserId, saveProduct, unsaveProduct, isProductSaved, ailmentCategories, preferenceCategories } = useEnaj()
   const [scanResult, setScanResult] = useState<(Omit<ScanResult, 'flaggedIngredients'> & { flaggedIngredients: ApiFlaggedIngredient[] }) | null>(null)
   const [scanning, setScanning] = useState(false)
@@ -116,6 +122,7 @@ export function ProductScanner() {
     sourceName: string
     sources: { title: string; url: string }[]
   } | null>(null)
+
 
   useEffect(() => {
     let cancelled = false
@@ -387,6 +394,13 @@ export function ProductScanner() {
     },
     [profile, clerkUserId, clientSideScan, apiSearchResults]
   )
+
+  useEffect(() => {
+    if (!selectedProduct) return
+
+    performScan(selectedProduct)
+    onProductOpened?.()
+  }, [selectedProduct, performScan, onProductOpened])
 
   const filteredProducts = useMemo(() => {
     let base = products.filter((p) => {
