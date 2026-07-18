@@ -1291,7 +1291,7 @@ export function Onboarding() {
               {/* Organized two-column card: Install on the left, How it works on the right */}
               <div className="mt-8 grid w-full max-w-3xl gap-6 rounded-2xl border border-border bg-card p-6 md:grid-cols-2 md:p-8">
                 {/* Install panel */}
-                <div className="flex flex-col md:border-r md:border-border md:pr-8">
+                <div className="flex flex-col justify-center md:border-r md:border-border md:pr-8">
                   <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Install</h3>
                   <Button
                     size="lg"
@@ -1300,10 +1300,22 @@ export function Onboarding() {
                     <Chrome className="h-5 w-5" />
                     Add to Chrome — Free
                   </Button>
+                  <p className="mt-2 text-xs text-muted-foreground">More browsers coming soon.</p>
 
-                  <p className="mt-4 text-xs font-medium text-muted-foreground">
-                    More browsers coming soon.
-                  </p>
+                  <ul className="mt-6 flex flex-col gap-3">
+                    <li className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                      <Check className="h-4 w-4 flex-shrink-0 text-primary" />
+                      Free to install — no credit card required
+                    </li>
+                    <li className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                      <Check className="h-4 w-4 flex-shrink-0 text-primary" />
+                      Private — your health data stays yours
+                    </li>
+                    <li className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                      <Check className="h-4 w-4 flex-shrink-0 text-primary" />
+                      Works instantly, right in your browser
+                    </li>
+                  </ul>
                 </div>
 
                 {/* How it works panel */}
