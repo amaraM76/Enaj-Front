@@ -1288,79 +1288,77 @@ export function Onboarding() {
                 </p>
               </div>
 
-              {/* Organized two-column card: Install on the left, How it works on the right */}
-              <div className="mt-8 grid w-full max-w-3xl gap-6 rounded-2xl border border-border bg-card p-6 md:grid-cols-2 md:p-8">
-                {/* Install panel */}
-                <div className="flex flex-col justify-center md:border-r md:border-border md:pr-8">
-                  <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Install</h3>
+              {/* Install section — full width on top */}
+              <div className="mt-8 w-full max-w-4xl rounded-2xl border border-border bg-card p-6 md:p-8">
+                <div className="flex flex-col items-center gap-5 md:flex-row md:items-center md:justify-between">
+                  <div className="text-center md:text-left">
+                    <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Install</h3>
+                    <p className="mt-1 text-xs text-muted-foreground">More browsers coming soon.</p>
+                  </div>
                   <Button
                     size="lg"
-                    className="mt-4 w-full gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
+                    className="w-full gap-2 bg-primary text-primary-foreground hover:bg-primary/90 md:w-auto md:px-8"
                   >
                     <Chrome className="h-5 w-5" />
                     Add to Chrome — Free
                   </Button>
-                  <p className="mt-2 text-xs text-muted-foreground">More browsers coming soon.</p>
-
-                  <ul className="mt-6 flex flex-col gap-3">
-                    <li className="flex items-center gap-2.5 text-sm text-muted-foreground">
-                      <Check className="h-4 w-4 flex-shrink-0 text-primary" />
-                      Free to install — no credit card required
-                    </li>
-                    <li className="flex items-center gap-2.5 text-sm text-muted-foreground">
-                      <Check className="h-4 w-4 flex-shrink-0 text-primary" />
-                      Private — your health data stays yours
-                    </li>
-                    <li className="flex items-center gap-2.5 text-sm text-muted-foreground">
-                      <Check className="h-4 w-4 flex-shrink-0 text-primary" />
-                      Works instantly, right in your browser
-                    </li>
-                  </ul>
                 </div>
 
-                {/* How it works panel */}
-                <div className="flex flex-col">
-                  <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">How it works</h3>
-                  <div className="mt-4 flex flex-col gap-4 text-left">
-                    <div className="flex items-start gap-3">
-                      <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
-                        1
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-card-foreground">Shop like you normally do</p>
-                        <p className="text-sm text-muted-foreground">
-                          Open any product page on Amazon, Sephora, Ulta, Walmart, or Target.
-                          <span className="mt-1 block text-xs italic text-muted-foreground/80">
-                            More supported websites coming soon.
-                          </span>
-                        </p>
-                      </div>
+                <ul className="mt-6 grid gap-3 border-t border-border pt-6 sm:grid-cols-3">
+                  <li className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                    <Check className="h-4 w-4 flex-shrink-0 text-primary" />
+                    Free to install — no credit card required
+                  </li>
+                  <li className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                    <Check className="h-4 w-4 flex-shrink-0 text-primary" />
+                    Private — your health data stays yours
+                  </li>
+                  <li className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                    <Check className="h-4 w-4 flex-shrink-0 text-primary" />
+                    Works instantly, right in your browser
+                  </li>
+                </ul>
+              </div>
+
+              {/* How it works — each step in its own card */}
+              <div className="mt-6 w-full max-w-4xl">
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">How it works</h3>
+                <div className="mt-4 grid gap-4 md:grid-cols-3">
+                  {/* Step 1 */}
+                  <div className="flex flex-col rounded-2xl border border-border bg-card p-6 text-left">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                      1
                     </div>
-                    <div className="flex items-start gap-3">
-                      <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
-                        2
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-card-foreground">Open the Enaj extension</p>
-                        <p className="text-sm text-muted-foreground">
-                          Click the Enaj icon while viewing a product page to instantly analyze its ingredients.
-                        </p>
-                      </div>
+                    <p className="mt-4 text-sm font-medium text-card-foreground">Shop like you normally do</p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      Open any product page on Amazon, Sephora, Ulta, Walmart, or Target.
+                    </p>
+                    <p className="mt-2 text-xs italic text-muted-foreground/80">
+                      More supported websites coming soon.
+                    </p>
+                  </div>
+                  {/* Step 2 */}
+                  <div className="flex flex-col rounded-2xl border border-border bg-card p-6 text-left">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                      2
                     </div>
-                    <div className="flex items-start gap-3">
-                      <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
-                        3
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-card-foreground">Get instant results</p>
-                        <p className="text-sm text-muted-foreground">
-                          See whether a product matches your health profile, learn why ingredients are flagged, and save products to your Enaj profile.
-                          <span className="mt-1 block text-xs italic text-muted-foreground/80">
-                            Personalized product recommendations coming soon.
-                          </span>
-                        </p>
-                      </div>
+                    <p className="mt-4 text-sm font-medium text-card-foreground">Open the Enaj extension</p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      Click the Enaj icon while viewing a product page to instantly analyze its ingredients.
+                    </p>
+                  </div>
+                  {/* Step 3 */}
+                  <div className="flex flex-col rounded-2xl border border-border bg-card p-6 text-left">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                      3
                     </div>
+                    <p className="mt-4 text-sm font-medium text-card-foreground">Get instant results</p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      See whether a product matches your health profile, learn why ingredients are flagged, and save products to your Enaj profile.
+                    </p>
+                    <p className="mt-2 text-xs italic text-muted-foreground/80">
+                      Personalized product recommendations coming soon.
+                    </p>
                   </div>
                 </div>
               </div>
