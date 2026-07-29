@@ -157,27 +157,34 @@
     .btn-primary:disabled { background: #b0d8d6; cursor: not-allowed; transform: none; box-shadow: none; }
     .btn-secondary { background: var(--card); color: var(--dark); border: 1px solid var(--border); }
     .btn-secondary:hover { background: var(--muted); }
-    /* ── Fun scan button: label on top, flapping winged logo below ── */
+    /* ── Fun scan button: floating winged logo above a teal pill ── */
     .scan-btn-fun {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
-      margin: 16px;
+      gap: 8px;
+      margin: 10px 16px 16px;
       width: calc(100% - 32px);
-      padding: 13px 16px 11px;
+      padding: 0;
       border: none;
+      background: transparent;
       cursor: pointer;
+    }
+    .scan-btn-fun:disabled { opacity: 0.6; cursor: not-allowed; }
+    .scan-pill {
+      width: 100%;
+      padding: 12px 16px;
       border-radius: var(--radius);
       background: linear-gradient(135deg, var(--primary) 0%, #35c7bd 100%);
       color: white;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
       box-shadow: var(--shadow-md);
       transition: transform 0.15s ease, box-shadow 0.2s ease;
     }
-    .scan-btn-fun:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(10,186,181,0.30); }
-    .scan-btn-fun:active { transform: scale(0.97); }
-    .scan-btn-fun:disabled { opacity: 0.75; cursor: not-allowed; transform: none; box-shadow: var(--shadow-sm); }
-    .scan-label { font-size: 15px; font-weight: 700; letter-spacing: -0.2px; }
+    .scan-btn-fun:hover .scan-pill { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(10,186,181,0.30); }
+    .scan-btn-fun:active .scan-pill { transform: scale(0.98); }
     .scan-logo { overflow: visible; }
     .scan-logo .wing { transform-box: fill-box; }
     .scan-logo .wing-left { transform-origin: 100% 60%; }
@@ -285,7 +292,14 @@
     .flag-item .info { font-size: 11px; color: var(--muted-fg); margin-top: 5px; line-height: 1.45; }
     .flag-item .info a { color: var(--primary); font-weight: 600; text-decoration: none; white-space: nowrap; }
     .flag-item .info a:hover { text-decoration: underline; }
-    .flag-item .reason strong, .flag-item .info strong { color: var(--dark); font-weight: 700; }
+    .flag-item .reason strong, .flag-item .info strong {
+      color: var(--primary-dark);
+      font-weight: 600;
+      background: rgba(10,186,181,0.12);
+      padding: 1px 5px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
 
     /* ── Ingredient list ── */
     .ing-list { padding: 14px 16px; border-top: 1px solid var(--border); }
@@ -392,26 +406,25 @@
       </div>
     </div>
     <button class="scan-btn-fun" id="scan-btn">
-      <span class="scan-label" id="scan-label">Scan with enaJ</span>
-      <svg class="scan-logo" width="76" height="52" viewBox="0 0 96 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <svg class="scan-logo" width="72" height="48" viewBox="0 0 96 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <g class="wing wing-left">
-          <path d="M36 30C32 26 22 14 10 6C7 4 3 5 4 8C6 14 14 24 28 32C32 34 35 33 36 31Z" fill="url(#bwg)" opacity="0.6"/>
-          <path d="M37 28C34 22 27 14 18 10C15 9 12 10 13 13C15 18 22 26 32 31C35 32 36 31 37 29Z" fill="url(#bwg)" opacity="0.85"/>
-          <path d="M37 27C35 22 30 16 23 13C20 12 18 13 19 15C20 19 26 26 33 30C35 31 37 30 37 28Z" fill="url(#bwg)" opacity="0.9"/>
+          <path d="M36 30C32 26 22 14 10 6C7 4 3 5 4 8C6 14 14 24 28 32C32 34 35 33 36 31Z" fill="url(#bwg)" opacity="0.55"/>
+          <path d="M37 28C34 22 27 14 18 10C15 9 12 10 13 13C15 18 22 26 32 31C35 32 36 31 37 29Z" fill="url(#bwg)" opacity="0.8"/>
+          <path d="M37 27C35 22 30 16 23 13C20 12 18 13 19 15C20 19 26 26 33 30C35 31 37 30 37 28Z" fill="url(#bwg)"/>
         </g>
         <g class="wing wing-right">
-          <path d="M60 30C64 26 74 14 86 6C89 4 93 5 92 8C90 14 82 24 68 32C64 34 61 33 60 31Z" fill="url(#bwg)" opacity="0.6"/>
-          <path d="M59 28C62 22 69 14 78 10C81 9 84 10 83 13C81 18 74 26 64 31C61 32 60 31 59 29Z" fill="url(#bwg)" opacity="0.85"/>
-          <path d="M59 27C61 22 66 16 73 13C76 12 78 13 77 15C76 19 70 26 63 30C61 31 59 30 59 28Z" fill="url(#bwg)" opacity="0.9"/>
+          <path d="M60 30C64 26 74 14 86 6C89 4 93 5 92 8C90 14 82 24 68 32C64 34 61 33 60 31Z" fill="url(#bwg)" opacity="0.55"/>
+          <path d="M59 28C62 22 69 14 78 10C81 9 84 10 83 13C81 18 74 26 64 31C61 32 60 31 59 29Z" fill="url(#bwg)" opacity="0.8"/>
+          <path d="M59 27C61 22 66 16 73 13C76 12 78 13 77 15C76 19 70 26 63 30C61 31 59 30 59 28Z" fill="url(#bwg)"/>
         </g>
-        <path d="M48 10L36 16V30C36 40 48 52 48 52C48 52 60 40 60 30V16L48 10Z" fill="url(#bsg)" stroke="url(#bss)" stroke-width="1.5"/>
-        <path d="M43 31L46 35L54 26" stroke="#0ABAB5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M48 10L36 16V30C36 40 48 52 48 52C48 52 60 40 60 30V16L48 10Z" fill="url(#bsg)"/>
+        <path d="M43 31L46 35L54 26" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
         <defs>
-          <linearGradient id="bwg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#B8EBD6"/><stop offset="100%" stop-color="#ffffff"/></linearGradient>
-          <linearGradient id="bsg" x1="48" y1="10" x2="48" y2="52"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#D4F5E9"/></linearGradient>
-          <linearGradient id="bss" x1="48" y1="10" x2="48" y2="52"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#ffffff"/></linearGradient>
+          <linearGradient id="bwg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0ABAB5"/><stop offset="100%" stop-color="#7FD8CE"/></linearGradient>
+          <linearGradient id="bsg" x1="48" y1="10" x2="48" y2="52"><stop offset="0%" stop-color="#0ABAB5"/><stop offset="100%" stop-color="#35C7BD"/></linearGradient>
         </defs>
       </svg>
+      <span class="scan-pill" id="scan-label">Scan with enaJ</span>
     </button>
   </div>
 
