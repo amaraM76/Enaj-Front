@@ -161,9 +161,10 @@ $("scan-btn").addEventListener("click", async () => {
   if (!currentProduct || !userId) return;
 
   const btn = $("scan-btn");
-  const btnOriginal = btn.innerHTML;
+  const label = $("scan-label");
+  const labelOriginal = label ? label.textContent : "";
   btn.disabled = true;
-  btn.innerHTML = btnOriginal.replace("Scan with", "Scanning with");
+  if (label) label.textContent = "Scanning with enaJ";
   loadingEl.style.display = "block";
   productSection.style.display = "none";
   resultsEl.style.display = "none";
@@ -216,7 +217,7 @@ $("scan-btn").addEventListener("click", async () => {
     if (ingredients.length === 0) {
       loadingEl.style.display = "none";
       btn.disabled = false;
-      btn.innerHTML = btnOriginal;
+      if (label) label.textContent = labelOriginal;
       showExternalPrompt();
       return;
     }
@@ -262,7 +263,7 @@ $("scan-btn").addEventListener("click", async () => {
     resultsEl.style.display = "block";
   } finally {
     btn.disabled = false;
-    btn.innerHTML = btnOriginal;
+    if (label) label.textContent = labelOriginal;
   }
 });
 
@@ -287,10 +288,10 @@ function showExternalPrompt() {
     <div class="state">
       <div class="state-icon">${ICONS.search}</div>
       <h3>Ingredients not found</h3>
-      <p>We couldn't find ingredients on this page. Would you like enaj to search external sources?</p>
+      <p>We couldn't find ingredients on this page. Would you like enaJ to search external sources?</p>
       <div style="margin-top:16px;">
         <button class="btn btn-primary" id="yes-external-btn">${ICONS.search} Yes, search external sources</button>
-        <button class="btn btn-secondary" id="no-external-btn">No, I'll look it up in enaj Shop</button>
+        <button class="btn btn-secondary" id="no-external-btn">No, I'll look it up in enaJ Shop</button>
       </div>
     </div>
   `;
@@ -343,9 +344,9 @@ function showExternalPrompt() {
               <div class="state">
                 <div class="state-icon">${ICONS.frown}</div>
                 <h3>Not found anywhere</h3>
-                <p>We couldn't find this product's ingredients. Try searching for it in the enaj Shop.</p>
+                <p>We couldn't find this product's ingredients. Try searching for it in the enaJ Shop.</p>
                 <div style="margin-top:16px;">
-                  <a href="${ENAJ_SITE}" target="_blank" class="btn btn-primary">${ICONS.bag} Open enaj Shop</a>
+                  <a href="${ENAJ_SITE}" target="_blank" class="btn btn-primary">${ICONS.bag} Open enaJ Shop</a>
                 </div>
               </div>
             `;
@@ -427,9 +428,9 @@ function showExternalPrompt() {
         <div class="state">
           <div class="state-icon">${ICONS.frown}</div>
           <h3>Not found anywhere</h3>
-          <p>We couldn't find this product's ingredients. Try searching for it in the enaj Shop.</p>
+          <p>We couldn't find this product's ingredients. Try searching for it in the enaJ Shop.</p>
           <div style="margin-top:16px;">
-            <a href="${ENAJ_SITE}" target="_blank" class="btn btn-primary">${ICONS.bag} Open enaj Shop</a>
+            <a href="${ENAJ_SITE}" target="_blank" class="btn btn-primary">${ICONS.bag} Open enaJ Shop</a>
           </div>
         </div>
       `;
@@ -438,9 +439,9 @@ function showExternalPrompt() {
       resultsEl.innerHTML = `
         <div class="section-pad center">
           <div class="result-badge warning">${ICONS.xCircle} Search Failed</div>
-          <p class="sub-text">Please try again or search in the enaj Shop.</p>
+          <p class="sub-text">Please try again or search in the enaJ Shop.</p>
           <div style="margin-top:12px;">
-            <a href="${ENAJ_SITE}" target="_blank" class="btn btn-primary">${ICONS.bag} Open enaj Shop</a>
+            <a href="${ENAJ_SITE}" target="_blank" class="btn btn-primary">${ICONS.bag} Open enaJ Shop</a>
           </div>
         </div>
       `;
@@ -451,9 +452,9 @@ function showExternalPrompt() {
     resultsEl.innerHTML = `
       <div class="state">
         <div class="state-icon">${ICONS.bag}</div>
-        <p>You can look up this product in the enaj Shop to check its ingredients.</p>
+        <p>You can look up this product in the enaJ Shop to check its ingredients.</p>
         <div style="margin-top:16px;">
-          <a href="${ENAJ_SITE}" target="_blank" class="btn btn-primary">${ICONS.bag} Open enaj Shop</a>
+          <a href="${ENAJ_SITE}" target="_blank" class="btn btn-primary">${ICONS.bag} Open enaJ Shop</a>
         </div>
       </div>
     `;
@@ -507,8 +508,8 @@ async function renderResults(scanData, originalIngredients, fromExternal) {
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/^-+|-+$/g, '')
         learnUrl = `https://www.enajhealth.com/education/${slug}?from=conditions`
-        reasonText = `Flagged because you marked ${flag.sourceName}.`
-        infoText = `Some people with ${flag.sourceName} choose to avoid this ingredient.`
+        reasonText = `Flagged because you marked <strong>${flag.sourceName}</strong>.`
+        infoText = `Some people with <strong>${flag.sourceName}</strong> choose to avoid this ingredient.`
       } else {
         const matchedPref = storedPreferences.find((p) => {
           if (typeof p === "string") {
@@ -521,8 +522,9 @@ async function renderResults(scanData, originalIngredients, fromExternal) {
           ? matchedPref.slug
           : flag.sourceName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
         learnUrl = `https://www.enajhealth.com/education/${prefSlug}?from=preferences`
-        reasonText = `Flagged because you marked ${flag.sourceName}.`
-        infoText = `This ingredient is a ${flag.sourceName.toLowerCase()}.`
+        const prefLower = flag.sourceName.toLowerCase()
+        reasonText = `Flagged because you marked <strong>${flag.sourceName}</strong>.`
+        infoText = `This ingredient is ${indefiniteArticle(prefLower)} <strong>${prefLower}</strong>.`
       }
 
       html += `
@@ -582,7 +584,7 @@ async function renderResults(scanData, originalIngredients, fromExternal) {
           }),
         });
         if (res.ok) {
-          saveBtn.innerHTML = `${ICONS.check} Saved to your enaj profile!`;
+          saveBtn.innerHTML = `${ICONS.check} Saved to your enaJ profile!`;
           saveBtn.style.background = "var(--success-bg)";
           saveBtn.style.color = "var(--success-text)";
           saveBtn.style.borderColor = "var(--success-border)";
@@ -601,6 +603,11 @@ async function renderResults(scanData, originalIngredients, fromExternal) {
 // ════════════════════════════════════════
 // Helpers
 // ════════════════════════════════════════
+// Choose "a" or "an" based on whether the next word starts with a vowel sound.
+function indefiniteArticle(word) {
+  return /^[aeiou]/i.test((word || "").trim()) ? "an" : "a";
+}
+
 function detectCategory(product) {
   const n = (product.name || "").toLowerCase();
   if (/shampoo|conditioner|hair/.test(n)) return "haircare";

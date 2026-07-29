@@ -157,15 +157,38 @@
     .btn-primary:disabled { background: #b0d8d6; cursor: not-allowed; transform: none; box-shadow: none; }
     .btn-secondary { background: var(--card); color: var(--dark); border: 1px solid var(--border); }
     .btn-secondary:hover { background: var(--muted); }
-    .btn-scan {
-      background: var(--primary);
-      color: white;
-      margin: 14px 16px;
+    /* ── Fun scan button: label on top, flapping winged logo below ── */
+    .scan-btn-fun {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      margin: 16px;
       width: calc(100% - 32px);
+      padding: 13px 16px 11px;
+      border: none;
+      cursor: pointer;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, var(--primary) 0%, #35c7bd 100%);
+      color: white;
       box-shadow: var(--shadow-md);
+      transition: transform 0.15s ease, box-shadow 0.2s ease;
     }
-    .btn-scan:hover { background: var(--primary-dark); transform: translateY(-1px); }
-    .btn-scan:disabled { background: #b0d8d6; cursor: not-allowed; transform: none; box-shadow: none; }
+    .scan-btn-fun:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(10,186,181,0.30); }
+    .scan-btn-fun:active { transform: scale(0.97); }
+    .scan-btn-fun:disabled { opacity: 0.75; cursor: not-allowed; transform: none; box-shadow: var(--shadow-sm); }
+    .scan-label { font-size: 15px; font-weight: 700; letter-spacing: -0.2px; }
+    .scan-logo { overflow: visible; }
+    .scan-logo .wing { transform-box: fill-box; }
+    .scan-logo .wing-left { transform-origin: 100% 60%; }
+    .scan-logo .wing-right { transform-origin: 0% 60%; }
+    @keyframes flapL { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(-24deg); } }
+    @keyframes flapR { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(24deg); } }
+    /* Gentle flap on hover, faster flap on press */
+    .scan-btn-fun:hover .wing-left { animation: flapL 0.7s ease-in-out infinite; }
+    .scan-btn-fun:hover .wing-right { animation: flapR 0.7s ease-in-out infinite; }
+    .scan-btn-fun:active .wing-left { animation: flapL 0.28s ease-in-out infinite; }
+    .scan-btn-fun:active .wing-right { animation: flapR 0.28s ease-in-out infinite; }
 
     /* ── Product info ── */
     .product-card {
@@ -262,6 +285,7 @@
     .flag-item .info { font-size: 11px; color: var(--muted-fg); margin-top: 5px; line-height: 1.45; }
     .flag-item .info a { color: var(--primary); font-weight: 600; text-decoration: none; white-space: nowrap; }
     .flag-item .info a:hover { text-decoration: underline; }
+    .flag-item .reason strong, .flag-item .info strong { color: var(--dark); font-weight: 700; }
 
     /* ── Ingredient list ── */
     .ing-list { padding: 14px 16px; border-top: 1px solid var(--border); }
@@ -302,7 +326,7 @@
   <!-- ── header ── -->
   <div class="header">
     <div>
-      <h1>enaj</h1>
+      <h1>enaJ</h1>
       <div class="tagline">Your ingredient guardian angel</div>
     </div>
     <svg width="64" height="44" viewBox="0 0 96 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="logo-float" aria-hidden="true">
@@ -340,9 +364,9 @@
     <div class="state-icon">
       <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V5l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
     </div>
-    <h2>Welcome to enaj</h2>
+    <h2>Welcome to enaJ</h2>
     <p>Connect your profile at <a href="https://www.enajhealth.com" target="_blank">enajhealth.com</a>.</p>
-    <p>Then click the enaj icon on any product page to scan its ingredients while you shop.</p>
+    <p>Then click the enaJ icon on any product page to scan its ingredients while you shop.</p>
   </div>
 
   <!-- ── No product ── -->
@@ -351,7 +375,7 @@
       <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
     </div>
     <h3>Browse a product</h3>
-    <p>Open a product page and click the enaj icon to scan its ingredients.</p>
+    <p>Open a product page and click the enaJ icon to scan its ingredients.</p>
     <span class="chip">
       <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
       Amazon · Sephora · Ulta · Walmart · Target
@@ -367,23 +391,27 @@
         <div class="name" id="product-name"></div>
       </div>
     </div>
-    <button class="btn btn-scan" id="scan-btn">
-      <svg width="20" height="14" viewBox="0 0 96 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <path d="M36 30C32 26 22 14 10 6C7 4 3 5 4 8C6 14 14 24 28 32C32 34 35 33 36 31Z" fill="url(#bwg)" opacity="0.6"/>
-        <path d="M37 28C34 22 27 14 18 10C15 9 12 10 13 13C15 18 22 26 32 31C35 32 36 31 37 29Z" fill="url(#bwg)" opacity="0.85"/>
-        <path d="M37 27C35 22 30 16 23 13C20 12 18 13 19 15C20 19 26 26 33 30C35 31 37 30 37 28Z" fill="url(#bwg)" opacity="0.9"/>
-        <path d="M60 30C64 26 74 14 86 6C89 4 93 5 92 8C90 14 82 24 68 32C64 34 61 33 60 31Z" fill="url(#bwg)" opacity="0.6"/>
-        <path d="M59 28C62 22 69 14 78 10C81 9 84 10 83 13C81 18 74 26 64 31C61 32 60 31 59 29Z" fill="url(#bwg)" opacity="0.85"/>
-        <path d="M59 27C61 22 66 16 73 13C76 12 78 13 77 15C76 19 70 26 63 30C61 31 59 30 59 28Z" fill="url(#bwg)" opacity="0.9"/>
+    <button class="scan-btn-fun" id="scan-btn">
+      <span class="scan-label" id="scan-label">Scan with enaJ</span>
+      <svg class="scan-logo" width="76" height="52" viewBox="0 0 96 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g class="wing wing-left">
+          <path d="M36 30C32 26 22 14 10 6C7 4 3 5 4 8C6 14 14 24 28 32C32 34 35 33 36 31Z" fill="url(#bwg)" opacity="0.6"/>
+          <path d="M37 28C34 22 27 14 18 10C15 9 12 10 13 13C15 18 22 26 32 31C35 32 36 31 37 29Z" fill="url(#bwg)" opacity="0.85"/>
+          <path d="M37 27C35 22 30 16 23 13C20 12 18 13 19 15C20 19 26 26 33 30C35 31 37 30 37 28Z" fill="url(#bwg)" opacity="0.9"/>
+        </g>
+        <g class="wing wing-right">
+          <path d="M60 30C64 26 74 14 86 6C89 4 93 5 92 8C90 14 82 24 68 32C64 34 61 33 60 31Z" fill="url(#bwg)" opacity="0.6"/>
+          <path d="M59 28C62 22 69 14 78 10C81 9 84 10 83 13C81 18 74 26 64 31C61 32 60 31 59 29Z" fill="url(#bwg)" opacity="0.85"/>
+          <path d="M59 27C61 22 66 16 73 13C76 12 78 13 77 15C76 19 70 26 63 30C61 31 59 30 59 28Z" fill="url(#bwg)" opacity="0.9"/>
+        </g>
         <path d="M48 10L36 16V30C36 40 48 52 48 52C48 52 60 40 60 30V16L48 10Z" fill="url(#bsg)" stroke="url(#bss)" stroke-width="1.5"/>
-        <path d="M43 31L46 35L54 26" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M43 31L46 35L54 26" stroke="#0ABAB5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
         <defs>
           <linearGradient id="bwg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#B8EBD6"/><stop offset="100%" stop-color="#ffffff"/></linearGradient>
           <linearGradient id="bsg" x1="48" y1="10" x2="48" y2="52"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#D4F5E9"/></linearGradient>
           <linearGradient id="bss" x1="48" y1="10" x2="48" y2="52"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#ffffff"/></linearGradient>
         </defs>
       </svg>
-      Scan with enaj
     </button>
   </div>
 
@@ -400,7 +428,7 @@
 
   <!-- ── Footer ── -->
   <div class="footer">
-    Powered by <a href="https://www.enajhealth.com" target="_blank">enaj</a> · Your health, your choice
+    Powered by <a href="https://www.enajhealth.com" target="_blank">enaJ</a> · Your health, your choice
   </div>
 
   <script src="popup.js"></script>
