@@ -860,7 +860,7 @@ export function ProductScanner({
               Why is this flagged?
             </DialogTitle>
             <DialogDescription className="text-muted-foreground">
-              We have flagged <span className="font-semibold text-foreground">{sourcesDialog?.ingredient}</span> to conflict with your health condition based on the following sources:
+              Based on your journal entry, <span className="font-semibold text-foreground">{sourcesDialog?.ingredient}</span> may be contributing to your symptom according to the following sources:
             </DialogDescription>
           </DialogHeader>
           <div className="mt-2 rounded-lg bg-muted/50 p-4">

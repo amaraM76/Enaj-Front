@@ -30,7 +30,6 @@ type DashboardTab = 'monitor' | 'journal' | 'scanner' | 'saved' | 'settings'
 
 const NAV_ITEMS: { id: DashboardTab; label: string; icon: React.ReactNode }[] = [
   { id: 'monitor', label: 'My Health', icon: <Heart className="h-5 w-5" /> },
-  { id: 'journal', label: 'Journal', icon: <NotebookPen className="h-5 w-5" /> },
   { id: 'scanner', label: 'Shop', icon: <ShoppingCart className="h-5 w-5" /> },
   { id: 'saved', label: 'Saved Items', icon: <Bookmark className="h-5 w-5" /> },
   { id: 'settings', label: 'Settings', icon: <Settings className="h-5 w-5" /> },
@@ -88,6 +87,16 @@ export function Dashboard() {
               {item.label}
             </Button>
           ))}
+          <Link href="/journal">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-2 text-muted-foreground hover:text-foreground"
+            >
+              <NotebookPen className="h-5 w-5" />
+              Journal
+            </Button>
+          </Link>
           <Link href="/education">
             <Button
               variant="ghost"
@@ -145,6 +154,16 @@ export function Dashboard() {
                 {item.label}
               </Button>
             ))}
+            <Link href="/journal" onClick={() => setMobileMenuOpen(false)}>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start gap-3 text-muted-foreground hover:text-foreground"
+              >
+                <NotebookPen className="h-5 w-5" />
+                Journal
+              </Button>
+            </Link>
             <Link href="/education" onClick={() => setMobileMenuOpen(false)}>
               <Button
                 variant="ghost"
@@ -172,8 +191,6 @@ export function Dashboard() {
       <main className="relative z-10 flex-1 px-4 py-6 lg:px-8 lg:py-8">
         <div className="mx-auto max-w-5xl">
           {activeTab === 'monitor' && <AilmentMonitor />}
-
-          {activeTab === 'journal' && <HealthJournal />}
 
           {activeTab === 'scanner' && (
             <ProductScanner
@@ -204,7 +221,22 @@ export function Dashboard() {
             <span>{item.label}</span>
           </button>
         ))}
+        <Link
+          href="/journal"
+          className="flex flex-1 flex-col items-center gap-1 py-3 text-xs text-muted-foreground"
+        >
+          <NotebookPen className="h-5 w-5" />
+          <span>Journal</span>
+        </Link>
+        <Link
+          href="/education"
+          className="flex flex-1 flex-col items-center gap-1 py-3 text-xs text-muted-foreground"
+        >
+          <BookOpen className="h-5 w-5" />
+          <span>Learn</span>
+        </Link>
       </nav>
+
       {/* Bottom spacer for mobile */}
       <div className="h-16 md:hidden" />
     </div>
