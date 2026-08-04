@@ -57,7 +57,7 @@ export interface ScanResult {
   flaggedIngredients: {
     ingredient: string
     reason: string
-    source: 'ailment' | 'preference'
+    source: 'ailment' | 'preference' | 'journal'
     sourceName: string
   }[]
   alternatives: Product[]
