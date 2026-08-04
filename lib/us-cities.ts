@@ -7,6 +7,7 @@ export const US_STATES = [
     { abbr: 'CO', name: 'Colorado' },
     { abbr: 'CT', name: 'Connecticut' },
     { abbr: 'DE', name: 'Delaware' },
+    { abbr: 'DC', name: 'District of Columbia' },
     { abbr: 'FL', name: 'Florida' },
     { abbr: 'GA', name: 'Georgia' },
     { abbr: 'HI', name: 'Hawaii' },

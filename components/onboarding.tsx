@@ -121,7 +121,7 @@ export function Onboarding() {
   }, [isSignedIn, step])
 
   useEffect(() => {
-    if (!selectedState) { setCities([]); return }
+    if (!selectedState || selectedState === 'DC') { setCities([]); return }
     setCitiesLoading(true)
     const stateCode = selectedState // already the 2-letter abbr
     fetch(`/api/cities?state=${stateCode}`)
@@ -626,9 +626,10 @@ export function Onboarding() {
                     id="state"
                     value={selectedState}
                     onChange={(e) => {
-                      setSelectedState(e.target.value)
-                      setSelectedCity('')
-                      setCitySearch('')
+                      const stateValue = e.target.value
+                      setSelectedState(stateValue)
+                      setSelectedCity(stateValue === 'DC' ? 'Washington' : '')
+                      setCitySearch(stateValue === 'DC' ? 'Washington' : '')
                       setCities([])
                     }}
                     className="mt-1.5 h-9 w-full min-w-0 rounded-md border border-input bg-card px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none md:text-sm text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
@@ -641,59 +642,60 @@ export function Onboarding() {
                 </div>
 
                 {/* City */}
-                <div className="relative">
-                  <Label htmlFor="city" className="text-foreground">
-                    City <span className="text-destructive">*</span>
-                  </Label>
-                  <div className="relative mt-1.5">
-                    <input
-                      id="city"
-                      type="text"
-                      placeholder={selectedState ? 'Search city...' : 'Select a state first'}
-                      disabled={!selectedState}
-                      value={citySearch}
-                      onChange={(e) => {
-                        setCitySearch(e.target.value)
-                        setSelectedCity('')
-                        setCityDropdownOpen(true)
-                      }}
-                      onFocus={() => selectedState && setCityDropdownOpen(true)}
-                      onBlur={() => setTimeout(() => setCityDropdownOpen(false), 150)}
-                      className="h-9 w-full rounded-md border border-input bg-card px-3 py-1 text-base shadow-xs outline-none md:text-sm text-foreground placeholder:text-muted-foreground disabled:opacity-50 disabled:cursor-not-allowed focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
-                    />
-                    {cityDropdownOpen && selectedState && (
-                      <div className="absolute z-50 mt-1 w-full rounded-md border border-border bg-card shadow-lg max-h-48 overflow-y-auto">
-                        {citiesLoading ? (
-                          <div className="flex items-center justify-center py-4">
-                            <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                          </div>
-                        ) : cities
-                            .filter((c) => c.toLowerCase().includes(citySearch.toLowerCase()))
-                            .map((city) => (
-                              <button
-                                key={city}
-                                type="button"
-                                onMouseDown={() => {
-                                  setSelectedCity(city)
-                                  setCitySearch(city)
-                                  setCityDropdownOpen(false)
-                                }}
-                                className="w-full px-3 py-2 text-left text-sm text-foreground hover:bg-accent transition-colors"
-                              >
-                                {city}
-                              </button>
-                            ))
-                        }
-                        {!citiesLoading && cities.filter((c) =>
-                          c.toLowerCase().includes(citySearch.toLowerCase())
-                        ).length === 0 && (
-                          <p className="px-3 py-2 text-sm text-muted-foreground">No cities found</p>
-                        )}
-                      </div>
-                    )}
+                {selectedState !== 'DC' && (
+                  <div className="relative">
+                    <Label htmlFor="city" className="text-foreground">
+                      City <span className="text-destructive">*</span>
+                    </Label>
+                    <div className="relative mt-1.5">
+                      <input
+                        id="city"
+                        type="text"
+                        placeholder={selectedState ? 'Search city...' : 'Select a state first'}
+                        disabled={!selectedState}
+                        value={citySearch}
+                        onChange={(e) => {
+                          setCitySearch(e.target.value)
+                          setSelectedCity('')
+                          setCityDropdownOpen(true)
+                        }}
+                        onFocus={() => selectedState && setCityDropdownOpen(true)}
+                        onBlur={() => setTimeout(() => setCityDropdownOpen(false), 150)}
+                        className="h-9 w-full rounded-md border border-input bg-card px-3 py-1 text-base shadow-xs outline-none md:text-sm text-foreground placeholder:text-muted-foreground disabled:opacity-50 disabled:cursor-not-allowed focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+                      />
+                      {cityDropdownOpen && selectedState && (
+                        <div className="absolute z-50 mt-1 w-full rounded-md border border-border bg-card shadow-lg max-h-48 overflow-y-auto">
+                          {citiesLoading ? (
+                            <div className="flex items-center justify-center py-4">
+                              <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                            </div>
+                          ) : cities
+                              .filter((c) => c.toLowerCase().includes(citySearch.toLowerCase()))
+                              .map((city) => (
+                                <button
+                                  key={city}
+                                  type="button"
+                                  onMouseDown={() => {
+                                    setSelectedCity(city)
+                                    setCitySearch(city)
+                                    setCityDropdownOpen(false)
+                                  }}
+                                  className="w-full px-3 py-2 text-left text-sm text-foreground hover:bg-accent transition-colors"
+                                >
+                                  {city}
+                                </button>
+                              ))
+                          }
+                          {!citiesLoading && cities.filter((c) =>
+                            c.toLowerCase().includes(citySearch.toLowerCase())
+                          ).length === 0 && (
+                            <p className="px-3 py-2 text-sm text-muted-foreground">No cities found</p>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-
+                )}
                 {/* Age */}
                 <div>
                   <Label htmlFor="age" className="text-foreground">
@@ -1348,67 +1350,77 @@ export function Onboarding() {
                 </p>
               </div>
 
-              {/* Organized two-column card: Install on the left, How it works on the right */}
-              <div className="mt-8 grid w-full max-w-3xl gap-6 rounded-2xl border border-border bg-card p-6 md:grid-cols-2 md:p-8">
-                {/* Install panel */}
-                <div className="flex flex-col md:border-r md:border-border md:pr-8">
-                  <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Install</h3>
+              {/* Install section — full width on top */}
+              <div className="mt-8 w-full max-w-4xl rounded-2xl border border-border bg-card p-6 md:p-8">
+                <div className="flex flex-col items-center gap-5 md:flex-row md:items-center md:justify-between">
+                  <div className="text-center md:text-left">
+                    <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Install</h3>
+                    <p className="mt-1 text-xs text-muted-foreground">More browsers coming soon.</p>
+                  </div>
                   <Button
                     size="lg"
-                    className="mt-4 w-full gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
+                    className="w-full gap-2 bg-primary text-primary-foreground hover:bg-primary/90 md:w-auto md:px-8"
                   >
                     <Chrome className="h-5 w-5" />
                     Add to Chrome
                   </Button>
-
-                  <p className="mt-4 text-xs font-medium text-muted-foreground">
-                    More browsers coming soon.
-                  </p>
                 </div>
 
-                {/* How it works panel */}
-                <div className="flex flex-col">
-                  <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">How it works</h3>
-                  <div className="mt-4 flex flex-col gap-4 text-left">
-                    <div className="flex items-start gap-3">
-                      <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
-                        1
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-card-foreground">Shop like you normally do</p>
-                        <p className="text-sm text-muted-foreground">
-                          Open any product page on Amazon, Sephora, Ulta, Walmart, or Target.
-                          <span className="mt-1 block text-xs italic text-muted-foreground/80">
-                            More supported websites coming soon.
-                          </span>
-                        </p>
-                      </div>
+                <ul className="mt-6 grid gap-3 border-t border-border pt-6 sm:grid-cols-3">
+                  <li className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                    <Check className="h-4 w-4 flex-shrink-0 text-primary" />
+                    You&apos;re in control — Enaj only scans when you click the button
+                  </li>
+                  <li className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                    <Check className="h-4 w-4 flex-shrink-0 text-primary" />
+                    Private — your health data stays yours
+                  </li>
+                  <li className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                    <Check className="h-4 w-4 flex-shrink-0 text-primary" />
+                    Works right in your browser while you shop
+                  </li>
+                </ul>
+              </div>
+
+              {/* How it works — each step in its own card */}
+              <div className="mt-6 w-full max-w-4xl">
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">How it works</h3>
+                <div className="mt-4 grid gap-4 md:grid-cols-3">
+                  {/* Step 1 */}
+                  <div className="flex flex-col rounded-2xl border border-border bg-card p-6 text-left">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                      1
                     </div>
-                    <div className="flex items-start gap-3">
-                      <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
-                        2
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-card-foreground">Open the Enaj extension</p>
-                        <p className="text-sm text-muted-foreground">
-                          Click the Enaj icon while viewing a product page to instantly analyze its ingredients.
-                        </p>
-                      </div>
+                    <p className="mt-4 text-sm font-medium text-card-foreground">Shop like you normally do</p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      Open any product page on Amazon, Sephora, Ulta, Walmart, or Target.
+                    </p>
+                    <p className="mt-2 text-xs italic text-muted-foreground/80">
+                      More supported websites coming soon.
+                    </p>
+                  </div>
+                  {/* Step 2 */}
+                  <div className="flex flex-col rounded-2xl border border-border bg-card p-6 text-left">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                      2
                     </div>
-                    <div className="flex items-start gap-3">
-                      <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
-                        3
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-card-foreground">Get instant results</p>
-                        <p className="text-sm text-muted-foreground">
-                          See whether a product matches your health profile, learn why ingredients are flagged, and save products to your Enaj profile.
-                          <span className="mt-1 block text-xs italic text-muted-foreground/80">
-                            Personalized product recommendations coming soon.
-                          </span>
-                        </p>
-                      </div>
+                    <p className="mt-4 text-sm font-medium text-card-foreground">Open the Enaj extension</p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      Click the Enaj icon while viewing a product page to instantly analyze its ingredients.
+                    </p>
+                  </div>
+                  {/* Step 3 */}
+                  <div className="flex flex-col rounded-2xl border border-border bg-card p-6 text-left">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                      3
                     </div>
+                    <p className="mt-4 text-sm font-medium text-card-foreground">Get instant results</p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      See whether a product matches your health profile, learn why ingredients are flagged, and save products to your Enaj profile.
+                    </p>
+                    <p className="mt-2 text-xs italic text-muted-foreground/80">
+                      Personalized product recommendations coming soon.
+                    </p>
                   </div>
                 </div>
               </div>

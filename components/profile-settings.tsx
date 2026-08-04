@@ -187,9 +187,10 @@ export function ProfileSettings() {
               id="settings-state"
               value={selectedState}
               onChange={(e) => {
-                setSelectedState(e.target.value)
-                setSelectedCity('')
-                setCitySearch('')
+                const stateValue = e.target.value
+                setSelectedState(stateValue)
+                setSelectedCity(stateValue === 'DC' ? 'Washington' : '')
+                setCitySearch(stateValue === 'DC' ? 'Washington' : '')
                 setCities([])
               }}
               className="mt-1.5 h-9 w-full rounded-md border border-border bg-background px-3 py-1 text-sm text-foreground"
@@ -202,57 +203,59 @@ export function ProfileSettings() {
           </div>
 
           {/* City */}
-          <div className="relative">
-            <Label htmlFor="settings-city" className="text-foreground">City</Label>
-            <div className="relative mt-1.5">
-              <input
-                id="settings-city"
-                type="text"
-                placeholder={selectedState ? 'Search city...' : 'Select a state first'}
-                disabled={!selectedState}
-                value={citySearch}
-                onChange={(e) => {
-                  setCitySearch(e.target.value)
-                  setSelectedCity('')
-                  setCityDropdownOpen(true)
-                }}
-                onFocus={() => selectedState && setCityDropdownOpen(true)}
-                onBlur={() => setTimeout(() => setCityDropdownOpen(false), 150)}
-                className="h-9 w-full rounded-md border border-border bg-background px-3 py-1 text-sm text-foreground placeholder:text-muted-foreground disabled:opacity-50 disabled:cursor-not-allowed"
-              />
-              {cityDropdownOpen && selectedState && (
-                <div className="absolute z-50 mt-1 w-full rounded-md border border-border bg-card shadow-lg max-h-48 overflow-y-auto">
-                  {citiesLoading ? (
-                    <div className="flex items-center justify-center py-4">
-                      <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                    </div>
-                  ) : cities
-                      .filter((c) => c.toLowerCase().includes(citySearch.toLowerCase()))
-                      .map((city) => (
-                        <button
-                          key={city}
-                          type="button"
-                          onMouseDown={() => {
-                            setSelectedCity(city)
-                            setCitySearch(city)
-                            setLocation(`${city}, ${selectedState}`)
-                            setCityDropdownOpen(false)
-                          }}
-                          className="w-full px-3 py-2 text-left text-sm text-foreground hover:bg-accent transition-colors"
-                        >
-                          {city}
-                        </button>
-                      ))
-                  }
-                  {!citiesLoading && cities.filter((c) =>
-                    c.toLowerCase().includes(citySearch.toLowerCase())
-                  ).length === 0 && (
-                    <p className="px-3 py-2 text-sm text-muted-foreground">No cities found</p>
-                  )}
-                </div>
-              )}
+          {selectedState !== 'DC' && (
+            <div className="relative">
+              <Label htmlFor="settings-city" className="text-foreground">City</Label>
+              <div className="relative mt-1.5">
+                <input
+                  id="settings-city"
+                  type="text"
+                  placeholder={selectedState ? 'Search city...' : 'Select a state first'}
+                  disabled={!selectedState}
+                  value={citySearch}
+                  onChange={(e) => {
+                    setCitySearch(e.target.value)
+                    setSelectedCity('')
+                    setCityDropdownOpen(true)
+                  }}
+                  onFocus={() => selectedState && setCityDropdownOpen(true)}
+                  onBlur={() => setTimeout(() => setCityDropdownOpen(false), 150)}
+                  className="h-9 w-full rounded-md border border-border bg-background px-3 py-1 text-sm text-foreground placeholder:text-muted-foreground disabled:opacity-50 disabled:cursor-not-allowed"
+                />
+                {cityDropdownOpen && selectedState && (
+                  <div className="absolute z-50 mt-1 w-full rounded-md border border-border bg-card shadow-lg max-h-48 overflow-y-auto">
+                    {citiesLoading ? (
+                      <div className="flex items-center justify-center py-4">
+                        <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                      </div>
+                    ) : cities
+                        .filter((c) => c.toLowerCase().includes(citySearch.toLowerCase()))
+                        .map((city) => (
+                          <button
+                            key={city}
+                            type="button"
+                            onMouseDown={() => {
+                              setSelectedCity(city)
+                              setCitySearch(city)
+                              setLocation(`${city}, ${selectedState}`)
+                              setCityDropdownOpen(false)
+                            }}
+                            className="w-full px-3 py-2 text-left text-sm text-foreground hover:bg-accent transition-colors"
+                          >
+                            {city}
+                          </button>
+                        ))
+                    }
+                    {!citiesLoading && cities.filter((c) =>
+                      c.toLowerCase().includes(citySearch.toLowerCase())
+                    ).length === 0 && (
+                      <p className="px-3 py-2 text-sm text-muted-foreground">No cities found</p>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          )}
           <div>
             <Label htmlFor="settings-age" className="text-foreground">Age</Label>
             <select
