@@ -5,6 +5,7 @@ import { useEnaj } from '@/lib/enaj-context'
 import { api } from '@/lib/api'
 import type { Product, ScanResult } from '@/lib/enaj-data'
 import { getPreferenceKeywords } from '@/lib/preference-ingredients'
+import { getJournalKeywords } from '@/lib/journal-ingredients'
 
 const PRODUCT_CATEGORIES = [
   { id: 'all', label: 'All', slug: 'all' },
@@ -50,6 +51,7 @@ import {
   Package,
   ShieldCheck,
   ShieldOff,
+  NotebookPen,
 } from 'lucide-react'
 
 const CATEGORY_ICONS: Record<string, React.ReactNode> = {
@@ -66,7 +68,7 @@ const CATEGORY_ICONS: Record<string, React.ReactNode> = {
 interface ApiFlaggedIngredient {
   ingredient: string
   reason: string
-  source: 'ailment' | 'preference'
+  source: 'ailment' | 'preference' | 'journal'
   sourceName: string
   flaggedFrom?: 'ingredients' | 'packaging' | 'allergens'
   sources?: { title: string; url: string }[]
@@ -79,7 +81,7 @@ export function ProductScanner({
   selectedProduct?: Product & { slug?: string }
   onProductOpened?: () => void
 }) {
-  const { profile, clerkUserId, saveProduct, unsaveProduct, isProductSaved, ailmentCategories, preferenceCategories } = useEnaj()
+  const { profile, clerkUserId, saveProduct, unsaveProduct, isProductSaved, ailmentCategories, preferenceCategories, journalCategories } = useEnaj()
   const [scanResult, setScanResult] = useState<(Omit<ScanResult, 'flaggedIngredients'> & { flaggedIngredients: ApiFlaggedIngredient[] }) | null>(null)
   const [scanning, setScanning] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -348,9 +350,31 @@ export function ProductScanner({
           flaggedPrefIds.add(prefId)
         }
       }
+      const journalConditionMap = new Map<string, { name: string; whatWeMonitor: { ingredient: string; reason: string }[] }>()
+      for (const cat of journalCategories) {
+        for (const condition of cat.conditions) {
+          journalConditionMap.set(condition.id, condition)
+        }
+      }
+      for (const conditionId of profile.journalEntries) {
+        const condition = journalConditionMap.get(conditionId)
+        if (!condition) continue
+        for (const monitor of condition.whatWeMonitor) {
+          const keywords = getJournalKeywords(monitor.ingredient)
+          const ingredientMatch = findMatch(keywords, productIngredients)
+          if (ingredientMatch) {
+            flagged.push({ ingredient: ingredientMatch, reason: monitor.reason, source: 'journal', sourceName: condition.name, flaggedFrom: 'ingredients' })
+            continue
+          }
+          const packagingMatch = findMatch(keywords, productPackaging)
+          if (packagingMatch) {
+            flagged.push({ ingredient: packagingMatch, reason: monitor.reason, source: 'journal', sourceName: condition.name, flaggedFrom: 'packaging' })
+          }
+        }
+      }
       return { flaggedIngredients: flagged, isRecommended: flagged.length === 0 }
     },
-    [profile, preferenceCategories]
+    [profile, preferenceCategories, journalCategories]
   )
 
   const performScan = useCallback(
@@ -683,7 +707,15 @@ export function ProductScanner({
                   <div key={`${fi.ingredient}-${idx}`} className="rounded-lg border border-border bg-card p-3">
                     <div className="flex items-start gap-3">
                       <div className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-destructive/10">
-                        {fi.source === 'ailment' ? <Heart className="h-3.5 w-3.5 text-destructive" /> : fi.flaggedFrom === 'packaging' ? <Package className="h-3.5 w-3.5 text-destructive" /> : <Leaf className="h-3.5 w-3.5 text-destructive" />}
+                        {fi.source === 'ailment' ? (
+                          <Heart className="h-3.5 w-3.5 text-destructive" />
+                        ) : fi.source === 'journal' ? (
+                          <NotebookPen className="h-3.5 w-3.5 text-destructive" />
+                        ) : fi.flaggedFrom === 'packaging' ? (
+                          <Package className="h-3.5 w-3.5 text-destructive" />
+                        ) : (
+                          <Leaf className="h-3.5 w-3.5 text-destructive" />
+                        )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-card-foreground">{fi.ingredient}</p>
@@ -693,6 +725,11 @@ export function ProductScanner({
                             <span className="inline-flex items-center gap-1.5 rounded-full bg-destructive/10 px-3 py-1 text-xs font-medium text-destructive">
                               <Heart className="h-3 w-3" />
                               Conflicts with your {fi.sourceName}
+                            </span>
+                          ) : fi.source === 'journal' ? (
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-destructive/10 px-3 py-1 text-xs font-medium text-destructive">
+                              <NotebookPen className="h-3 w-3" />
+                              Flagged by your journal entry: {fi.sourceName}
                             </span>
                           ) : (
                             <span className="inline-flex items-center gap-1.5 rounded-full bg-destructive/10 px-3 py-1 text-xs font-medium text-destructive">
