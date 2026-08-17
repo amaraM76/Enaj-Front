@@ -6,9 +6,10 @@ import type {
 } from '@/lib/enaj-data'
 import type { JournalCategory } from '@/lib/journal-data'
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  'https://enaj-back-production.up.railway.app'
+// All calls go through this app's own /api/* routes (which proxy
+// server-side to the Railway backend) rather than hitting Railway directly
+// from the browser - keeps the backend's hostname, and any user id in the
+// request, out of the browser's network tab.
 
 // ---------------------------------------------------------------------------
 // Shared fetch helper
@@ -23,7 +24,7 @@ interface FetchOptions {
 async function request<T>(path: string, opts: FetchOptions = {}): Promise<T> {
   const { method = 'GET', body, params } = opts
 
-  let url = `${API_URL}${path}`
+  let url = path
   if (params) {
     const qs = new URLSearchParams(params).toString()
     if (qs) url += `?${qs}`
