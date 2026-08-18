@@ -19,6 +19,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { StoreMultiSelect } from '@/components/store-multiselect'
 import { Progress } from '@/components/ui/progress'
 import {
   ArrowRight,
@@ -754,13 +755,7 @@ export function Onboarding() {
                   <Label htmlFor="shoppingStores" className="text-foreground">
                     Where do you mainly shop? <span className="text-destructive">*</span>
                   </Label>
-                  <Input
-                    id="shoppingStores"
-                    placeholder="e.g., Target, Amazon, Sephora, Walmart"
-                    value={shoppingStores}
-                    onChange={(e) => setShoppingStores(e.target.value)}
-                    className="mt-1.5 bg-card border-border text-foreground placeholder:text-muted-foreground"
-                  />
+                  <StoreMultiSelect value={shoppingStores} onChange={setShoppingStores} />
                 </div>
 
               </div>
