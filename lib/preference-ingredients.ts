@@ -31,6 +31,10 @@ export const PREFERENCE_INGREDIENT_MAP: Record<string, string[]> = {
   "PFAS (Forever Chemicals)": ["PFAS", "PFOA", "PFOS", "perfluoro", "polyfluoro", "fluorotelomer", "PTFE", "teflon", "perfluorooctanoic", "perfluorooctane", "GenX"],
   "Microplastics": ["microplastic", "polyethylene", "polypropylene", "nylon", "polyester", "acrylic", "PET", "plastic micro", "plastic particle", "polymethyl methacrylate", "PMMA", "polytetrafluoroethylene", "plastic bottle", "plastic cap", "plastic wrap", "plastic film", "plastic bag", "plastic lining", "plastic straw", "plastic shrink wrap", "plastic tube", "plastic pump", "plastic sprayer", "plastic wand", "plastic jar", "plastic lid", "plastic trigger", "plastic inner bag"],
   "Bleached Fabrics": ["chlorine bleach", "sodium hypochlorite", "bleached", "chlorine", "optical brightener"],
+  // Its own preference so it fires on any product/fabric containing or
+  // blended with polyester, independent of whether "Microplastics" is
+  // also selected.
+  "Polyester": ["polyester", "poly-blend", "polyblend", "poly blend", "polyethylene terephthalate", "PET fiber", "PET fabric", "spun polyester", "recycled polyester", "rPET"],
   "Eco-Friendly Packaging": ["plastic"],
   "enaJ Non-Toxic Baseline": [
     // Synthetic chemicals & preservatives

@@ -51,9 +51,6 @@ import type { JournalCondition } from '@/lib/journal-data'
 
 type OnboardingStep = 'welcome' | 'profile' | 'ailments' | 'preferences' | 'journal' | 'review' | 'extension'
 
-// Only these two preferences show the endocrine disruptor info icon
-const ENDOCRINE_INFO_PREFS = new Set(['no-pfas', 'no-triclosan'])
-
 
 
 // Map icon names to components for journal categories
@@ -999,12 +996,12 @@ export function Onboarding() {
                             </div>
                           )}
                         </div>
-                        <div className="flex flex-wrap gap-2">
-                          {category.preferences.map((pref) => {
+                        {(() => {
+                          const renderChip = (pref: (typeof category.preferences)[number]) => {
                             const selected = selectedPreferenceIds.has(pref.id)
                             const isLinked = linkedPrefs.has(pref.id)
                             const baselineCovered = selectedPreferenceIds.has(baselineId) && BASELINE_COVERED_PREFS.has(pref.name)
-                            const showEndocrineIcon = ENDOCRINE_INFO_PREFS.has(pref.id)
+                            const showInfoIcon = !!pref.description
                             const showingInfo = endocrineInfoId === pref.id
                             return (
                               <div key={pref.id} className="relative">
@@ -1024,11 +1021,11 @@ export function Onboarding() {
                                     {baselineCovered && !selected && <Sparkles className="h-3 w-3 opacity-60" />}
                                     {pref.name}
                                   </button>
-                                  {showEndocrineIcon && (
+                                  {showInfoIcon && (
                                     <button
                                       onClick={() => setEndocrineInfoId(showingInfo ? null : pref.id)}
-                                      className="flex h-5 w-5 items-center justify-center rounded-full text-primary hover:bg-primary/10 transition-colors"
-                                      aria-label="More info"
+                                      className="flex h-5 w-5 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-primary hover:bg-primary/10 transition-colors"
+                                      aria-label={`What is ${pref.name}?`}
                                     >
                                       <Info className="h-3.5 w-3.5" />
                                     </button>
@@ -1042,7 +1039,7 @@ export function Onboarding() {
                                           <Info className="h-4 w-4 text-primary" />
                                         </div>
                                         <p className="text-sm font-semibold text-foreground">
-                                          Known Endocrine Disruptor
+                                          {pref.name}
                                         </p>
                                       </div>
                                       <button
@@ -1054,14 +1051,53 @@ export function Onboarding() {
                                       </button>
                                     </div>
                                     <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                                      This ingredient is classified as an endocrine disruptor. It can interfere with hormone function and has been linked to reproductive, developmental, and metabolic health concerns.
+                                      {pref.description || 'This ingredient is one some people choose to avoid.'}
                                     </p>
                                   </div>
                                 )}
                               </div>
                             )
-                          })}
-                        </div>
+                          }
+
+                          const selectedForYou = category.preferences.filter((pref) => linkedPrefs.has(pref.id))
+                          const otherOptions = category.preferences.filter((pref) => !linkedPrefs.has(pref.id))
+
+                          // When none of this category's preferences were
+                          // suggested by the user's health conditions, fall
+                          // back to one flat list rather than showing an
+                          // empty "Selected for you" section.
+                          if (selectedForYou.length === 0) {
+                            return (
+                              <div className="flex flex-wrap gap-2">
+                                {otherOptions.map(renderChip)}
+                              </div>
+                            )
+                          }
+
+                          return (
+                            <div className="flex flex-col gap-3">
+                              <div>
+                                <p className="mb-2 flex items-center gap-1.5 text-xs font-medium text-primary">
+                                  <Sparkles className="h-3 w-3" />
+                                  Selected for you based on your health conditions
+                                </p>
+                                <div className="flex flex-wrap gap-2">
+                                  {selectedForYou.map(renderChip)}
+                                </div>
+                              </div>
+                              {otherOptions.length > 0 && (
+                                <div>
+                                  <p className="mb-2 text-xs font-medium text-muted-foreground">
+                                    Other options
+                                  </p>
+                                  <div className="flex flex-wrap gap-2">
+                                    {otherOptions.map(renderChip)}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          )
+                        })()}
                       </div>
                     )
                   })}
