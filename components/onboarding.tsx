@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useParams, useRouter } from 'next/navigation'
 import { useAuth, useUser, SignUp } from '@clerk/nextjs'
 import { useEnaj } from '@/lib/enaj-context'
 import { EnajLogo } from '@/components/enaj-logo'
@@ -78,8 +79,16 @@ const STEPS: OnboardingStep[] = ['welcome', 'profile', 'ailments', 'preferences'
 export function Onboarding() {
   const { setProfile, setCurrentStep, ailmentCategories, preferenceCategories, fetchUserProfile, saveProfileWithClerk, profile, journalCategories } = useEnaj()
   const { isSignedIn, userId } = useAuth()
-  const { user: clerkUser } = useUser() 
-  const [step, setStep] = useState<OnboardingStep>('welcome')
+  const { user: clerkUser } = useUser()
+  const router = useRouter()
+  const routeParams = useParams<{ step?: string }>()
+  // The step now lives in the URL (/onboarding/[step]) so refresh and back/
+  // forward work correctly - an unrecognized or missing segment falls back
+  // to 'welcome' rather than 404ing.
+  const step: OnboardingStep = STEPS.includes(routeParams.step as OnboardingStep)
+    ? (routeParams.step as OnboardingStep)
+    : 'welcome'
+  const setStep = (next: OnboardingStep) => router.push(`/onboarding/${next}`)
   const [location, setLocation] = useState('')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
@@ -312,7 +321,10 @@ export function Onboarding() {
 
   const handleFinish = async () => {
     const ok = profileSaved ? true : await saveProfile()
-    if (ok) setCurrentStep('dashboard')
+    if (ok) {
+      setCurrentStep('dashboard')
+      router.push('/dashboard/monitor')
+    }
   }
 
   const goNext = () => {
@@ -325,12 +337,12 @@ export function Onboarding() {
 
   const goBack = () => {
     if (step === 'profile') {
-      setCurrentStep('landing')
+      router.push('/')
       return
     }
     const idx = STEPS.indexOf(step)
     if (idx > 0) setStep(STEPS[idx - 1])
-    else setCurrentStep('landing')
+    else router.push('/')
   }
 
   // Get set of linked preferences for display purposes
@@ -351,7 +363,7 @@ export function Onboarding() {
       {/* Header */}
       <header className="relative z-10 flex items-center justify-between border-b border-border px-6 py-4" style={{ background: 'rgba(255,255,255,0.5)', backdropFilter: 'blur(12px)' }}>
         {step === 'welcome' ? (
-          <Button variant="ghost" onClick={() => setCurrentStep('landing')} className="gap-2">
+          <Button variant="ghost" onClick={() => router.push('/')} className="gap-2">
             <ArrowLeft className="h-4 w-4" />
             Back
           </Button>
@@ -545,7 +557,10 @@ export function Onboarding() {
                       Already have an account?{' '}
                       <button
                         type="button"
-                        onClick={() => setCurrentStep('login')}
+                        onClick={() => {
+                          setCurrentStep('login')
+                          router.push('/')
+                        }}
                         className="text-primary hover:underline font-medium"
                       >
                         Sign in

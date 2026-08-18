@@ -1,16 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useRouter, usePathname } from 'next/navigation'
 import { useClerk } from '@clerk/nextjs'
 import { useEnaj } from '@/lib/enaj-context'
 import { CloudBackground } from '@/components/cloud-background'
-import { AilmentMonitor } from '@/components/ailment-monitor'
-import { ProductScanner } from '@/components/product-scanner'
-import { SavedItems } from '@/components/saved-items'
-import { ProfileSettings } from '@/components/profile-settings'
-import type { Product } from '@/lib/enaj-data'
-import { Button } from '@/components/ui/button'
 import { EnajLogo } from '@/components/enaj-logo'
+import { Button } from '@/components/ui/button'
 import {
   ShoppingCart,
   Heart,
@@ -20,42 +16,67 @@ import {
   X,
   LogOut,
   BookOpen,
-  Sparkles,
   NotebookPen,
 } from 'lucide-react'
 import Link from 'next/link'
-import { HealthJournal } from '@/components/health-journal'
 
-type DashboardTab = 'monitor' | 'journal' | 'scanner' | 'saved' | 'settings'
+const NAV_ITEMS = [
+  { id: 'monitor', label: 'My Health', href: '/dashboard/monitor', icon: <Heart className="h-5 w-5" /> },
+  { id: 'scanner', label: 'Shop', href: '/dashboard/scanner', icon: <ShoppingCart className="h-5 w-5" /> },
+  { id: 'saved', label: 'Saved Items', href: '/dashboard/saved', icon: <Bookmark className="h-5 w-5" /> },
+  { id: 'settings', label: 'Settings', href: '/dashboard/settings', icon: <Settings className="h-5 w-5" /> },
+] as const
 
-const NAV_ITEMS: { id: DashboardTab; label: string; icon: React.ReactNode }[] = [
-  { id: 'monitor', label: 'My Health', icon: <Heart className="h-5 w-5" /> },
-  { id: 'scanner', label: 'Shop', icon: <ShoppingCart className="h-5 w-5" /> },
-  { id: 'saved', label: 'Saved Items', icon: <Bookmark className="h-5 w-5" /> },
-  { id: 'settings', label: 'Settings', icon: <Settings className="h-5 w-5" /> },
-]
-
-export function Dashboard() {
-  const { profile, logout } = useEnaj()
+// This layout persists across /dashboard/* navigation, so it - not each
+// individual tab page - owns the nav chrome, the auth/profile-loading
+// guard, and the active-tab highlight (derived from the URL via
+// usePathname() instead of component state). A bookmark or refresh on any
+// /dashboard/* route lands here directly; there's no longer a "flash the
+// marketing homepage first" step for a signed-in user.
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const { profile, logout, isClerkLoaded, clerkUserId, profileLoaded, currentStep } = useEnaj()
   const { signOut } = useClerk()
-  const [activeTab, setActiveTab] = useState<DashboardTab>('monitor')
+  const router = useRouter()
+  const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [selectedMarketplaceProduct, setSelectedMarketplaceProduct] =
-  useState<Product & { slug?: string } | null>(null)
-  const openSavedProduct = (product: Product & { slug?: string }) => {
-  setSelectedMarketplaceProduct(product)
-  setActiveTab('scanner')
-}
+
+  useEffect(() => {
+    if (isClerkLoaded && !clerkUserId) {
+      router.replace('/')
+    }
+  }, [isClerkLoaded, clerkUserId, router])
+
+  useEffect(() => {
+    // A signed-in user who hasn't finished onboarding yet (e.g. a direct/
+    // bookmarked link to /dashboard/*) gets sent to pick up onboarding
+    // where they left off, instead of seeing a dashboard built on an
+    // incomplete profile.
+    if (profileLoaded && currentStep === 'onboarding') {
+      router.replace('/onboarding/welcome')
+    }
+  }, [profileLoaded, currentStep, router])
 
   const handleLogout = async () => {
     await signOut()
     logout()
+    router.replace('/')
   }
 
-  if (!profile) return null
+  const isActive = (href: string) => pathname === href || pathname?.startsWith(`${href}/`)
+
+  if (!isClerkLoaded || !clerkUserId || !profileLoaded || !profile) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="animate-pulse text-muted-foreground">Loading...</div>
+      </div>
+    )
+  }
 
   return (
-    <div className="relative flex min-h-screen flex-col" style={{ background: 'linear-gradient(170deg, #e0f7f6 0%, #c2ede8 20%, #b0e6d8 45%, #a8d5ba 70%, #c2ede8 100%)' }}>
+    <div
+      className="relative flex min-h-screen flex-col"
+      style={{ background: 'linear-gradient(170deg, #e0f7f6 0%, #c2ede8 20%, #b0e6d8 45%, #a8d5ba 70%, #c2ede8 100%)' }}
+    >
       <CloudBackground />
       {/* Top Header */}
       <header className="relative z-10 flex items-center justify-between border-b border-border px-4 py-3 lg:px-8" style={{ background: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(12px)' }}>
@@ -72,20 +93,20 @@ export function Dashboard() {
         {/* Desktop Nav */}
         <nav className="hidden items-center gap-1 md:flex">
           {NAV_ITEMS.map((item) => (
-            <Button
-              key={item.id}
-              variant={activeTab === item.id ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setActiveTab(item.id)}
-              className={`gap-2 ${
-                activeTab === item.id
-                  ? 'bg-primary text-primary-foreground'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              {item.icon}
-              {item.label}
-            </Button>
+            <Link key={item.id} href={item.href}>
+              <Button
+                variant={isActive(item.href) ? 'default' : 'ghost'}
+                size="sm"
+                className={`gap-2 ${
+                  isActive(item.href)
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {item.icon}
+                {item.label}
+              </Button>
+            </Link>
           ))}
           <Link href="/journal">
             <Button
@@ -136,23 +157,20 @@ export function Dashboard() {
         <div className="relative z-10 border-b border-border p-3 md:hidden" style={{ background: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(12px)' }}>
           <nav className="flex flex-col gap-1">
             {NAV_ITEMS.map((item) => (
-              <Button
-                key={item.id}
-                variant={activeTab === item.id ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => {
-                  setActiveTab(item.id)
-                  setMobileMenuOpen(false)
-                }}
-                className={`justify-start gap-3 ${
-                  activeTab === item.id
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                {item.icon}
-                {item.label}
-              </Button>
+              <Link key={item.id} href={item.href} onClick={() => setMobileMenuOpen(false)}>
+                <Button
+                  variant={isActive(item.href) ? 'default' : 'ghost'}
+                  size="sm"
+                  className={`w-full justify-start gap-3 ${
+                    isActive(item.href)
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  {item.icon}
+                  {item.label}
+                </Button>
+              </Link>
             ))}
             <Link href="/journal" onClick={() => setMobileMenuOpen(false)}>
               <Button
@@ -189,37 +207,22 @@ export function Dashboard() {
 
       {/* Content */}
       <main className="relative z-10 flex-1 px-4 py-6 lg:px-8 lg:py-8">
-        <div className="mx-auto max-w-5xl">
-          {activeTab === 'monitor' && <AilmentMonitor />}
-
-          {activeTab === 'scanner' && (
-            <ProductScanner
-              selectedProduct={selectedMarketplaceProduct ?? undefined}
-              onProductOpened={() => setSelectedMarketplaceProduct(null)}
-            />
-          )}
-
-          {activeTab === 'saved' && (
-            <SavedItems onOpenProduct={openSavedProduct} />
-          )}
-
-          {activeTab === 'settings' && <ProfileSettings />}
-        </div>
+        <div className="mx-auto max-w-5xl">{children}</div>
       </main>
 
       {/* Mobile Bottom Nav */}
       <nav className="fixed bottom-0 left-0 right-0 flex border-t border-border bg-card md:hidden z-50">
         {NAV_ITEMS.map((item) => (
-          <button
+          <Link
             key={item.id}
-            onClick={() => setActiveTab(item.id)}
+            href={item.href}
             className={`flex flex-1 flex-col items-center gap-1 py-3 text-xs transition-colors ${
-              activeTab === item.id ? 'text-primary' : 'text-muted-foreground'
+              isActive(item.href) ? 'text-primary' : 'text-muted-foreground'
             }`}
           >
             {item.icon}
             <span>{item.label}</span>
-          </button>
+          </Link>
         ))}
         <Link
           href="/journal"
