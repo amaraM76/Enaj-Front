@@ -1,7 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import type { ScanTextResponse } from '@/lib/api'
+import { buildFlagReasonText } from '@/lib/preference-display'
 import {
   Dialog,
   DialogContent,
@@ -110,7 +112,7 @@ export function TextScanResult({
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-card-foreground">{fi.ingredient}</p>
-                  <p className="mt-0.5 text-sm text-muted-foreground">{fi.reason}</p>
+                  <p className="mt-0.5 text-sm text-muted-foreground">{buildFlagReasonText(fi)}</p>
                   <div className="mt-2 flex flex-wrap items-center gap-2">
                     {fi.source === 'ailment' ? (
                       <span className="inline-flex items-center gap-1.5 rounded-full bg-destructive/10 px-3 py-1 text-xs font-medium text-destructive">
@@ -133,6 +135,15 @@ export function TextScanResult({
                         <Package className="h-3 w-3" />
                         Found in packaging
                       </span>
+                    )}
+                    {fi.sourceSlug && (
+                      <Link
+                        href={`/education/${fi.sourceSlug}?from=${fi.source === 'ailment' ? 'conditions' : 'preferences'}&highlight=${encodeURIComponent(fi.ingredient)}`}
+                        className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-3 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary/10"
+                      >
+                        <BookOpen className="h-3 w-3" />
+                        Learn why
+                      </Link>
                     )}
                     {fi.sources && fi.sources.length > 0 && (
                       <button
