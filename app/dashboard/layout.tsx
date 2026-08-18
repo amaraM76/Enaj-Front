@@ -17,12 +17,14 @@ import {
   LogOut,
   BookOpen,
   NotebookPen,
+  ScanLine,
 } from 'lucide-react'
 import Link from 'next/link'
 
 const NAV_ITEMS = [
   { id: 'monitor', label: 'My Health', href: '/dashboard/monitor', icon: <Heart className="h-5 w-5" /> },
   { id: 'scanner', label: 'Shop', href: '/dashboard/scanner', icon: <ShoppingCart className="h-5 w-5" /> },
+  { id: 'scan', label: 'Scanner', href: '/scanner', icon: <ScanLine className="h-5 w-5" /> },
   { id: 'saved', label: 'Saved Items', href: '/dashboard/saved', icon: <Bookmark className="h-5 w-5" /> },
   { id: 'settings', label: 'Settings', href: '/dashboard/settings', icon: <Settings className="h-5 w-5" /> },
 ] as const

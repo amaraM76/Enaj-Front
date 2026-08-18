@@ -47,10 +47,16 @@ export function ProductDetail({
   result,
   backHref,
   backLabel = 'Back to Products',
+  onBack,
 }: {
   result: ProductDetailResult
   backHref: string
   backLabel?: string
+  // Overrides the default router.push(backHref) navigation - for callers
+  // that render a scan result as in-place component state rather than a
+  // dedicated route (e.g. the /scanner barcode tab, where "back" means
+  // "reset and scan another product", not "navigate to a URL").
+  onBack?: () => void
 }) {
   const { saveProduct, unsaveProduct, isProductSaved } = useEnaj()
   const router = useRouter()
@@ -65,7 +71,7 @@ export function ProductDetail({
 
   return (
     <div className="flex flex-col gap-6">
-      <Button variant="ghost" size="sm" onClick={() => router.push(backHref)} className="self-start text-muted-foreground hover:text-foreground gap-2">
+      <Button variant="ghost" size="sm" onClick={() => (onBack ? onBack() : router.push(backHref))} className="self-start text-muted-foreground hover:text-foreground gap-2">
         <X className="h-4 w-4" />
         {backLabel}
       </Button>
