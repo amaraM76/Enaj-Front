@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useParams, useRouter } from 'next/navigation'
 import { useAuth, useUser, SignUp } from '@clerk/nextjs'
 import { useEnaj } from '@/lib/enaj-context'
 import { EnajLogo } from '@/components/enaj-logo'
@@ -18,6 +19,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { StoreMultiSelect } from '@/components/store-multiselect'
 import { Progress } from '@/components/ui/progress'
 import {
   ArrowRight,
@@ -50,9 +52,6 @@ import type { JournalCondition } from '@/lib/journal-data'
 
 type OnboardingStep = 'welcome' | 'profile' | 'ailments' | 'preferences' | 'journal' | 'review' | 'extension'
 
-// Only these two preferences show the endocrine disruptor info icon
-const ENDOCRINE_INFO_PREFS = new Set(['no-pfas', 'no-triclosan'])
-
 
 
 // Map icon names to components for journal categories
@@ -78,8 +77,16 @@ const STEPS: OnboardingStep[] = ['welcome', 'profile', 'ailments', 'preferences'
 export function Onboarding() {
   const { setProfile, setCurrentStep, ailmentCategories, preferenceCategories, fetchUserProfile, saveProfileWithClerk, profile, journalCategories } = useEnaj()
   const { isSignedIn, userId } = useAuth()
-  const { user: clerkUser } = useUser() 
-  const [step, setStep] = useState<OnboardingStep>('welcome')
+  const { user: clerkUser } = useUser()
+  const router = useRouter()
+  const routeParams = useParams<{ step?: string }>()
+  // The step now lives in the URL (/onboarding/[step]) so refresh and back/
+  // forward work correctly - an unrecognized or missing segment falls back
+  // to 'welcome' rather than 404ing.
+  const step: OnboardingStep = STEPS.includes(routeParams.step as OnboardingStep)
+    ? (routeParams.step as OnboardingStep)
+    : 'welcome'
+  const setStep = (next: OnboardingStep) => router.push(`/onboarding/${next}`)
   const [location, setLocation] = useState('')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
@@ -312,7 +319,10 @@ export function Onboarding() {
 
   const handleFinish = async () => {
     const ok = profileSaved ? true : await saveProfile()
-    if (ok) setCurrentStep('dashboard')
+    if (ok) {
+      setCurrentStep('dashboard')
+      router.push('/dashboard/monitor')
+    }
   }
 
   const goNext = () => {
@@ -325,12 +335,12 @@ export function Onboarding() {
 
   const goBack = () => {
     if (step === 'profile') {
-      setCurrentStep('landing')
+      router.push('/')
       return
     }
     const idx = STEPS.indexOf(step)
     if (idx > 0) setStep(STEPS[idx - 1])
-    else setCurrentStep('landing')
+    else router.push('/')
   }
 
   // Get set of linked preferences for display purposes
@@ -351,7 +361,7 @@ export function Onboarding() {
       {/* Header */}
       <header className="relative z-10 flex items-center justify-between border-b border-border px-6 py-4" style={{ background: 'rgba(255,255,255,0.5)', backdropFilter: 'blur(12px)' }}>
         {step === 'welcome' ? (
-          <Button variant="ghost" onClick={() => setCurrentStep('landing')} className="gap-2">
+          <Button variant="ghost" onClick={() => router.push('/')} className="gap-2">
             <ArrowLeft className="h-4 w-4" />
             Back
           </Button>
@@ -545,7 +555,10 @@ export function Onboarding() {
                       Already have an account?{' '}
                       <button
                         type="button"
-                        onClick={() => setCurrentStep('login')}
+                        onClick={() => {
+                          setCurrentStep('login')
+                          router.push('/')
+                        }}
                         className="text-primary hover:underline font-medium"
                       >
                         Sign in
@@ -742,13 +755,7 @@ export function Onboarding() {
                   <Label htmlFor="shoppingStores" className="text-foreground">
                     Where do you mainly shop? <span className="text-destructive">*</span>
                   </Label>
-                  <Input
-                    id="shoppingStores"
-                    placeholder="e.g., Target, Amazon, Sephora, Walmart"
-                    value={shoppingStores}
-                    onChange={(e) => setShoppingStores(e.target.value)}
-                    className="mt-1.5 bg-card border-border text-foreground placeholder:text-muted-foreground"
-                  />
+                  <StoreMultiSelect value={shoppingStores} onChange={setShoppingStores} />
                 </div>
 
               </div>
@@ -984,12 +991,12 @@ export function Onboarding() {
                             </div>
                           )}
                         </div>
-                        <div className="flex flex-wrap gap-2">
-                          {category.preferences.map((pref) => {
+                        {(() => {
+                          const renderChip = (pref: (typeof category.preferences)[number]) => {
                             const selected = selectedPreferenceIds.has(pref.id)
                             const isLinked = linkedPrefs.has(pref.id)
                             const baselineCovered = selectedPreferenceIds.has(baselineId) && BASELINE_COVERED_PREFS.has(pref.name)
-                            const showEndocrineIcon = ENDOCRINE_INFO_PREFS.has(pref.id)
+                            const showInfoIcon = !!pref.description
                             const showingInfo = endocrineInfoId === pref.id
                             return (
                               <div key={pref.id} className="relative">
@@ -1009,11 +1016,11 @@ export function Onboarding() {
                                     {baselineCovered && !selected && <Sparkles className="h-3 w-3 opacity-60" />}
                                     {pref.name}
                                   </button>
-                                  {showEndocrineIcon && (
+                                  {showInfoIcon && (
                                     <button
                                       onClick={() => setEndocrineInfoId(showingInfo ? null : pref.id)}
-                                      className="flex h-5 w-5 items-center justify-center rounded-full text-primary hover:bg-primary/10 transition-colors"
-                                      aria-label="More info"
+                                      className="flex h-5 w-5 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-primary hover:bg-primary/10 transition-colors"
+                                      aria-label={`What is ${pref.name}?`}
                                     >
                                       <Info className="h-3.5 w-3.5" />
                                     </button>
@@ -1027,7 +1034,7 @@ export function Onboarding() {
                                           <Info className="h-4 w-4 text-primary" />
                                         </div>
                                         <p className="text-sm font-semibold text-foreground">
-                                          Known Endocrine Disruptor
+                                          {pref.name}
                                         </p>
                                       </div>
                                       <button
@@ -1039,14 +1046,53 @@ export function Onboarding() {
                                       </button>
                                     </div>
                                     <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                                      This ingredient is classified as an endocrine disruptor. It can interfere with hormone function and has been linked to reproductive, developmental, and metabolic health concerns.
+                                      {pref.description || 'This ingredient is one some people choose to avoid.'}
                                     </p>
                                   </div>
                                 )}
                               </div>
                             )
-                          })}
-                        </div>
+                          }
+
+                          const selectedForYou = category.preferences.filter((pref) => linkedPrefs.has(pref.id))
+                          const otherOptions = category.preferences.filter((pref) => !linkedPrefs.has(pref.id))
+
+                          // When none of this category's preferences were
+                          // suggested by the user's health conditions, fall
+                          // back to one flat list rather than showing an
+                          // empty "Selected for you" section.
+                          if (selectedForYou.length === 0) {
+                            return (
+                              <div className="flex flex-wrap gap-2">
+                                {otherOptions.map(renderChip)}
+                              </div>
+                            )
+                          }
+
+                          return (
+                            <div className="flex flex-col gap-3">
+                              <div>
+                                <p className="mb-2 flex items-center gap-1.5 text-xs font-medium text-primary">
+                                  <Sparkles className="h-3 w-3" />
+                                  Selected for you based on your health conditions
+                                </p>
+                                <div className="flex flex-wrap gap-2">
+                                  {selectedForYou.map(renderChip)}
+                                </div>
+                              </div>
+                              {otherOptions.length > 0 && (
+                                <div>
+                                  <p className="mb-2 text-xs font-medium text-muted-foreground">
+                                    Other options
+                                  </p>
+                                  <div className="flex flex-wrap gap-2">
+                                    {otherOptions.map(renderChip)}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          )
+                        })()}
                       </div>
                     )
                   })}

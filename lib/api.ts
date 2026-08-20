@@ -5,10 +5,12 @@ import type {
   ScanResult,
 } from '@/lib/enaj-data'
 import type { JournalCategory } from '@/lib/journal-data'
+import type { ApiFlaggedIngredient } from '@/lib/scan-types'
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  'https://enaj-back-production.up.railway.app'
+// All calls go through this app's own /api/* routes (which proxy
+// server-side to the Railway backend) rather than hitting Railway directly
+// from the browser - keeps the backend's hostname, and any user id in the
+// request, out of the browser's network tab.
 
 // ---------------------------------------------------------------------------
 // Shared fetch helper
@@ -23,7 +25,7 @@ interface FetchOptions {
 async function request<T>(path: string, opts: FetchOptions = {}): Promise<T> {
   const { method = 'GET', body, params } = opts
 
-  let url = `${API_URL}${path}`
+  let url = path
   if (params) {
     const qs = new URLSearchParams(params).toString()
     if (qs) url += `?${qs}`
@@ -155,6 +157,40 @@ export interface SaveProductResponse {
 
 export interface UnsaveProductResponse {
   removed: boolean
+}
+
+// Shape returned by POST /api/product-search (barcode lookup) - see
+// Enaj-Back's app/api/product-search/route.ts. On a miss the backend
+// responds 404 with { error }, which the shared request() helper turns
+// into a thrown Error rather than a resolved value, so callers only ever
+// see this shape on a hit.
+export interface BarcodeLookupProduct {
+  barcode: string | null
+  name: string
+  brand: string
+  image: string
+  ingredients: string[]
+  packaging: string[]
+  allergens: string[]
+  category: string
+  source: string
+}
+
+export interface BarcodeLookupResponse {
+  product: BarcodeLookupProduct
+}
+
+// Response of the new POST /api/scan-text endpoint (Enaj-Back, built in
+// parallel against this fixed contract) - a scan of raw pasted/OCR'd
+// ingredient text rather than a stored Product, so there's no `product` or
+// `alternatives` in the response the way ScanProductResponse has. Uses
+// ApiFlaggedIngredient (not ScanResult['flaggedIngredients']) since the
+// contract includes `flaggedFrom`/`sources`, which ScanResult's inline type
+// doesn't declare.
+export interface ScanTextResponse {
+  ingredients: string[]
+  flaggedIngredients: ApiFlaggedIngredient[]
+  isRecommended: boolean
 }
 
 // ---------------------------------------------------------------------------
@@ -342,10 +378,19 @@ export const api = {
     )
   },
 
-  lookupBarcode(barcode: string) {
-    return request<unknown>('/api/product-search', {
+  lookupBarcode(barcode: string): Promise<BarcodeLookupResponse> {
+    return request<BarcodeLookupResponse>('/api/product-search', {
       method: 'POST',
       body: { barcode },
+    })
+  },
+
+  // -- Text/OCR ingredient scan -----------------------------------------------
+
+  scanText(userId: string, ingredientsText: string): Promise<ScanTextResponse> {
+    return request<ScanTextResponse>('/api/scan-text', {
+      method: 'POST',
+      body: { userId, ingredientsText },
     })
   },
 }

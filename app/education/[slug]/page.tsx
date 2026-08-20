@@ -5,12 +5,19 @@ import { CloudBackground } from '@/components/cloud-background'
 import { EnajLogo } from '@/components/enaj-logo'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ArrowLeft, Heart, Leaf, AlertTriangle, ExternalLink, Loader2, AlertCircle, Info, MapPin } from 'lucide-react'
+import { ArrowLeft, Heart, Leaf, AlertTriangle, ExternalLink, Loader2, AlertCircle, Info, MapPin, ChevronDown } from 'lucide-react'
 import Link from 'next/link'
 import { api } from '@/lib/api'
 import type { Ailment, FlaggedIngredient } from '@/lib/enaj-data'
 import { useParams, useSearchParams } from 'next/navigation'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 
+
+interface PreferenceSection {
+  header: string
+  description: string
+  bullets: string[]
+}
 
 interface Preference {
   id: string
@@ -20,6 +27,7 @@ interface Preference {
   commonlyFoundIn?: string[]
   whyPeopleAvoid?: string
   sources?: { title: string; url: string }[]
+  educationSections?: PreferenceSection[]
   flaggedIngredients?: Array<{
     id: string
     name: string
@@ -39,6 +47,21 @@ export default function EducationDetailPage() {
   const searchParams = useSearchParams()
   const from = searchParams.get('from') // 'conditions' | 'preferences' | null
   const backHref = from === 'preferences' ? '/education?tab=preferences' : '/education?tab=conditions'
+  const highlight = searchParams.get('highlight') // an ingredient name to scroll to and highlight, e.g. from "Learn why"
+
+  const ingredientAnchorId = (name: string) => `ingredient-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`
+  const isHighlighted = (name: string) =>
+    !!highlight && (name.toLowerCase().includes(highlight.toLowerCase()) || highlight.toLowerCase().includes(name.toLowerCase()))
+
+  // Scrolls to and highlights the ingredient named by ?highlight=, so
+  // pressing "Learn why" on a flagged ingredient lands the user right on it
+  // in the (often long) ingredients-to-watch-for list instead of making
+  // them hunt for it.
+  useEffect(() => {
+    if (!highlight || loading) return
+    const el = document.getElementById(ingredientAnchorId(highlight))
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }, [highlight, loading])
 
   useEffect(() => {
     async function fetchData() {
@@ -62,13 +85,13 @@ export default function EducationDetailPage() {
         const foundPref = allPrefs.find((p) => p.id === slug)
 
         if (foundPref) {
-          // Get education content from local hardcoded data (preference-education.ts)
           setPreference({
             ...(foundPref as Preference),
             whatItIs: (foundPref as any).whatItIs,
             commonlyFoundIn: (foundPref as any).commonlyFoundIn,
             whyPeopleAvoid: (foundPref as any).whyPeopleAvoid,
             sources: (foundPref as any).educationSources,
+            educationSections: (foundPref as any).educationSections,
           })
           setType('preference')
         }
@@ -205,7 +228,12 @@ export default function EducationDetailPage() {
                         return (
                           <div
                             key={ing.id}
-                            className="rounded-lg bg-background p-3 border border-border"
+                            id={ingredientAnchorId(ing.name)}
+                            className={`rounded-lg bg-background p-3 border transition-colors ${
+                              isHighlighted(ing.name)
+                                ? 'border-primary ring-2 ring-primary/40 bg-primary/5'
+                                : 'border-border'
+                            }`}
                           >
                             <p className="font-medium text-card-foreground">{ing.name}</p>
                             {ingredientReason && (
@@ -316,8 +344,46 @@ export default function EducationDetailPage() {
                   </div>
                 )}
 
-                {/* Why People Avoid Section */}
-                {preference.whyPeopleAvoid && (
+                {/* Why People Avoid Section - a structured section breakdown
+                    (bold+underlined header, brief description, "see more"
+                    bulleted detail) when the preference has one, otherwise
+                    the flat paragraph every other preference uses. */}
+                {preference.educationSections && preference.educationSections.length > 0 ? (
+                  <div className="rounded-lg bg-amber-50 border border-amber-200 p-4">
+                    <p className="text-sm font-semibold text-amber-800 mb-3 flex items-center gap-2">
+                      <AlertTriangle className="h-4 w-4 text-amber-600" />
+                      Why Some People Avoid This
+                    </p>
+                    <div className="space-y-4">
+                      {preference.educationSections.map((section, idx) => (
+                        <div key={idx} className={idx > 0 ? 'pt-4 border-t border-amber-200/70' : ''}>
+                          <p className="text-sm text-amber-900">
+                            <span className="font-bold underline underline-offset-2">{section.header}:</span>{' '}
+                            <span className="text-amber-700">{section.description}</span>
+                          </p>
+                          {section.bullets.length > 0 && (
+                            <Collapsible>
+                              <CollapsibleTrigger className="mt-2 flex items-center gap-1 text-xs font-medium text-amber-700 hover:text-amber-900 [&[data-state=open]>svg]:rotate-180">
+                                See more
+                                <ChevronDown className="h-3 w-3 transition-transform" />
+                              </CollapsibleTrigger>
+                              <CollapsibleContent>
+                                <ul className="mt-2 space-y-1.5 pl-1">
+                                  {section.bullets.map((bullet, bIdx) => (
+                                    <li key={bIdx} className="flex items-start gap-2 text-sm text-amber-700">
+                                      <span className="mt-1.5 h-1 w-1 flex-shrink-0 rounded-full bg-amber-500" />
+                                      {bullet}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </CollapsibleContent>
+                            </Collapsible>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : preference.whyPeopleAvoid && (
                   <div className="rounded-lg bg-amber-50 border border-amber-200 p-4">
                     <p className="text-sm font-semibold text-amber-800 mb-2 flex items-center gap-2">
                       <AlertTriangle className="h-4 w-4 text-amber-600" />
@@ -341,7 +407,12 @@ export default function EducationDetailPage() {
                       {preference.flaggedIngredients.map((ing) => (
                         <div
                           key={ing.id}
-                          className="rounded-lg bg-background p-3 border border-border"
+                          id={ingredientAnchorId(ing.name)}
+                          className={`rounded-lg bg-background p-3 border transition-colors ${
+                            isHighlighted(ing.name)
+                              ? 'border-primary ring-2 ring-primary/40 bg-primary/5'
+                              : 'border-border'
+                          }`}
                         >
                           <p className="font-medium text-card-foreground">{ing.name}</p>
                           {ing.reason && (

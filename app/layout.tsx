@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Plus_Jakarta_Sans, Geist_Mono } from 'next/font/google'
 import { ClerkProvider } from '@clerk/nextjs'
 import { Analytics } from '@vercel/analytics/next'
+import { EnajProvider } from '@/lib/enaj-context'
 import './globals.css'
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -53,7 +54,7 @@ export default function RootLayout({
         <body
           className={`${plusJakarta.variable} ${geistMono.variable} font-sans antialiased`}
         >
-          {children}
+          <EnajProvider>{children}</EnajProvider>
           <Analytics />
         </body>
       </html>

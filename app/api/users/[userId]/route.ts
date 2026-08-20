@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { auth } from '@clerk/nextjs/server'
 import { prisma } from '@/lib/prisma'
 import { Gender, Prisma } from '@prisma/client'
 
@@ -31,11 +32,21 @@ export async function GET(
   const headers = getCorsHeaders(request)
   const { userId } = await params
 
+  // A caller must be signed in, and may only ever read their own profile.
+  // Without this check, anyone who knows (or guesses) a database UUID or a
+  // Clerk ID could fetch a stranger's full profile - name, email, health
+  // conditions, preferences - with no session at all.
+  const { userId: sessionClerkId } = await auth()
+  if (!sessionClerkId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401, headers })
+  }
+
   try {
     // First try to find by database UUID
     const userProfile = await prisma.userProfile.findUnique({
       where: { id: userId },
       include: {
+        auth: true,
         ailments: true,
         preferences: true,
         savedProducts: true,
@@ -43,7 +54,11 @@ export async function GET(
     })
 
     if (userProfile) {
-      return NextResponse.json(userProfile, { headers })
+      if (userProfile.auth?.clerkId !== sessionClerkId) {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403, headers })
+      }
+      const { auth: _authRecord, ...safeProfile } = userProfile
+      return NextResponse.json(safeProfile, { headers })
     }
 
     // If not found, try finding by clerkId
@@ -61,6 +76,9 @@ export async function GET(
     })
 
     if (authRecord) {
+      if (authRecord.clerkId !== sessionClerkId) {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403, headers })
+      }
       return NextResponse.json(authRecord.user, { headers })
     }
 
@@ -86,17 +104,26 @@ export async function PUT(
   const headers = getCorsHeaders(request)
   const { userId } = await params
 
+  // A caller must be signed in, and may only ever update their own profile -
+  // otherwise an unauthenticated PUT to a guessed userId could overwrite a
+  // stranger's name, email, location, or gender.
+  const { userId: sessionClerkId } = await auth()
+  if (!sessionClerkId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401, headers })
+  }
+
   try {
     const body = await request.json()
 
     // First determine the actual database ID
     let dbUserId = userId
+    let ownerClerkId: string | null
 
     // If it looks like a Clerk ID, look up the real database ID
     if (userId.startsWith('user_')) {
       const authRecord = await prisma.userAuth.findUnique({
         where: { clerkId: userId },
-        select: { userId: true },
+        select: { userId: true, clerkId: true },
       })
       if (!authRecord) {
         return NextResponse.json(
@@ -105,6 +132,17 @@ export async function PUT(
         )
       }
       dbUserId = authRecord.userId
+      ownerClerkId = authRecord.clerkId
+    } else {
+      const authRecord = await prisma.userAuth.findUnique({
+        where: { userId: dbUserId },
+        select: { clerkId: true },
+      })
+      ownerClerkId = authRecord?.clerkId ?? null
+    }
+
+    if (ownerClerkId !== sessionClerkId) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403, headers })
     }
 
     const updateData: Prisma.UserProfileUpdateInput = {}

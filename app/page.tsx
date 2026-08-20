@@ -2,17 +2,30 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { EnajProvider, useEnaj } from '@/lib/enaj-context'
+import { useEnaj } from '@/lib/enaj-context'
 import { LandingPage } from '@/components/landing-page'
 import { LoginPage } from '@/components/login-page'
-import { Onboarding } from '@/components/onboarding'
-import { Dashboard } from '@/components/dashboard'
 
+// This route now only ever needs to decide between landing/login for an
+// anonymous visitor, and redirecting a signed-in one straight to their
+// deep route - it no longer renders onboarding or the dashboard itself
+// (those are real routes now, under /onboarding and /dashboard), so a
+// refresh or back-navigation on those never passes through here.
 function AppContent() {
   const { currentStep, isClerkLoaded, clerkUserId, profileLoaded } = useEnaj()
+  const router = useRouter()
 
-  // Show loading while Clerk initializes
-  if (!isClerkLoaded || (clerkUserId && !profileLoaded)) {
+  useEffect(() => {
+    if (currentStep === 'dashboard') {
+      router.replace('/dashboard/monitor')
+    } else if (currentStep === 'onboarding') {
+      router.replace('/onboarding/welcome')
+    }
+  }, [currentStep, router])
+
+  const redirecting = currentStep === 'dashboard' || currentStep === 'onboarding'
+
+  if (!isClerkLoaded || (clerkUserId && !profileLoaded) || redirecting) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="animate-pulse text-muted-foreground">Loading...</div>
@@ -20,18 +33,7 @@ function AppContent() {
     )
   }
 
-  switch (currentStep) {
-    case 'landing':
-      return <LandingPage />
-    case 'login':
-      return <LoginPage />
-    case 'onboarding':
-      return <Onboarding />
-    case 'dashboard':
-      return <Dashboard />
-    default:
-      return <LandingPage />
-  }
+  return currentStep === 'login' ? <LoginPage /> : <LandingPage />
 }
 
 function AccessGate({ children }: { children: React.ReactNode }) {
@@ -67,9 +69,7 @@ function AccessGate({ children }: { children: React.ReactNode }) {
 export default function Home() {
   return (
     <AccessGate>
-      <EnajProvider>
-        <AppContent />
-      </EnajProvider>
+      <AppContent />
     </AccessGate>
   )
 }

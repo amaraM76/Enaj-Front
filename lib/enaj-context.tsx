@@ -59,10 +59,6 @@ interface EnajContextType {
 
 const EnajContext = createContext<EnajContextType | null>(null)
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  'https://enaj-back-production.up.railway.app'
-
 export function EnajProvider({ children }: { children: ReactNode }) {
   const { isSignedIn, userId: clerkUserId, isLoaded: isClerkLoaded } = useAuth()
   const { user: clerkUser } = useUser()
@@ -204,6 +200,14 @@ export function EnajProvider({ children }: { children: ReactNode }) {
     if (profileLoaded) return
     const initializeUser = async () => {
       const comingFromSignup = currentStepRef.current === 'onboarding'
+
+      // createUserInBackend (clerk-sync) is an idempotent create-or-fetch,
+      // so calling it up front - before ever trying to read the profile -
+      // means a brand-new sign-up never has to hit fetchUserProfile before
+      // the UserProfile row exists. That avoids a guaranteed 404 on every
+      // first sign-up (the profile row can't exist yet the instant Clerk
+      // finishes auth) instead of just tolerating it after the fact.
+      await createUserInBackend(clerkUserId)
       const userProfile = await fetchUserProfile(clerkUserId)
 
       setProfileLoaded(true)
@@ -221,8 +225,6 @@ export function EnajProvider({ children }: { children: ReactNode }) {
           setCurrentStep('onboarding')
         }
       } else {
-        await createUserInBackend(clerkUserId)
-        await fetchUserProfile(clerkUserId)
         setCurrentStep('onboarding')
       }
     }
