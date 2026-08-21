@@ -115,7 +115,7 @@ export interface GetPreferencesResponse {
 }
 
 export interface SaveUserAilmentsResponse {
-  saved: boolean
+  saved: number
 }
 
 export interface SaveUserPreferencesBody {
