@@ -194,48 +194,60 @@ export function EnajProvider({ children }: { children: ReactNode }) {
 
 
   useEffect(() => {
-    if (!isClerkLoaded) return
-    if (!isSignedIn || !clerkUserId) return
-    if (!clerkUser) return
-    if (profileLoaded) return
-    const initializeUser = async () => {
-      const comingFromSignup = currentStepRef.current === 'onboarding'
+  if (!isClerkLoaded) return
+  if (!isSignedIn || !clerkUserId) return
+  if (!clerkUser) return
+  if (profileLoaded) return
 
-      // createUserInBackend (clerk-sync) is an idempotent create-or-fetch,
-      // so calling it up front - before ever trying to read the profile -
-      // means a brand-new sign-up never has to hit fetchUserProfile before
-      // the UserProfile row exists. That avoids a guaranteed 404 on every
-      // first sign-up (the profile row can't exist yet the instant Clerk
-      // finishes auth) instead of just tolerating it after the fact.
-      await createUserInBackend(clerkUserId)
-      const userProfile = await fetchUserProfile(clerkUserId)
+  const initializeUser = async () => {
+    const comingFromSignup = currentStepRef.current === 'onboarding'
 
+    // Always sync the current Clerk account first
+    const synced = await createUserInBackend(clerkUserId)
+
+    if (!synced) {
       setProfileLoaded(true)
+      return
+    }
 
-      if (userProfile) {
-        const hasBasicProfile =
+    const userProfile = await fetchUserProfile(clerkUserId)
+
+    setProfileLoaded(true)
+
+    if (userProfile) {
+      const hasBasicProfile =
         !!userProfile.location?.trim() &&
-        userProfile.age !== '' && userProfile.age !== '0' &&
+        userProfile.age !== '' &&
+        userProfile.age !== '0' &&
         !!userProfile.gender?.trim() &&
         !!userProfile.shoppingStores?.trim()
 
-        if (hasBasicProfile && !comingFromSignup) {
-          setCurrentStep('dashboard')
-        } else {
-          setCurrentStep('onboarding')
-        }
+      if (hasBasicProfile && !comingFromSignup) {
+        setCurrentStep('dashboard')
       } else {
         setCurrentStep('onboarding')
       }
+    } else {
+      setCurrentStep('onboarding')
     }
-    initializeUser()
-  }, [isClerkLoaded, isSignedIn, clerkUserId, clerkUser, profileLoaded, fetchUserProfile, createUserInBackend])
+  }
 
-  const logout = useCallback(() => {
-    setProfileState(null)
-    setProfileLoaded(false)
-    setCurrentStep('landing')
-  }, [])
+  initializeUser()
+}, [
+  isClerkLoaded,
+  isSignedIn,
+  clerkUserId,
+  clerkUser,
+  profileLoaded,
+  fetchUserProfile,
+  createUserInBackend,
+])
+
+const logout = useCallback(() => {
+  setProfileState(null)
+  setProfileLoaded(false)
+  setCurrentStep('landing')
+}, [])
 
   const setProfile = useCallback((p: UserProfile) => {
     setProfileState(p)

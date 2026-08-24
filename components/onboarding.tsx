@@ -311,6 +311,33 @@ export function Onboarding() {
       setSaving(false)
     }
   }
+  const handleAilmentsNext = async () => {
+  if (!userId) {
+    setSaveError('Please sign in first')
+    return
+  }
+
+  setSaving(true)
+  setSaveError('')
+
+  try {
+    await api.saveUserAilments(
+      userId,
+      Array.from(selectedAilmentIds),
+      customHealthCondition.trim() || undefined
+    )
+
+    goNext()
+  } catch (err) {
+    setSaveError(
+      err instanceof Error
+        ? err.message
+        : 'Failed to save health conditions.'
+    )
+  } finally {
+    setSaving(false)
+  }
+}
 
   const handleCompleteReview = async () => {
     const ok = await saveProfile()
@@ -1524,7 +1551,7 @@ export function Onboarding() {
               </Button>
             ) : (
             <Button
-              onClick={step === 'profile' ? handleProfileNext : goNext}
+              onClick={step === 'profile' ? handleProfileNext : step === 'ailments' ? handleAilmentsNext : goNext}
               disabled={(step === 'profile' && !isProfileValid()) || saving}
               className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 px-6"
             >
