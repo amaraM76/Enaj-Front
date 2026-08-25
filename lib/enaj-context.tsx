@@ -131,6 +131,20 @@ export function EnajProvider({ children }: { children: ReactNode }) {
 
   // ── Fetch catalog data on mount ──────────────────────────────────────────
   useEffect(() => {
+    if (!isClerkLoaded) return
+
+    if (!isSignedIn || !clerkUserId) {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('enaj-userId')
+      }
+
+      setProfileState(null)
+      setProfileLoaded(false)
+    }
+  }, [isClerkLoaded, isSignedIn, clerkUserId])
+
+
+  useEffect(() => {
     let cancelled = false
     async function init() {
       try {
@@ -247,6 +261,10 @@ const logout = useCallback(() => {
   setProfileState(null)
   setProfileLoaded(false)
   setCurrentStep('landing')
+
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('enaj-userId')
+  }
 }, [])
 
   const setProfile = useCallback((p: UserProfile) => {
