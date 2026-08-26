@@ -86,7 +86,7 @@ export function SavedItems({ onOpenProduct }: SavedItemsProps) {
 
   if (!profile) return null
 
-  const savedProducts = profile.savedProducts as SavedProduct[]
+  const savedProducts = (profile.savedProducts ?? []) as SavedProduct[]
 
   return (
     <div className="flex flex-col gap-6">
