@@ -390,8 +390,9 @@ const logout = useCallback(() => {
     setProfileState((prev) => {
       if (!prev) return prev
       // Check if already saved by slug or id
-      if (prev.savedProducts.find((p) => (p as Product & { slug?: string }).slug === productSlug || p.id === productSlug)) return prev
-      return { ...prev, savedProducts: [...prev.savedProducts, { ...product, slug: productSlug }] }
+      const existingSavedProducts = prev.savedProducts ?? []
+      if (existingSavedProducts.find((p) => (p as Product & { slug?: string }).slug === productSlug || p.id === productSlug)) return prev
+      return { ...prev, savedProducts: [...existingSavedProducts, { ...product, slug: productSlug }] }
     })
     // Persist to backend using Clerk userId
     if (clerkUserId) {
@@ -402,7 +403,7 @@ const logout = useCallback(() => {
   const unsaveProduct = useCallback((productSlug: string) => {
     setProfileState((prev) => {
       if (!prev) return prev
-      return { ...prev, savedProducts: prev.savedProducts.filter((p) => {
+      return { ...prev, savedProducts: (prev.savedProducts ?? []).filter((p) => {
         const pSlug = (p as Product & { slug?: string }).slug || p.id
         return pSlug !== productSlug
       }) }
@@ -415,7 +416,7 @@ const logout = useCallback(() => {
 
   const isProductSaved = useCallback(
     (productSlug: string) => {
-      return !!profile?.savedProducts.find((p) => {
+      return !!profile?.savedProducts?.find((p) => {
         const pSlug = (p as Product & { slug?: string }).slug || p.id
         return pSlug === productSlug
       })

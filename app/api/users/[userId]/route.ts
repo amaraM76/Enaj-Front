@@ -58,7 +58,7 @@ export async function GET(
         return NextResponse.json({ error: 'Forbidden' }, { status: 403, headers })
       }
       const { auth: _authRecord, ...safeProfile } = userProfile
-      return NextResponse.json(safeProfile, { headers })
+      return NextResponse.json({ user: safeProfile }, { headers })
     }
 
     // If not found, try finding by clerkId
@@ -79,7 +79,7 @@ export async function GET(
       if (authRecord.clerkId !== sessionClerkId) {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403, headers })
       }
-      return NextResponse.json(authRecord.user, { headers })
+      return NextResponse.json({ user: authRecord.user }, { headers })
     }
 
     // Return 404 if neither lookup finds anything
@@ -177,7 +177,7 @@ export async function PUT(
       },
     })
 
-    return NextResponse.json(updatedUser, { headers })
+    return NextResponse.json({ user: updatedUser }, { headers })
   } catch (error) {
     console.error('Error updating user:', error)
     return NextResponse.json(

@@ -16,7 +16,7 @@ export default function SavedProductPage() {
   // query param (set when navigating from the Saved Items list) is a
   // same-request-cycle hint that avoids a flash of "not found" before
   // `profile` is available, but the lookup below is the source of truth.
-  const savedProduct = profile?.savedProducts.find(
+  const savedProduct = profile?.savedProducts?.find(
     (p) => ((p as { slug?: string }).slug || p.id) === params.slug
   )
   const categoryHint = searchParams.get('category')
