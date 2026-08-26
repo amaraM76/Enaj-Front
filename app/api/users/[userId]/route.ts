@@ -3,6 +3,43 @@ import { auth } from '@clerk/nextjs/server'
 import { prisma } from '@/lib/prisma'
 import { Gender, Prisma } from '@prisma/client'
 
+// Ailments, preferences, saved products, and journal entries are still
+// written through the Railway backend (see app/api/[...path]/route.ts,
+// which proxies /api/user-ailments, /api/preferences, /api/saved-products
+// and /api/journal there) rather than into this app's own database, so
+// this route's local Prisma lookup alone never has them. Until that's
+// fully migrated onto this app's own tables, fetch those fields from
+// Railway - keyed by Clerk ID, the one identifier both databases share -
+// and merge them into the locally-sourced profile.
+const BACKEND_URL =
+  process.env.BACKEND_API_URL ||
+  process.env.NEXT_PUBLIC_API_URL ||
+  'https://enaj-back-production.up.railway.app'
+
+async function withRailwaySelections(clerkId: string, profile: Record<string, unknown>) {
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/users/${clerkId}`, {
+      headers: { 'Content-Type': 'application/json' },
+    })
+    if (!res.ok) return profile
+    const data = await res.json().catch(() => null)
+    const railwayUser = data?.user
+    if (!railwayUser) return profile
+    return {
+      ...profile,
+      selectedAilments: railwayUser.selectedAilments ?? [],
+      selectedPreferences: railwayUser.selectedPreferences ?? [],
+      savedProducts: railwayUser.savedProducts ?? [],
+      journalEntries: railwayUser.journalEntries ?? [],
+      customHealthCondition: railwayUser.customHealthCondition,
+      customPreference: railwayUser.customPreference,
+    }
+  } catch (error) {
+    console.error('Failed to fetch Railway selections:', error)
+    return profile
+  }
+}
+
 function getCorsHeaders(request?: NextRequest) {
   const origin = request?.headers.get('origin') || '*'
   const allowedOrigins = [
@@ -58,7 +95,8 @@ export async function GET(
         return NextResponse.json({ error: 'Forbidden' }, { status: 403, headers })
       }
       const { auth: _authRecord, ...safeProfile } = userProfile
-      return NextResponse.json({ user: safeProfile }, { headers })
+      const merged = await withRailwaySelections(sessionClerkId, safeProfile)
+      return NextResponse.json({ user: merged }, { headers })
     }
 
     // If not found, try finding by clerkId
@@ -79,7 +117,8 @@ export async function GET(
       if (authRecord.clerkId !== sessionClerkId) {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403, headers })
       }
-      return NextResponse.json({ user: authRecord.user }, { headers })
+      const merged = await withRailwaySelections(sessionClerkId, authRecord.user)
+      return NextResponse.json({ user: merged }, { headers })
     }
 
     // Return 404 if neither lookup finds anything
