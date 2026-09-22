@@ -243,40 +243,11 @@ export function Onboarding() {
         
       })
 
-      const ailmentIds = ailmentCategories
-        .flatMap((category) => category.ailments)
-        .filter((ailment) => selectedAilmentIds.has(ailment.id))
-        .map((ailment) => ailment.id)
 
-      await api.saveUserAilments(
-        apiUserId,
-        ailmentIds,
-        customHealthCondition.trim() || undefined
-      )
-  
-      const prefsArray: { preferenceSlug?: string; source: string; customEntry?: string }[] =
-        Array.from(selectedPreferenceIds).map((id) => ({
-          preferenceSlug: id,
-          source: 'SELECTED',
-        }))
-  
-      if (customPreference.trim()) {
-        prefsArray.push({ customEntry: customPreference.trim(), source: 'CUSTOM' })
-      }
-  
-      await api.saveUserJournal(apiUserId, Array.from(selectedJournalIds))
-
-      await api.saveUserPreferences(apiUserId, prefsArray)
       // await api.saveUserJournal(apiUserId, Array.from(selectedJournalIds))
       await fetchUserProfile(apiUserId)
   
-      const allAilments = ailmentCategories.flatMap((c) => c.ailments)
-      const selectedAilments = allAilments
-        .filter((a) => selectedAilmentIds.has(a.id))
-        .map((ailment) => ({
-          ailment,
-          activeIngredients: [...ailment.flaggedIngredients],
-        }))
+
   
 
   
@@ -321,6 +292,7 @@ export function Onboarding() {
       setSaving(false)
     }
   }
+
   const handleAilmentsNext = async () => {
   if (!userId) {
     setSaveError('Please sign in first')
@@ -343,6 +315,75 @@ export function Onboarding() {
       err instanceof Error
         ? err.message
         : 'Failed to save health conditions.'
+    )
+  } finally {
+    setSaving(false)
+  }
+}
+
+const handlePreferencesNext = async () => {
+  if (!userId) {
+    setSaveError('Please sign in first')
+    return
+  }
+
+  setSaving(true)
+  setSaveError('')
+
+  try {
+    const prefsArray: {
+      preferenceSlug?: string
+      source: string
+      customEntry?: string
+    }[] = Array.from(selectedPreferenceIds).map((id) => ({
+      preferenceSlug: id,
+      source: 'SELECTED',
+    }))
+
+    if (customPreference.trim()) {
+      prefsArray.push({
+        customEntry: customPreference.trim(),
+        source: 'CUSTOM',
+      })
+    }
+
+    await api.saveUserPreferences(apiUserId, prefsArray)
+
+    goNext()
+  } catch (err) {
+    setSaveError(
+      err instanceof Error
+        ? err.message
+        : 'Failed to save preferences.'
+    )
+  } finally {
+    setSaving(false)
+  }
+}
+
+
+
+const handleJournalNext = async () => {
+  if (!userId) {
+    setSaveError('Please sign in first')
+    return
+  }
+
+  setSaving(true)
+  setSaveError('')
+
+  try {
+    await api.saveUserJournal(
+      apiUserId,
+      Array.from(selectedJournalIds)
+    )
+
+    goNext()
+  } catch (err) {
+    setSaveError(
+      err instanceof Error
+        ? err.message
+        : 'Failed to save journal.'
     )
   } finally {
     setSaving(false)
@@ -1561,7 +1602,17 @@ export function Onboarding() {
               </Button>
             ) : (
             <Button
-              onClick={step === 'profile' ? handleProfileNext : step === 'ailments' ? handleAilmentsNext : goNext}
+              onClick={
+                step === 'profile'
+                  ? handleProfileNext
+                  : step === 'ailments'
+                    ? handleAilmentsNext
+                    : step === 'preferences'
+                      ? handlePreferencesNext
+                      : step === 'journal'
+                        ? handleJournalNext
+                        : goNext
+              }
               disabled={(step === 'profile' && !isProfileValid()) || saving}
               className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 px-6"
             >
