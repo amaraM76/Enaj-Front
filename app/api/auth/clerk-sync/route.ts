@@ -19,6 +19,53 @@ function getCorsHeaders(request?: NextRequest) {
     'Access-Control-Allow-Credentials': 'true',
   }
 }
+async function syncUserToBackend({
+  clerkId,
+  firstName,
+  lastName,
+  email,
+}: {
+  clerkId: string
+  firstName?: string
+  lastName?: string
+  email: string
+}) {
+  const backendUrl = process.env.BACKEND_URL
+
+  if (!backendUrl) {
+    console.error('BACKEND_URL is not configured')
+    throw new Error('BACKEND_URL is not configured')
+  }
+
+  const response = await fetch(`${backendUrl}/api/auth/clerk-sync`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      clerkId,
+      firstName,
+      lastName,
+      email,
+    }),
+  })
+
+  if (!response.ok) {
+    const errorText = await response.text()
+
+    console.error(
+      'Backend clerk-sync failed:',
+      response.status,
+      errorText
+    )
+
+    throw new Error(
+      `Backend clerk-sync failed with status ${response.status}`
+    )
+  }
+
+  return response.json()
+}
 
 export async function OPTIONS(request: NextRequest) {
   return NextResponse.json({}, { headers: getCorsHeaders(request) })
@@ -43,6 +90,13 @@ export async function POST(request: NextRequest) {
     })
 
     if (existingAuth) {
+      await syncUserToBackend({
+        clerkId,
+        firstName,
+        lastName,
+        email,
+      })
+
       return NextResponse.json({ user: existingAuth.user }, { headers })
     }
 
@@ -59,6 +113,13 @@ export async function POST(request: NextRequest) {
           userId: existingProfile.id,
           clerkId,
         },
+      })
+
+      await syncUserToBackend({
+        clerkId,
+        firstName,
+        lastName,
+        email,
       })
 
       return NextResponse.json(
@@ -83,13 +144,31 @@ export async function POST(request: NextRequest) {
           },
         },
       })
-      return NextResponse.json({ user: newProfile }, { status: 201, headers })
+      await syncUserToBackend({
+        clerkId,
+        firstName,
+        lastName,
+        email,
+      })
+
+      return NextResponse.json(
+        { user: newProfile },
+        { status: 201, headers }
+      )
     } catch (err) {
       if (!(err instanceof Prisma.PrismaClientKnownRequestError) || err.code !== 'P2002') throw err
       const winner = await prisma.userAuth.findUnique({ where: { clerkId }, include: { user: true } })
         ?? await prisma.userProfile.findUnique({ where: { email } })
       if (!winner) throw err
       const user = 'user' in winner ? winner.user : winner
+
+      await syncUserToBackend({
+        clerkId,
+        firstName,
+        lastName,
+        email,
+      })
+
       return NextResponse.json({ user }, { headers })
     }
   } catch (error) {

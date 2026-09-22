@@ -5,6 +5,7 @@ import { useAuth, useUser } from '@clerk/nextjs'
 import type { Ailment, AilmentCategory, FlaggedIngredient, PreferenceCategory, Product } from './enaj-data'
 import { api } from './api'
 import type { JournalCategory } from './journal-data'
+import error from 'next/error'
 
 
 export interface UserProfile {
@@ -98,7 +99,8 @@ export function EnajProvider({ children }: { children: ReactNode }) {
       }
 
       return profileData
-    } catch {
+    } catch (error) {
+      console.error('Failed to fetch user profile:', error)
       return null
     }
   }, [clerkUser])
@@ -174,9 +176,8 @@ export function EnajProvider({ children }: { children: ReactNode }) {
   // Create user in our backend if they don't exist (uses local API proxy to avoid CORS)
   const createUserInBackend = useCallback(async (userId: string): Promise<boolean> => {
     if (!clerkUser) return false
-    
+
     try {
-      // Use local API route to avoid CORS issues
       const response = await fetch('/api/auth/clerk-sync', {
         method: 'POST',
         headers: {
@@ -191,11 +192,18 @@ export function EnajProvider({ children }: { children: ReactNode }) {
       })
 
       if (!response.ok) {
+        const errorText = await response.text()
+        console.error(
+          'Failed to sync Clerk user:',
+          response.status,
+          errorText
+        )
         return false
       }
-      
+
       return true
-    } catch {
+    } catch (error) {
+      console.error('Failed to sync Clerk user:', error)
       return false
     }
   }, [clerkUser])
@@ -285,7 +293,9 @@ const logout = useCallback(() => {
       // Persist to backend using Clerk userId
       if (clerkUserId) {
         const allSlugs = updated.selectedAilments.map((sa) => sa.ailment.id)
-        api.saveUserAilments(clerkUserId, allSlugs).catch(() => {})
+        api.saveUserAilments(clerkUserId, allSlugs).catch((error) => {
+          console.error('Failed to save ailments:', error)
+      })
       }
       return updated
     })
@@ -301,7 +311,9 @@ const logout = useCallback(() => {
       // Persist to backend using Clerk userId
       if (clerkUserId) {
         const allSlugs = updated.selectedAilments.map((sa) => sa.ailment.id)
-        api.saveUserAilments(clerkUserId, allSlugs).catch(() => {})
+        api.saveUserAilments(clerkUserId, allSlugs).catch((error) => {
+          console.error('Failed to save ailments:', error)
+        })
       }
       return updated
     })
@@ -351,7 +363,9 @@ const logout = useCallback(() => {
           preferenceSlug: id,
           source: 'SELECTED' as const,
         }))
-        api.saveUserPreferences(clerkUserId, prefsArray).catch(() => {})
+        api.saveUserPreferences(clerkUserId, prefsArray).catch((error) => {
+          console.error('Failed to save preferences:', error)
+        })
       }
       return updated
     })
@@ -366,7 +380,9 @@ const logout = useCallback(() => {
         journalEntries: [...prev.journalEntries, conditionId],
       }
       if (clerkUserId) {
-        api.saveUserJournal(clerkUserId, updated.journalEntries).catch(() => {})
+        api.saveUserJournal(clerkUserId, updated.journalEntries).catch((error) => {
+          console.error('Failed to save journal entries:', error)
+      })
       }
       return updated
     })
@@ -379,7 +395,9 @@ const logout = useCallback(() => {
         journalEntries: prev.journalEntries.filter((id) => id !== conditionId),
       }
       if (clerkUserId) {
-        api.saveUserJournal(clerkUserId, updated.journalEntries).catch(() => {})
+        api.saveUserJournal(clerkUserId, updated.journalEntries).catch((error) => {
+          console.error('Failed to save journal entries:', error)
+        })
       }
       return updated
     })
@@ -396,7 +414,9 @@ const logout = useCallback(() => {
     })
     // Persist to backend using Clerk userId
     if (clerkUserId) {
-      api.saveProduct(clerkUserId, productSlug).catch(() => {})
+      api.saveProduct(clerkUserId, productSlug).catch((error) => {
+        console.error('Failed to save product:', error)
+      })
     }
   }, [clerkUserId])
 
@@ -410,7 +430,9 @@ const logout = useCallback(() => {
     })
     // Persist to backend using Clerk userId
     if (clerkUserId) {
-      api.unsaveProduct(clerkUserId, productSlug).catch(() => {})
+      api.unsaveProduct(clerkUserId, productSlug).catch((error) => {
+        console.error('Failed to unsave product:', error)
+      })
     }
   }, [clerkUserId])
 

@@ -115,11 +115,28 @@ export function Onboarding() {
   const [citiesLoading, setCitiesLoading] = useState(false)
   const [selectedJournalIds, setSelectedJournalIds] = useState<Set<string>>(new Set())
   const [expandedJournalCategory, setExpandedJournalCategory] = useState<string | null>(null)
-  const dbUserId = profile?.id || userId || ''
-
+  const apiUserId = userId || ''
 
   const currentStepIndex = STEPS.indexOf(step)
   const progress = ((currentStepIndex + 1) / STEPS.length) * 100
+
+  useEffect(() => {
+  if (!profile) return
+
+  setSelectedAilmentIds(
+    new Set(
+      profile.selectedAilments.map((item) => item.ailment.id)
+    )
+  )
+
+  setSelectedPreferenceIds(
+    new Set(profile.selectedPreferences)
+  )
+
+  setSelectedJournalIds(
+    new Set(profile.journalEntries)
+  )
+}, [profile])
 
   useEffect(() => {
     if (isSignedIn && step === 'welcome') {
@@ -226,9 +243,14 @@ export function Onboarding() {
         
       })
 
+      const ailmentSlugs = ailmentCategories
+        .flatMap((category) => category.ailments)
+        .filter((ailment) => selectedAilmentIds.has(ailment.id))
+        .map((ailment) => ailment.slug)
+
       await api.saveUserAilments(
-        dbUserId,
-        Array.from(selectedAilmentIds),
+        apiUserId,
+        ailmentSlugs,
         customHealthCondition.trim() || undefined
       )
   
@@ -242,11 +264,11 @@ export function Onboarding() {
         prefsArray.push({ customEntry: customPreference.trim(), source: 'CUSTOM' })
       }
   
-      await api.saveUserJournal(dbUserId, Array.from(selectedJournalIds))
+      await api.saveUserJournal(apiUserId, Array.from(selectedJournalIds))
 
-      await api.saveUserPreferences(dbUserId, prefsArray)
-      // await api.saveUserJournal(dbUserId, Array.from(selectedJournalIds))
-      await fetchUserProfile(dbUserId)
+      await api.saveUserPreferences(apiUserId, prefsArray)
+      // await api.saveUserJournal(apiUserId, Array.from(selectedJournalIds))
+      await fetchUserProfile(apiUserId)
   
       const allAilments = ailmentCategories.flatMap((c) => c.ailments)
       const selectedAilments = allAilments
@@ -322,7 +344,7 @@ export function Onboarding() {
 
   try {
     await api.saveUserAilments(
-      userId,
+      apiUserId,
       Array.from(selectedAilmentIds),
       customHealthCondition.trim() || undefined
     )
