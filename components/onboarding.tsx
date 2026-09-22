@@ -356,6 +356,8 @@ const handlePreferencesNext = async () => {
     }
 
     await api.saveUserPreferences(apiUserId, prefsArray)
+    await fetchUserProfile(apiUserId)
+
 
     goNext()
   } catch (err) {
