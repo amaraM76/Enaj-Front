@@ -75,7 +75,7 @@ const PERIMENOPAUSE_ID = 'perimenopause'
 const STEPS: OnboardingStep[] = ['welcome', 'profile', 'ailments', 'preferences', 'journal', 'review', 'extension']
 
 export function Onboarding() {
-  const { setProfile, setCurrentStep, ailmentCategories, preferenceCategories, fetchUserProfile, saveProfileWithClerk, profile, journalCategories } = useEnaj()
+  const { setCurrentStep, ailmentCategories, preferenceCategories, fetchUserProfile, saveProfileWithClerk, profile, journalCategories } = useEnaj()
   const { isSignedIn, userId } = useAuth()
   const { user: clerkUser } = useUser()
   const router = useRouter()
@@ -278,19 +278,7 @@ export function Onboarding() {
           activeIngredients: [...ailment.flaggedIngredients],
         }))
   
-      setProfile({
-        firstName: firstName,
-        lastName: lastName,
-        email: clerkUser?.primaryEmailAddress?.emailAddress || '',
-        location: location || `${selectedCity}, ${selectedState}`,
-        age,
-        gender,
-        shoppingStores,
-        selectedAilments,
-        selectedPreferences: Array.from(selectedPreferenceIds),
-        journalEntries: Array.from(selectedJournalIds),
-        savedProducts: [],
-      })
+
   
       setProfileSaved(true)
       return true

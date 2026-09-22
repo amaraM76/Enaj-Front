@@ -5,7 +5,6 @@ import { useAuth, useUser } from '@clerk/nextjs'
 import type { Ailment, AilmentCategory, FlaggedIngredient, PreferenceCategory, Product } from './enaj-data'
 import { api } from './api'
 import type { JournalCategory } from './journal-data'
-import error from 'next/error'
 
 
 export interface UserProfile {
@@ -76,6 +75,10 @@ export function EnajProvider({ children }: { children: ReactNode }) {
   const fetchUserProfile = useCallback(async (userId: string): Promise<UserProfile | null> => {
     try {
       const { user } = await api.getUser(userId)
+      console.log('🔥 USER RETURNED BY api.getUser:', user)
+      console.log('🔥 selectedAilments:', user.selectedAilments)
+      console.log('🔥 selectedAilments count:', user.selectedAilments?.length)
+
       const profileData = {
         id: user.id,
         firstName: user.firstName ?? clerkUser?.firstName ?? '',
