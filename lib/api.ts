@@ -269,6 +269,11 @@ export const api = {
     ailmentSlugs: string[],
     customEntry?: string
   ): Promise<SaveUserAilmentsResponse> {
+    console.trace(
+      '[SAVE USER AILMENTS API]',
+      { userId, ailmentSlugs, customEntry }
+    )
+
     return request<SaveUserAilmentsResponse>('/api/user-ailments', {
       method: 'POST',
       body: { userId, ailmentSlugs, ...(customEntry ? { customEntry } : {}) },
