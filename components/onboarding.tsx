@@ -309,6 +309,8 @@ export function Onboarding() {
       customHealthCondition.trim() || undefined
     )
 
+    await fetchUserProfile(apiUserId)
+
     goNext()
   } catch (err) {
     setSaveError(
