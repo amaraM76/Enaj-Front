@@ -296,6 +296,11 @@ const logout = useCallback(() => {
       // Persist to backend using Clerk userId
       if (clerkUserId) {
         const allSlugs = updated.selectedAilments.map((sa) => sa.ailment.id)
+         console.trace(
+          '[AILMENT SAVE] addAilment',
+          clerkUserId,
+          allSlugs
+        )
         api.saveUserAilments(clerkUserId, allSlugs).catch((error) => {
           console.error('Failed to save ailments:', error)
       })
@@ -314,6 +319,11 @@ const logout = useCallback(() => {
       // Persist to backend using Clerk userId
       if (clerkUserId) {
         const allSlugs = updated.selectedAilments.map((sa) => sa.ailment.id)
+        console.trace(
+          '[AILMENT SAVE] removeAilment',
+          clerkUserId,
+          allSlugs
+        )
         api.saveUserAilments(clerkUserId, allSlugs).catch((error) => {
           console.error('Failed to save ailments:', error)
         })

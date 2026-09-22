@@ -303,11 +303,17 @@ export function Onboarding() {
   setSaveError('')
 
   try {
-    await api.saveUserAilments(
-      apiUserId,
-      Array.from(selectedAilmentIds),
-      customHealthCondition.trim() || undefined
-    )
+    console.trace(
+    '[AILMENT SAVE] onboarding handleAilmentsNext',
+    apiUserId,
+    Array.from(selectedAilmentIds)
+  )
+
+  await api.saveUserAilments(
+    apiUserId,
+    Array.from(selectedAilmentIds),
+    customHealthCondition.trim() || undefined
+  )
 
     await fetchUserProfile(apiUserId)
 
