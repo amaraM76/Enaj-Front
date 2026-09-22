@@ -243,14 +243,14 @@ export function Onboarding() {
         
       })
 
-      const ailmentSlugs = ailmentCategories
+      const ailmentIds = ailmentCategories
         .flatMap((category) => category.ailments)
         .filter((ailment) => selectedAilmentIds.has(ailment.id))
-        .map((ailment) => ailment.slug)
+        .map((ailment) => ailment.id)
 
       await api.saveUserAilments(
         apiUserId,
-        ailmentSlugs,
+        ailmentIds,
         customHealthCondition.trim() || undefined
       )
   
