@@ -269,14 +269,29 @@ export const api = {
     ailmentSlugs: string[],
     customEntry?: string
   ): Promise<SaveUserAilmentsResponse> {
-    console.trace(
-      '[SAVE USER AILMENTS API]',
-      { userId, ailmentSlugs, customEntry }
-    )
+    if (!userId.startsWith('user_') && ailmentSlugs.length === 0) {
+      console.error(
+        '🚨 BLOCKED DESTRUCTIVE AILMENT SAVE',
+        {
+          userId,
+          ailmentSlugs,
+          customEntry,
+          stack: new Error().stack,
+        }
+      )
+
+      return Promise.reject(
+        new Error('Blocked destructive ailment save using database UUID')
+      )
+    }
 
     return request<SaveUserAilmentsResponse>('/api/user-ailments', {
       method: 'POST',
-      body: { userId, ailmentSlugs, ...(customEntry ? { customEntry } : {}) },
+      body: {
+        userId,
+        ailmentSlugs,
+        ...(customEntry ? { customEntry } : {}),
+      },
     })
   },
 
