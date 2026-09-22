@@ -2,6 +2,7 @@
 // the "This ingredient is a {X}" ingredient-alert sentence (e.g.
 // "Silicones" -> "silicone"). Names that don't follow simple plural rules
 // are listed explicitly rather than mangled by the trailing-s heuristic.
+
 const SINGULAR_OVERRIDES: Record<string, string> = {
   'pfas (forever chemicals)': 'PFAS-type chemical',
   'microplastics': 'microplastic',
