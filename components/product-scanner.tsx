@@ -97,7 +97,7 @@ export function ProductScanner({ category }: { category: ProductCategorySlug }) 
 
     searchTimerRef.current = setTimeout(async () => {
       try {
-        const res = await api.searchProducts(normalizedQuery, 'all')
+        const res = await api.searchProducts(normalizedQuery, 'all', 1, category)
         const results = ((res as { products?: unknown[] }).products ?? []) as unknown[]
 
         const normalizeText = (value: unknown): string => {

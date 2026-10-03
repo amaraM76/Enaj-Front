@@ -391,12 +391,13 @@ export const api = {
   searchProducts(
     query: string,
     source: 'food' | 'beauty' | 'all' = 'all',
-    page = 1
+    page = 1,
+    category?: string
   ) {
-    return request<unknown>(
-      `/api/product-search?q=${encodeURIComponent(query)}&source=${source}&page=${page}`
-    )
-  },
+      const params = new URLSearchParams({ q: query, source, page: String(page) })
+      if (category) params.set('category', category)
+      return request<unknown>(`/api/product-search?${params.toString()}`)
+    },
 
   lookupBarcode(barcode: string): Promise<BarcodeLookupResponse> {
     return request<BarcodeLookupResponse>('/api/product-search', {
